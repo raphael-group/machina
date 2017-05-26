@@ -61,6 +61,9 @@ typedef SubDigraph::OutArcIt SubOutArcIt;
 typedef SubDigraph::InArcIt SubInArcIt;
 
 std::istream& getline(std::istream& is, std::string& t);
+bool parseMigrationGraph(const std::string& migrationGraphFile,
+                         const StringSet& samples,
+                         StringPairList& forcedComigrations);
 
 extern std::mt19937 g_rng;
 

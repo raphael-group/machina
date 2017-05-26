@@ -101,6 +101,18 @@ public:
     return MigrationGraph(_T, getLabeling(solIdx));
   }
   
+  /// Run Sankoff enumeration algorithm to infer all vertex labelings
+  /// with minimum number of migrations
+  ///
+  /// @param T Non-binary clone tree
+  /// @param primary Primary tumor label
+  /// @param outputDirectory Output directory
+  /// @param colorMap Color map
+  static void run(const NonBinaryCloneTree& T,
+                  const std::string& primary,
+                  const std::string& outputDirectory,
+                  const StringToIntMap& colorMap);
+  
 private:
   typedef CharacterTree::StringToIntMap StringToIntMap;
   typedef std::vector<StringNodeMap*> StringNodeMapVector;

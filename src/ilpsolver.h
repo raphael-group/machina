@@ -73,6 +73,33 @@ public:
     return _UB;
   }
   
+  /// Solve PMH under a topological constraint
+  ///
+  /// @param T Non-binary clone tree
+  /// @param primary Primary tumor
+  /// @param outputDirectory Output directory
+  /// @param colorMap Color map
+  /// @param pattern Topological constraint
+  /// @param nrThreads Number of threads
+  /// @param outputILP Output ILP model
+  /// @param outputSearchGraph Output search graph
+  /// @param timeLimit Time limit in seconds
+  ///
+  /// @param UB Upper bound on objective value
+  /// @param forcedComigrations List of ordered pairs of anatomical sites
+  /// that must be present
+  static void run(const NonBinaryCloneTree& T,
+                  const std::string& primary,
+                  const std::string& outputDirectory,
+                  const StringToIntMap& colorMap,
+                  MigrationGraph::Pattern pattern,
+                  int nrThreads,
+                  bool outputILP,
+                  bool outputSearchGraph,
+                  int timeLimit,
+                  double UB,
+                  const StringPairList& forcedComigrations);
+  
 protected:
   /// Initialize indices and mappings
   virtual void initIndices();

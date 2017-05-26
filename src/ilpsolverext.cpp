@@ -6,6 +6,7 @@
  */
 
 #include "ilpsolverext.h"
+#include <lemon/time_measure.h>
 
 IlpSolverExt::IlpSolverExt(const NonBinaryCloneTree& T,
                            const FrequencyMatrix& F,
@@ -1027,5 +1028,125 @@ void IlpSolverExt::labelEdges(const Digraph& resT,
   {
     Node v_j = resT.target(a);
     labelEdges(resT, resNodeToIndex, v_j, characterLabel, visited);
+  }
+}
+
+void IlpSolverExt::run(const NonBinaryCloneTree& T,
+                       const FrequencyMatrix& F,
+                       const std::string& primary,
+                       const std::string& outputDirectory,
+                       const StringToIntMap& colorMap,
+                       MigrationGraph::Pattern pattern,
+                       int nrThreads,
+                       bool outputILP,
+                       bool outputSearchGraph,
+                       int timeLimit,
+                       double UB,
+                       const StringPairList& forcedComigrations)
+{
+  char buf[1024];
+  std::string filenameGurobiLog;
+  std::string filenameSearchGraph;
+  
+  if (!outputDirectory.empty())
+  {
+    snprintf(buf, 1024, "%s/log-%s-%s-binarized.txt",
+             outputDirectory.c_str(),
+             primary.c_str(),
+             MigrationGraph::getPatternString(pattern).c_str());
+    
+    filenameGurobiLog = buf;
+    
+    snprintf(buf, 1024, "%s/searchG-%s-%s-binarized.dot",
+             outputDirectory.c_str(),
+             primary.c_str(),
+             MigrationGraph::getPatternString(pattern).c_str());
+    
+    filenameSearchGraph = buf;
+  }
+  
+  {
+    IlpSolverExt solver(T,
+                        F,
+                        primary,
+                        pattern,
+                        filenameGurobiLog,
+                        forcedComigrations);
+    solver.init(UB);
+    
+    if (!outputDirectory.empty() && outputILP)
+    {
+      snprintf(buf, 1024, "%s/ilp-%s-%s-binarized.lp",
+               outputDirectory.c_str(),
+               primary.c_str(),
+               MigrationGraph::getPatternString(pattern).c_str());
+      solver.exportModel(buf);
+    }
+    
+    if (outputSearchGraph)
+    {
+      std::ofstream outSearchG(filenameSearchGraph.c_str());
+      solver.writeDOT(outSearchG, colorMap);
+      outSearchG.close();
+    }
+    
+    lemon::Timer timer;
+    std::cerr << "With primary '" << primary << "', "
+      << MigrationGraph::getPatternLongString(pattern)
+      << " and binarization: " << std::flush;
+    if (!solver.solve(nrThreads, timeLimit))
+    {
+      std::cerr << "No solution found (" << outputDirectory << ")" << std::endl;
+//        continue;
+      return;
+    }
+    
+    MigrationGraph G(solver.T(), solver.lPlus());
+    
+    std::cerr << G.getNrMigrations() << " migrations, "
+      << G.getNrComigrations(solver.T(), solver.lPlus()) << " comigrations, "
+      << G.getNrNonUniqueParentageSamples() << " non-unique parentage sites and "
+      << G.getNrSeedingSamples() << " seeding sites";
+    if (G.hasReseeding())
+    {
+      std::cerr << " including reseeding";
+    }
+    std::cerr << ". [LB, UB] = [" << solver.LB() << ", " << solver.UB() << "]. " << timer.realTime() << " seconds (" << outputDirectory << ")" << std::endl;
+    
+    if (!outputDirectory.empty())
+    {
+      snprintf(buf, 1024, "%s/T-%s-%s-binarized.dot",
+               outputDirectory.c_str(),
+               primary.c_str(),
+               MigrationGraph::getPatternString(pattern).c_str());
+      std::ofstream outT(buf);
+      solver.T().writeDOT(outT,
+                          solver.lPlus(),
+                          colorMap,
+                          solver.getF(),
+                          solver.getU());
+      outT.close();
+      
+      snprintf(buf, 1024, "%s/T-%s-%s-binarized-condensed.dot",
+               outputDirectory.c_str(),
+               primary.c_str(),
+               MigrationGraph::getPatternString(pattern).c_str());
+      std::ofstream outCondensedT(buf);
+      solver.T().writeDOT(outCondensedT,
+                          solver.lPlus(),
+                          colorMap,
+                          solver.getU(),
+                          solver.getCharacterLabel());
+      outCondensedT.close();
+      
+      snprintf(buf, 1024, "%s/G-%s-%s-binarized.dot",
+               outputDirectory.c_str(),
+               primary.c_str(),
+               MigrationGraph::getPatternString(pattern).c_str());
+      
+      std::ofstream outG(buf);
+      G.writeDOT(outG, colorMap);
+      outG.close();
+    }
   }
 }

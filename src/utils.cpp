@@ -1,4 +1,5 @@
 #include "utils.h"
+#include <fstream>
 
 std::mt19937 g_rng(0);
 
@@ -34,4 +35,53 @@ std::istream& getline(std::istream& is, std::string& t)
         t += (char)c;
     }
   }
+}
+
+bool parseMigrationGraph(const std::string& migrationGraphFile,
+                         const StringSet& samples,
+                         StringPairList& forcedComigrations)
+{
+  std::ifstream inFile(migrationGraphFile);
+  if (!inFile.good())
+  {
+    std::cerr << "Could not open '" << migrationGraphFile << "' for reading" << std::endl;
+    return false;
+  }
+  else
+  {
+    int idx = 0;
+    while (inFile.good())
+    {
+      ++idx;
+      std::string line;
+      getline(inFile, line);
+      
+      if (line.empty()) continue;
+      
+      StringVector s;
+      boost::split(s, line, boost::is_any_of("\t "));
+      
+      if (s.size() < 2)
+      {
+        std::cerr << "Line " << idx << " is invalid in '" << migrationGraphFile
+        << "'" << std::endl;
+        return false;
+      }
+      if (samples.count(s[0]) != 1)
+      {
+        std::cerr << "Line " << idx << " is invalid in '" << migrationGraphFile
+        << "'. Sample '" << s[0] << "' is incorrect." << std::endl;
+        return false;
+      }
+      if (samples.count(s[1]) != 1)
+      {
+        std::cerr << "Line " << idx << " is invalid in '" << migrationGraphFile
+        << "'. Sample '" << s[1] << "' is incorrect." << std::endl;
+        return false;
+      }
+      forcedComigrations.push_back(StringPair(s[0], s[1]));
+    }
+  }
+  
+  return true;
 }

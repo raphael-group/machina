@@ -6,6 +6,7 @@
  */
 
 #include "ilpsolver.h"
+#include <lemon/time_measure.h>
 
 IlpSolver::IlpSolver(const NonBinaryCloneTree& T,
                      const std::string& primary,
@@ -613,4 +614,98 @@ bool IlpSolver::solve(int nrThreads, int timeLimit)
   }
   
   return true;
+}
+
+void IlpSolver::run(const NonBinaryCloneTree& T,
+                    const std::string& primary,
+                    const std::string& outputDirectory,
+                    const StringToIntMap& colorMap,
+                    MigrationGraph::Pattern pattern,
+                    int nrThreads,
+                    bool outputILP,
+                    bool outputSearchGraph,
+                    int timeLimit,
+                    double UB,
+                    const StringPairList& forcedComigrations)
+{
+  char buf[1024];
+  std::string filenameGurobiLog;
+  std::string filenameSearchGraph;
+  
+  if (!outputDirectory.empty())
+  {
+    snprintf(buf, 1024, "%s/log-%s-%s.txt",
+             outputDirectory.c_str(),
+             primary.c_str(),
+             MigrationGraph::getPatternString(pattern).c_str());
+    
+    filenameGurobiLog = buf;
+    
+    snprintf(buf, 1024, "%s/searchG-%s-%s.dot",
+             outputDirectory.c_str(),
+             primary.c_str(),
+             MigrationGraph::getPatternString(pattern).c_str());
+    
+    filenameSearchGraph = buf;
+  }
+  
+  IlpSolver solver(T,
+                   primary,
+                   pattern,
+                   filenameGurobiLog,
+                   forcedComigrations);
+  solver.init(UB);
+  
+  if (!outputDirectory.empty() && outputILP)
+  {
+    snprintf(buf, 1024, "%s/ilp-%s-%s.ilp",
+             outputDirectory.c_str(),
+             primary.c_str(),
+             MigrationGraph::getPatternString(pattern).c_str());
+    solver.exportModel(buf);
+  }
+  
+  lemon::Timer timer;
+  
+  std::cerr << "With primary '" << primary << "', "
+    << MigrationGraph::getPatternLongString(pattern)
+    << " and no binarization: ";
+  
+  if (!solver.solve(nrThreads, timeLimit))
+  {
+    std::cerr << "No solution found" << std::endl;
+    return;
+  }
+  
+  MigrationGraph G(T, solver.lPlus());
+
+  std::cerr << G.getNrMigrations() << " migrations, "
+    << G.getNrComigrations(T, solver.lPlus()) << " comigrations and "
+    << G.getNrSeedingSamples() << " seeding sites";
+  if (G.hasReseeding())
+  {
+    std::cerr << " including reseeding";
+  }
+  std::cerr << ". [LB, UB] = [" << solver.LB() << ", " << solver.UB() << "]. "
+  << timer.realTime() << " seconds" << std::endl;
+  
+  if (!outputDirectory.empty())
+  {
+    snprintf(buf, 1024, "%s/T-%s-%s.dot",
+             outputDirectory.c_str(),
+             primary.c_str(),
+             MigrationGraph::getPatternString(pattern).c_str());
+    std::ofstream outT(buf);
+    T.writeDOT(outT, solver.lPlus(), colorMap);
+    outT.close();
+    
+    snprintf(buf, 1024, "%s/G-%s-%s.dot",
+             outputDirectory.c_str(),
+             primary.c_str(),
+             MigrationGraph::getPatternString(pattern).c_str());
+    
+    std::ofstream outG(buf);
+    G.writeDOT(outG, colorMap);
+    outG.close();
+  }
 }

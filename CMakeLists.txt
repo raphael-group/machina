@@ -25,7 +25,35 @@ set( generatemigrationtrees_hdr
   src/gabowmyers.h
 )
 
-set( solve_ctb_hdr
+set( pmh_hdr
+  src/utils.h
+  src/nonbinaryclonetree.h
+  src/clonetree.h
+  src/binarytree.h
+  src/basetree.h
+  src/ilpsolver.h
+  src/migrationgraph.h
+)
+
+set( pmh_src
+  src/pmh.cpp
+  src/utils.cpp
+  src/clonetree.cpp
+  src/nonbinaryclonetree.cpp
+  src/binarytree.cpp
+  src/basetree.cpp
+  src/ilpsolver.cpp
+  src/migrationgraph.cpp
+  src/utils.h
+  src/nonbinaryclonetree.h
+  src/clonetree.h
+  src/binarytree.h
+  src/basetree.h
+  src/ilpsolver.h
+  src/migrationgraph.h
+)
+
+set( pmh_pr_hdr
   src/utils.h
   src/nonbinaryclonetree.h
   src/clonetree.h
@@ -36,8 +64,8 @@ set( solve_ctb_hdr
   src/migrationgraph.h
 )
 
-set( solve_ctb_src
-  src/solvemain.cpp
+set( pmh_pr_src
+  src/pmh_pr.cpp
   src/utils.cpp
   src/clonetree.cpp
   src/nonbinaryclonetree.cpp
@@ -56,21 +84,20 @@ set( solve_ctb_src
   src/migrationgraph.h
 )
 
-set( solve_ectb_hdr
+set( pmh_cti_hdr
   src/utils.h
   src/nonbinaryclonetree.h
   src/clonetree.h
   src/binarytree.h
   src/basetree.h
   src/ilpsolver.h
-  src/ilpbinarizationsolver.h
   src/migrationgraph.h
   src/frequencymatrix.h
   src/gabowmyers.h
 )
 
-set( solve_ectb_src
-  src/solveectbmain.cpp
+set( pmh_cti_src
+  src/pmh_cti.cpp
   src/utils.cpp
   src/clonetree.cpp
   src/nonbinaryclonetree.cpp
@@ -78,7 +105,6 @@ set( solve_ectb_src
   src/basetree.cpp
   src/ilpsolver.cpp
   src/ilpsolverext.cpp
-  src/ilpbinarizationsolver.cpp
   src/migrationgraph.cpp
   src/frequencymatrix.cpp
   src/gabowmyers.cpp
@@ -89,7 +115,6 @@ set( solve_ectb_src
   src/basetree.h
   src/ilpsolverext.h
   src/ilpsolver.h
-  src/ilpbinarizationsolver.h
   src/migrationgraph.h
   src/gabowmyers.h
 )
@@ -134,7 +159,7 @@ set( visualizemigrationgraph_src
   src/visualizemigrationgraphmain.cpp
 )
 
-set( sankofflabeling_hdr
+set( pmh_sankoff_hdr
   src/basetree.h
   src/binarytree.h
   src/utils.h
@@ -147,14 +172,14 @@ set( sankofflabeling_hdr
   src/migrationgraph.h
 )
 
-set( sankofflabeling_src
+set( pmh_sankoff_src
   src/basetree.cpp
   src/binarytree.cpp
   src/utils.cpp
   src/mpbase.cpp
   src/sankoff.cpp
   src/charactertree.cpp
-  src/sankofflabelingmain.cpp
+  src/pmh_sankoff.cpp
   src/nonbinaryclonetree.cpp
   src/sankofflabeling.cpp
   src/clonetree.cpp
@@ -179,7 +204,7 @@ option(BUILD_DOC "Build documentation" ON)
       # note the option ALL which allows to build the docs together with the application
       add_custom_target( doc_doxygen ALL
           COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
-          WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+          WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
           COMMENT "Generating API documentation with Doxygen"
           VERBATIM )
   else (DOXYGEN_FOUND) 
@@ -219,16 +244,20 @@ find_package( GUROBI REQUIRED )
 
 set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG" )
 
-add_executable( pmh_sankoff ${sankofflabeling_src} ${sankofflabeling_hdr} )
+add_executable( pmh_sankoff ${pmh_sankoff_src} ${pmh_sankoff_hdr} )
 target_link_libraries( pmh_sankoff ${CommonLibs} )
 
-add_executable( solve_ctb ${solve_ctb_src} ${solve_ctb_hdr} )
-target_include_directories( solve_ctb PUBLIC "${LIBLEMON_ROOT}/include" "src" ${Boost_INCLUDE_DIRS} ${GUROBI_INCLUDE_DIR} )
-target_link_libraries( solve_ctb ${CommonLibs} ${GUROBI_LIBRARIES} )
+add_executable( pmh ${pmh_src} ${pmh_hdr} )
+target_include_directories( pmh PUBLIC "${LIBLEMON_ROOT}/include" "src" ${Boost_INCLUDE_DIRS} ${GUROBI_INCLUDE_DIR} )
+target_link_libraries( pmh ${CommonLibs} ${GUROBI_LIBRARIES} )
 
-add_executable( solve_ectb ${solve_ectb_src} ${solve_ectb_hdr} )
-target_include_directories( solve_ectb PUBLIC "${LIBLEMON_ROOT}/include" "src" ${Boost_INCLUDE_DIRS} ${GUROBI_INCLUDE_DIR} )
-target_link_libraries( solve_ectb ${CommonLibs} ${GUROBI_LIBRARIES} )
+add_executable( pmh_pr ${pmh_pr_src} ${pmh_pr_hdr} )
+target_include_directories( pmh_pr PUBLIC "${LIBLEMON_ROOT}/include" "src" ${Boost_INCLUDE_DIRS} ${GUROBI_INCLUDE_DIR} )
+target_link_libraries( pmh_pr ${CommonLibs} ${GUROBI_LIBRARIES} )
+
+add_executable( pmh_cti ${pmh_cti_src} ${pmh_cti_hdr} )
+target_include_directories( pmh_cti PUBLIC "${LIBLEMON_ROOT}/include" "src" ${Boost_INCLUDE_DIRS} ${GUROBI_INCLUDE_DIR} )
+target_link_libraries( pmh_cti ${CommonLibs} ${GUROBI_LIBRARIES} )
 
 add_executable( generatemigrationtrees ${generatemigrationtrees_src} ${generatemigrationtrees_hdr} )
 target_link_libraries( generatemigrationtrees ${CommonLibs} )

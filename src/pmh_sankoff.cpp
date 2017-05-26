@@ -12,58 +12,15 @@
 #include <fstream>
 #include <boost/algorithm/string.hpp>
 
-void runSankoff(const NonBinaryCloneTree& T,
-                const std::string& primary,
-                const std::string& outputPrefix,
-                const StringToIntMap& colorMap)
-{
-  SankoffLabeling sankoff(T, primary);
-  
-  sankoff.run();
-  const int nrLabelings = sankoff.getNrLabelings();
-  std::cerr << "Found " << nrLabelings << " maximum parsimony labelings with primary '" << primary << "'" << std::endl;
-  
-  SankoffLabeling::IntTripleToIntMap result = sankoff.classify();
-  for (const auto& kv : result)
-  {
-    std::cerr << "Found " << kv.second << " labelings with " << kv.first.first << " comigrations, " << kv.first.second.first << " seeding sites and " << MigrationGraph::getPatternString(static_cast<MigrationGraph::Pattern>(kv.first.second.second)) << std::endl;
-  }
-  
-  char buf[1024];
-  for (int solIdx = 0; solIdx < nrLabelings; ++solIdx)
-  {
-    MigrationGraph G = sankoff.getMigrationGraph(solIdx);
-    std::cerr << "Labeling " << solIdx << ": "
-      << G.getNrMigrations() << " migrations, "
-      << G.getNrComigrations(T, sankoff.getLabeling(solIdx)) << " comigrations, "
-      << G.getNrSeedingSamples() << " seeding sites and "
-      << G.getPatternString(G.getPattern(T, sankoff.getLabeling(solIdx)));
-    std::cerr << std::endl;
-    
-    if (!outputPrefix.empty())
-    {
-      snprintf(buf, 1024, "%s/T-%s-%d.dot", outputPrefix.c_str(), primary.c_str(), solIdx);
-      std::ofstream outT(buf);
-      T.writeDOT(outT, sankoff.getLabeling(solIdx), colorMap);
-      outT.close();
-      
-      snprintf(buf, 1024, "%s/G-%s-%d.dot", outputPrefix.c_str(), primary.c_str(), solIdx);
-      std::ofstream outG(buf);
-      G.writeDOT(outG, colorMap);
-      outG.close();
-    }
-  }
-}
-
 int main(int argc, char** argv)
 {
   std::string primarySample;
-  std::string outputPrefix;
+  std::string outputDirectory;
   std::string filenameColorMap;
   
   lemon::ArgParser ap(argc, argv);
-  ap.refOption("p", "Primary sample", primarySample)
-    .refOption("o", "Output prefix", outputPrefix)
+  ap.refOption("p", "Primary sample (if omitted, every sample is considered iteratively as the primary)", primarySample)
+    .refOption("o", "Output prefix", outputDirectory)
     .refOption("c", "Color map file", filenameColorMap)
     .other("T", "Clone tree")
     .other("leaf_labeling", "Leaf labeling");
@@ -128,7 +85,7 @@ int main(int argc, char** argv)
   {
     for (const std::string& primary : T.getSamples())
     {
-      runSankoff(T, primary, outputPrefix, colorMap);
+      SankoffLabeling::run(T, primary, outputDirectory, colorMap);
     }
   }
   else
@@ -141,7 +98,7 @@ int main(int argc, char** argv)
       }
       else
       {
-        runSankoff(T, primary, outputPrefix, colorMap);
+        SankoffLabeling::run(T, primary, outputDirectory, colorMap);
       }
     }
   }
