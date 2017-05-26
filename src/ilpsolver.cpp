@@ -9,12 +9,12 @@
 
 IlpSolver::IlpSolver(const NonBinaryCloneTree& T,
                      const std::string& primary,
-                     Mode mode,
+                     MigrationGraph::Pattern pattern,
                      const std::string& gurobiLogFilename,
                      const StringPairList& forcedComigrations)
   : _T(T)
   , _primary(primary)
-  , _mode(mode)
+  , _pattern(pattern)
   , _forcedComigrations(forcedComigrations)
   , _indexToArc()
   , _pArcToIndex(NULL)
@@ -158,14 +158,6 @@ void IlpSolver::initVariables()
     _d[s] = _model.addVar(0, 1, 0, GRB_CONTINUOUS, buf);
   }
   
-//  _e = VarArray(nrSamples);
-//  for (int s = 0; s < nrSamples; ++s)
-//  {
-//    snprintf(buf, 1024, "e_%s",
-//             _indexToSample[s].c_str());
-//    _e[s] = _model.addVar(0, 1, 0, GRB_BINARY, buf);
-//  }
-  
   _model.update();
 }
 
@@ -259,25 +251,6 @@ void IlpSolver::initConstraints()
     }
   }
   
-//  for (int s = 0; s < nrSamples; ++s)
-//  {
-//    for (int t = 0; t < nrSamples; ++t)
-//    {
-//      sum += _c[t][s];
-//    }
-//    
-//    if (s == _primaryIndex)
-//    {
-//      _model.addConstr(_e[s] >= sum);
-//    }
-//    else
-//    {
-//      _model.addConstr(_e[s] >= sum - 1);
-//    }
-//    
-//    sum.clear();
-//  }
-  
   if (nrSamples > 1)
   {
     _model.addConstr(_d[_primaryIndex] == 1);
@@ -291,7 +264,7 @@ void IlpSolver::initConstraints()
     }
   }
   
-  if (_mode != RESEEDING)
+  if (_pattern != MigrationGraph::R)
   {
     for (OutArcIt a_ij(T, root()); a_ij != lemon::INVALID; ++a_ij)
     {
@@ -316,15 +289,15 @@ void IlpSolver::initConstraints()
     }
   }
   
-  if (_mode == SINGLE_SOURCE_SEEDING || _mode == PARALLEL_SINGLE_SOURCE_SEEDING)
+  if (_pattern == MigrationGraph::S || _pattern == MigrationGraph::PS)
   {
     initSingleSourceSeedingConstraints();
-    if (_mode == PARALLEL_SINGLE_SOURCE_SEEDING)
+    if (_pattern == MigrationGraph::PS)
     {
       initParallelSingleSourceSeedingConstraints();
     }
   }
-  else if (_mode == MULTI_SOURCE_SEEDING)
+  else if (_pattern == MigrationGraph::M)
   {
     initMultiSourceSeedingConstraints();
   }
@@ -531,8 +504,8 @@ void IlpSolver::initObjective(double upperBound)
 
 void IlpSolver::initForcedComigrations()
 {
-  const int nrSamples = _indexToSample.size();
-  DoubleMatrix map(nrSamples, DoubleVector(nrSamples, false));
+//  const int nrSamples = _indexToSample.size();
+//  DoubleMatrix map(nrSamples, DoubleVector(nrSamples, false));
   
   for (const StringPair& st : _forcedComigrations)
   {
@@ -543,19 +516,19 @@ void IlpSolver::initForcedComigrations()
     int t = _sampleToIndex[st.second];
     
     _model.addConstr(_c[s][t] == 1);
-    map[s][t] = true;
+//    map[s][t] = true;
   }
   
-  for (int s = 0; s < nrSamples; ++s)
-  {
-    for (int t = 0; t < nrSamples; ++t)
-    {
-      if (!map[s][t])
-      {
-        _model.addConstr(_c[s][t] == 0);
-      }
-    }
-  }
+//  for (int s = 0; s < nrSamples; ++s)
+//  {
+//    for (int t = 0; t < nrSamples; ++t)
+//    {
+//      if (!map[s][t])
+//      {
+//        _model.addConstr(_c[s][t] == 0);
+//      }
+//    }
+//  }
 }
 
 void IlpSolver::processSolution()
@@ -616,7 +589,7 @@ bool IlpSolver::solve(int nrThreads, int timeLimit)
     }
     else if (status == GRB_INFEASIBLE)
     {
-      std::cerr << "Model is infeasible" << std::endl;
+//      std::cerr << "Model is infeasible" << std::endl;
 //      _model.computeIIS();
 //      _model.write("/tmp/model_IIS.ilp");
       return false;

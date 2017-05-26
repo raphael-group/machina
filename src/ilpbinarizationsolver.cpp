@@ -9,10 +9,10 @@
 
 IlpBinarizationSolver::IlpBinarizationSolver(const NonBinaryCloneTree& T,
                                              const std::string& primary,
-                                             Mode mode,
+                                             MigrationGraph::Pattern pattern,
                                              const std::string& gurobiLogFilename,
                                              const StringPairList& forcedComigrations)
-  : IlpSolver(T, primary, mode, gurobiLogFilename, forcedComigrations)
+  : IlpSolver(T, primary, pattern, gurobiLogFilename, forcedComigrations)
   , _G()
   , _label(_G)
   , _TtoG(_T.tree(), lemon::INVALID)

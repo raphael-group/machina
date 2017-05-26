@@ -1,6 +1,6 @@
 cmake_minimum_required( VERSION 2.8 )
 
-project( FINCH )
+project( mFINCH )
 
 set( CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR} ${CMAKE_MODULE_PATH} )
 
@@ -79,7 +79,6 @@ set( solve_ectb_src
   src/ilpsolver.cpp
   src/ilpsolverext.cpp
   src/ilpbinarizationsolver.cpp
-  src/ilpbinarizationsolverext.cpp
   src/migrationgraph.cpp
   src/frequencymatrix.cpp
   src/gabowmyers.cpp
@@ -91,7 +90,6 @@ set( solve_ectb_src
   src/ilpsolverext.h
   src/ilpsolver.h
   src/ilpbinarizationsolver.h
-  src/ilpbinarizationsolverext.h
   src/migrationgraph.h
   src/gabowmyers.h
 )
@@ -221,8 +219,8 @@ find_package( GUROBI REQUIRED )
 
 set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG" )
 
-add_executable( sankofflabeling ${sankofflabeling_src} ${sankofflabeling_hdr} )
-target_link_libraries( sankofflabeling ${CommonLibs} )
+add_executable( pmh_sankoff ${sankofflabeling_src} ${sankofflabeling_hdr} )
+target_link_libraries( pmh_sankoff ${CommonLibs} )
 
 add_executable( solve_ctb ${solve_ctb_src} ${solve_ctb_hdr} )
 target_include_directories( solve_ctb PUBLIC "${LIBLEMON_ROOT}/include" "src" ${Boost_INCLUDE_DIRS} ${GUROBI_INCLUDE_DIR} )
@@ -235,8 +233,8 @@ target_link_libraries( solve_ectb ${CommonLibs} ${GUROBI_LIBRARIES} )
 add_executable( generatemigrationtrees ${generatemigrationtrees_src} ${generatemigrationtrees_hdr} )
 target_link_libraries( generatemigrationtrees ${CommonLibs} )
 
-add_executable( visualizemigrationgraph ${visualizemigrationgraph_src} ${visualizemigrationgraph_hdr} )
+add_executable( visualizemigrationgraph EXCLUDE_FROM_ALL ${visualizemigrationgraph_src} ${visualizemigrationgraph_hdr} )
 target_link_libraries( visualizemigrationgraph ${CommonLibs} )
 
-add_executable( visualizeclonetree ${visualizeclonetree_src} ${visualizeclonetree_hdr} )
+add_executable( visualizeclonetree EXCLUDE_FROM_ALL ${visualizeclonetree_src} ${visualizeclonetree_hdr} )
 target_link_libraries( visualizeclonetree ${CommonLibs} )

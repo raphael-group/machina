@@ -12,47 +12,10 @@
 #include <fstream>
 #include <lemon/arg_parser.h>
 #include "ilpsolver.h"
-#include "ilpbinarizationsolverext.h"
 #include "ilpsolverext.h"
 #include "migrationgraph.h"
 #include <boost/algorithm/string.hpp>
 #include <lemon/time_measure.h>
-
-std::string solverModeFullString(IlpSolverExt::Mode mode)
-{
-  switch (mode)
-  {
-    case IlpSolver::SINGLE_SOURCE_SEEDING:
-      return "single-site seeding";
-    case IlpSolver::MULTI_SOURCE_SEEDING:
-      return "multi-site seeding";
-    case IlpSolver::RESEEDING:
-      return "reseeding";
-    case IlpSolver::PARALLEL_SINGLE_SOURCE_SEEDING:
-      return "parallel single-site seeding";
-    default:
-      assert(false);
-      return "ERROR";
-  }
-}
-
-std::string solverModeString(IlpSolverExt::Mode mode)
-{
-  switch (mode)
-  {
-    case IlpSolver::SINGLE_SOURCE_SEEDING:
-      return "SSS";
-    case IlpSolver::MULTI_SOURCE_SEEDING:
-      return "MSS";
-    case IlpSolver::RESEEDING:
-      return "RS";
-    case IlpSolver::PARALLEL_SINGLE_SOURCE_SEEDING:
-      return "PSSS";
-    default:
-      assert(false);
-      return "ERR";
-  }
-}
 
 std::string binarizationFullString(bool binarization)
 {
@@ -83,8 +46,7 @@ void runSolver(const NonBinaryCloneTree& T,
                const std::string& primary,
                const std::string& outputPrefix,
                const StringToIntMap& colorMap,
-               IlpSolverExt::Mode mode,
-               bool binarization,
+               MigrationGraph::Pattern pattern,
                int nrThreads,
                bool outputILP,
                bool outputSearchGraph,
@@ -95,200 +57,115 @@ void runSolver(const NonBinaryCloneTree& T,
   StringSet mets = F.getSamples();
   mets.erase(primary);
 
-//  MigrationTreeList listBarS;
-//  MigrationTree::enumerate(primary, mets, listBarS);
-//  
-//  int index = 0;
-//  for (MigrationTree& barS : listBarS)
-//  {
-//    ++index;
+  char buf[1024];
+  std::string filenameGurobiLog;
+  std::string filenameSearchGraph;
   
-    char buf[1024];
-    std::string filenameGurobiLog;
-    std::string filenameSearchGraph;
+  if (!outputPrefix.empty())
+  {
+    snprintf(buf, 1024, "%s/log-%s-%s%s.txt",
+             outputPrefix.c_str(),
+             primary.c_str(),
+             MigrationGraph::getPatternString(pattern).c_str(),
+             binarizationString(true).c_str());
+    
+    filenameGurobiLog = buf;
+    
+    snprintf(buf, 1024, "%s/searchG-%s-%s%s.dot",
+             outputPrefix.c_str(),
+             primary.c_str(),
+             MigrationGraph::getPatternString(pattern).c_str(),
+             binarizationString(true).c_str());
+    
+    filenameSearchGraph = buf;
+  }
+  
+  {
+    IlpSolverExt solver(T,
+                        F,
+                        primary,
+                        pattern,
+                        filenameGurobiLog,
+                        forcedComigrations);
+    solver.init(UB);
+    
+    if (!outputPrefix.empty() && outputILP)
+    {
+      snprintf(buf, 1024, "%s/ilp-%s-%s%s.lp",
+               outputPrefix.c_str(),
+               primary.c_str(),
+               MigrationGraph::getPatternString(pattern).c_str(),
+               binarizationString(true).c_str());
+      solver.exportModel(buf);
+    }
+    
+    if (outputSearchGraph)
+    {
+      std::ofstream outSearchG(filenameSearchGraph.c_str());
+      solver.writeDOT(outSearchG, colorMap);
+      outSearchG.close();
+    }
+    
+    lemon::Timer timer;
+    if (!solver.solve(nrThreads, timelimit))
+    {
+      std::cerr << "No solution found (" << outputPrefix << ")" << std::endl;
+//        continue;
+      return;
+    }
+    
+    MigrationGraph G(solver.T(), solver.lPlus());
+    
+    std::cerr << "With primary '" << primary << "', " << MigrationGraph::getPatternLongString(pattern) << " and " << binarizationFullString(true) << ": "
+      << G.getNrMigrations() << " migrations, "
+      << G.getNrComigrations(solver.T(), solver.lPlus()) << " comigrations, "
+      << G.getNrNonUniqueParentageSamples() << " non-unique parentage sites and "
+      << G.getNrSeedingSamples() << " seeding sites";
+    if (G.hasReseeding())
+    {
+      std::cerr << " including reseeding";
+    }
+    std::cerr << ". [LB, UB] = [" << solver.LB() << ", " << solver.UB() << "]. " << timer.realTime() << " seconds (" << outputPrefix << ")" << std::endl;
     
     if (!outputPrefix.empty())
     {
-      snprintf(buf, 1024, "%s/log-%s-%s%s.txt",
+      snprintf(buf, 1024, "%s/T-%s-%s%s.dot",
                outputPrefix.c_str(),
                primary.c_str(),
-               solverModeString(mode).c_str(),
-               binarizationString(binarization).c_str());
+               MigrationGraph::getPatternString(pattern).c_str(),
+               binarizationString(true).c_str());
+      std::ofstream outT(buf);
+      solver.T().writeDOT(outT,
+                          solver.lPlus(),
+                          colorMap,
+                          solver.getF(),
+                          solver.getU());
+      outT.close();
       
-      filenameGurobiLog = buf;
-      
-      snprintf(buf, 1024, "%s/searchG-%s-%s%s.dot",
+      snprintf(buf, 1024, "%s/T-%s-%s%s-condensed.dot",
                outputPrefix.c_str(),
                primary.c_str(),
-               solverModeString(mode).c_str(),
-               binarizationString(binarization).c_str());
+               MigrationGraph::getPatternString(pattern).c_str(),
+               binarizationString(true).c_str());
+      std::ofstream outCondensedT(buf);
+      solver.T().writeDOT(outCondensedT,
+                          solver.lPlus(),
+                          colorMap,
+                          solver.getU(),
+                          solver.getCharacterLabel());
+      outCondensedT.close();
       
-      filenameSearchGraph = buf;
+      snprintf(buf, 1024, "%s/G-%s-%s%s.dot",
+               outputPrefix.c_str(),
+               primary.c_str(),
+               MigrationGraph::getPatternString(pattern).c_str(),
+               binarizationString(true).c_str());
+      
+      std::ofstream outG(buf);
+      G.writeDOT(outG, colorMap);
+      outG.close();
     }
-    
-//    StringPairList forcedComigrations = barS.getEdgeList();
-    if (!binarization)
-    {
-      IlpSolverExt solver(T,
-                          F,
-                          primary,
-                          mode,
-                          filenameGurobiLog,
-                          forcedComigrations);
-      solver.init(UB);
-      
-      if (!outputPrefix.empty() && outputILP)
-      {
-        snprintf(buf, 1024, "%s/ilp-%s-%s%s.lp",
-                 outputPrefix.c_str(),
-                 primary.c_str(),
-                 solverModeString(mode).c_str(),
-                 binarizationString(binarization).c_str());
-        solver.exportModel(buf);
-      }
-      
-      if (outputSearchGraph)
-      {
-        std::ofstream outSearchG(filenameSearchGraph.c_str());
-        solver.writeDOT(outSearchG, colorMap);
-        outSearchG.close();
-      }
-      
-      lemon::Timer timer;
-      if (!solver.solve(nrThreads, timelimit))
-      {
-        std::cerr << "No solution found (" << outputPrefix << ")" << std::endl;
-        return;
-      }
-
-      MigrationGraph G(solver.T(), solver.lPlus());
-      
-      std::cerr << "With primary '" << primary << "', "
-        << solverModeFullString(mode) << " and " << binarizationFullString(binarization) << ": "
-        << G.getNrMigrations() << " migrations, "
-        << G.getNrComigrations(solver.T(), solver.lPlus()) << " comigrations, "
-        << G.getNrNonUniqueParentageSamples() << " non-unique parentage sites and "
-        << G.getNrSeedingSamples() << " seeding sites";
-      if (G.hasReseeding())
-      {
-        std::cerr << " including reseeding";
-      }
-      std::cerr << ". [LB, UB] = [" << solver.LB() << ", " << solver.UB() << "]. " << timer.realTime() << " seconds (" << outputPrefix << ")" << std::endl;
-      
-      if (!outputPrefix.empty())
-      {
-        snprintf(buf, 1024, "%s/T-%s-%s%s.dot",
-                 outputPrefix.c_str(),
-                 primary.c_str(),
-                 solverModeString(mode).c_str(),
-                 binarizationString(binarization).c_str());
-        std::ofstream outT(buf);
-        solver.T().writeDOT(outT,
-                            solver.lPlus(),
-                            colorMap,
-                            solver.getF(),
-                            solver.getU());
-        outT.close();
-        
-        snprintf(buf, 1024, "%s/G-%s-%s%s.dot",
-                 outputPrefix.c_str(),
-                 primary.c_str(),
-                 solverModeString(mode).c_str(),
-                 binarizationString(binarization).c_str());
-        
-        std::ofstream outG(buf);
-        G.writeDOT(outG, colorMap);
-        outG.close();
-      }
-    }
-    else
-    {
-      IlpBinarizationSolverExt solver(T,
-                                      F,
-                                      primary,
-                                      mode,
-                                      filenameGurobiLog,
-                                      forcedComigrations);
-      solver.init(UB);
-      
-      if (!outputPrefix.empty() && outputILP)
-      {
-        snprintf(buf, 1024, "%s/ilp-%s-%s%s.lp",
-                 outputPrefix.c_str(),
-                 primary.c_str(),
-                 solverModeString(mode).c_str(),
-                 binarizationString(binarization).c_str());
-        solver.exportModel(buf);
-      }
-      
-      if (outputSearchGraph)
-      {
-        std::ofstream outSearchG(filenameSearchGraph.c_str());
-        solver.writeDOT(outSearchG, colorMap);
-        outSearchG.close();
-      }
-      
-      lemon::Timer timer;
-      if (!solver.solve(nrThreads, timelimit))
-      {
-        std::cerr << "No solution found (" << outputPrefix << ")" << std::endl;
-//        continue;
-        return;
-      }
-      
-      MigrationGraph G(solver.T(), solver.lPlus());
-      
-      std::cerr << "With primary '" << primary << "', " << solverModeFullString(mode) << " and " << binarizationFullString(binarization) << ": "
-        << G.getNrMigrations() << " migrations, "
-        << G.getNrComigrations(solver.T(), solver.lPlus()) << " comigrations, "
-        << G.getNrNonUniqueParentageSamples() << " non-unique parentage sites and "
-        << G.getNrSeedingSamples() << " seeding sites";
-      if (G.hasReseeding())
-      {
-        std::cerr << " including reseeding";
-      }
-      std::cerr << ". [LB, UB] = [" << solver.LB() << ", " << solver.UB() << "]. " << timer.realTime() << " seconds (" << outputPrefix << ")" << std::endl;
-      
-      if (!outputPrefix.empty())
-      {
-        snprintf(buf, 1024, "%s/T-%s-%s%s.dot",
-                 outputPrefix.c_str(),
-                 primary.c_str(),
-                 solverModeString(mode).c_str(),
-                 binarizationString(binarization).c_str());
-        std::ofstream outT(buf);
-        solver.T().writeDOT(outT,
-                            solver.lPlus(),
-                            colorMap,
-                            solver.getF(),
-                            solver.getU());
-        outT.close();
-        
-        snprintf(buf, 1024, "%s/T-%s-%s%s-condensed.dot",
-                 outputPrefix.c_str(),
-                 primary.c_str(),
-                 solverModeString(mode).c_str(),
-                 binarizationString(binarization).c_str());
-        std::ofstream outCondensedT(buf);
-        solver.T().writeDOT(outCondensedT,
-                            solver.lPlus(),
-                            colorMap,
-                            solver.getU(),
-                            solver.getCharacterLabel());
-        outCondensedT.close();
-        
-        snprintf(buf, 1024, "%s/G-%s-%s%s.dot",
-                 outputPrefix.c_str(),
-                 primary.c_str(),
-                 solverModeString(mode).c_str(),
-                 binarizationString(binarization).c_str());
-        
-        std::ofstream outG(buf);
-        G.writeDOT(outG, colorMap);
-        outG.close();
-      }
-    }
-//  }
+  }
 }
 
 bool parseSampleTree(const std::string& sampleTreeFile,
@@ -351,9 +228,8 @@ int main(int argc, char** argv)
   std::string filenameOutCloneTree;
   std::string outputPrefix;
   std::string primary;
-  int mode = -1;
+  int pattern = -1;
   int nrThreads = -1;
-  bool binarization = false;
   int timeLimit = -1;
   double UB = -1;
   std::string sampleTreeFile;
@@ -365,13 +241,12 @@ int main(int argc, char** argv)
     .refOption("g", "Output search graph", outputSearchGraph)
     .refOption("log", "Gurobi logging", gurobiLog)
     .refOption("t", "Number of threads (default: -1)", nrThreads)
-    .refOption("b", "Binarization", binarization)
     .refOption("o", "Output prefix" , outputPrefix)
     .refOption("m", "Migration pattern:\n"\
                     "       0 : Single-site parallel seeding\n"\
                     "       1 : Single-site seeding\n" \
                     "       2 : Multi-site seeding\n" \
-                    "       3 : Reseeding", mode)
+                    "       3 : Reseeding", pattern)
     .refOption("s", "Fix comigrations according to provided sample tree", sampleTreeFile)
     .refOption("e", "Export ILP", outputILP)
     .refOption("p", "Primary", primary)
@@ -441,10 +316,10 @@ int main(int argc, char** argv)
   }
   if (!forcedComigrations.empty())
   {
-    mode = 1;
+    pattern = 1;
   }
 
-  if (mode != -1)
+  if (pattern != -1)
   {
     if (primaryVector.empty())
     {
@@ -455,8 +330,7 @@ int main(int argc, char** argv)
                   primary,
                   outputPrefix,
                   colorMap,
-                  static_cast<IlpSolverExt::Mode>(mode),
-                  binarization,
+                  static_cast<MigrationGraph::Pattern>(pattern),
                   nrThreads,
                   outputILP,
                   outputSearchGraph,
@@ -478,8 +352,7 @@ int main(int argc, char** argv)
                     primary,
                     outputPrefix,
                     colorMap,
-                    static_cast<IlpSolverExt::Mode>(mode),
-                    binarization,
+                    static_cast<MigrationGraph::Pattern>(pattern),
                     nrThreads,
                     outputILP,
                     outputSearchGraph,
@@ -494,26 +367,14 @@ int main(int argc, char** argv)
     {
       for (const std::string& primary : T.getSamples())
       {
-        for (int mode = 0; mode < IlpSolver::_nrModes; ++mode)
+        for (int pattern = 0; pattern < MigrationGraph::_nrPatterns; ++pattern)
         {
           runSolver(T,
                     F,
                     primary,
                     outputPrefix,
                     colorMap,
-                    static_cast<IlpSolverExt::Mode>(mode),
-                    false,
-                    nrThreads,
-                    outputILP,
-                    outputSearchGraph,
-                    timeLimit, UB, forcedComigrations);
-          runSolver(T,
-                    F,
-                    primary,
-                    outputPrefix,
-                    colorMap,
-                    static_cast<IlpSolverExt::Mode>(mode),
-                    true,
+                    static_cast<MigrationGraph::Pattern>(pattern),
                     nrThreads,
                     outputILP,
                     outputSearchGraph,
@@ -525,7 +386,7 @@ int main(int argc, char** argv)
     {
       for (const std::string& primary : primaryVector)
       {
-        for (int mode = 0; mode < IlpSolver::_nrModes; ++mode)
+        for (int pattern = 0; pattern < MigrationGraph::_nrPatterns; ++pattern)
         {
           if (!F.isSample(primary))
           {
@@ -540,19 +401,7 @@ int main(int argc, char** argv)
                       primary,
                       outputPrefix,
                       colorMap,
-                      static_cast<IlpSolverExt::Mode>(mode),
-                      false,
-                      nrThreads,
-                      outputILP,
-                      outputSearchGraph,
-                      timeLimit, UB, forcedComigrations);
-            runSolver(T,
-                      F,
-                      primary,
-                      outputPrefix,
-                      colorMap,
-                      static_cast<IlpSolverExt::Mode>(mode),
-                      true,
+                      static_cast<MigrationGraph::Pattern>(pattern),
                       nrThreads,
                       outputILP,
                       outputSearchGraph,

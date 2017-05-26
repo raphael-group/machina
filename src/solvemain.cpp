@@ -16,42 +16,6 @@
 #include <boost/algorithm/string.hpp>
 #include <lemon/time_measure.h>
 
-std::string solverModeFullString(IlpSolver::Mode mode)
-{
-  switch (mode)
-  {
-    case IlpSolver::SINGLE_SOURCE_SEEDING:
-      return "single-site seeding";
-    case IlpSolver::MULTI_SOURCE_SEEDING:
-      return "multi-site seeding";
-    case IlpSolver::RESEEDING:
-      return "reseeding";
-    case IlpSolver::PARALLEL_SINGLE_SOURCE_SEEDING:
-      return "parallel single-site seeding";
-    default:
-      assert(false);
-      return "ERROR";
-  }
-}
-
-std::string solverModeString(IlpSolver::Mode mode)
-{
-  switch (mode)
-  {
-    case IlpSolver::SINGLE_SOURCE_SEEDING:
-      return "SSS";
-    case IlpSolver::MULTI_SOURCE_SEEDING:
-      return "MSS";
-    case IlpSolver::RESEEDING:
-      return "RS";
-    case IlpSolver::PARALLEL_SINGLE_SOURCE_SEEDING:
-      return "PSSS";
-    default:
-      assert(false);
-      return "ERR";
-  }
-}
-
 std::string binarizationFullString(bool binarization)
 {
   if (binarization)
@@ -80,7 +44,7 @@ void runSolver(const NonBinaryCloneTree& T,
                const std::string& primary,
                const std::string& outputPrefix,
                const StringToIntMap& colorMap,
-               IlpSolver::Mode mode,
+               MigrationGraph::Pattern pattern,
                bool binarization,
                int nrThreads,
                bool outputILP,
@@ -98,7 +62,7 @@ void runSolver(const NonBinaryCloneTree& T,
     snprintf(buf, 1024, "%s/log-%s-%s%s.txt",
              outputPrefix.c_str(),
              primary.c_str(),
-             solverModeString(mode).c_str(),
+             MigrationGraph::getPatternString(pattern).c_str(),
              binarizationString(binarization).c_str());
     
     filenameGurobiLog = buf;
@@ -106,7 +70,7 @@ void runSolver(const NonBinaryCloneTree& T,
     snprintf(buf, 1024, "%s/searchG-%s-%s%s.dot",
              outputPrefix.c_str(),
              primary.c_str(),
-             solverModeString(mode).c_str(),
+             MigrationGraph::getPatternString(pattern).c_str(),
              binarizationString(binarization).c_str());
     
     filenameSearchGraph = buf;
@@ -116,7 +80,7 @@ void runSolver(const NonBinaryCloneTree& T,
   {
     IlpSolver solver(T,
                      primary,
-                     mode,
+                     pattern,
                      filenameGurobiLog,
                      forcedComigrations);
     solver.init(UB);
@@ -126,7 +90,7 @@ void runSolver(const NonBinaryCloneTree& T,
       snprintf(buf, 1024, "%s/ilp-%s-%s%s.ilp",
                outputPrefix.c_str(),
                primary.c_str(),
-               solverModeString(mode).c_str(),
+               MigrationGraph::getPatternString(pattern).c_str(),
                binarizationString(binarization).c_str());
       solver.exportModel(buf);
     }
@@ -139,7 +103,9 @@ void runSolver(const NonBinaryCloneTree& T,
     }
     MigrationGraph G(T, solver.lPlus());
     
-    std::cerr << "With primary '" << primary << "', " << solverModeFullString(mode) << " and " << binarizationFullString(binarization) << ": "
+    std::cerr << "With primary '" << primary << "', "
+      << MigrationGraph::getPatternLongString(pattern)
+      << " and " << binarizationFullString(binarization) << ": "
       << G.getNrMigrations() << " migrations, "
       << G.getNrComigrations(T, solver.lPlus()) << " comigrations, "
       << G.getNrNonUniqueParentageSamples() << " non-unique parentage sites and "
@@ -148,14 +114,15 @@ void runSolver(const NonBinaryCloneTree& T,
     {
       std::cerr << " including reseeding";
     }
-    std::cerr << ". [LB, UB] = [" << solver.LB() << ", " << solver.UB() << "]. " << timer.realTime() << " seconds" << std::endl;
+    std::cerr << ". [LB, UB] = [" << solver.LB() << ", " << solver.UB() << "]. "
+              << timer.realTime() << " seconds" << std::endl;
     
     if (!outputPrefix.empty())
     {
       snprintf(buf, 1024, "%s/T-%s-%s%s.dot",
                outputPrefix.c_str(),
                primary.c_str(),
-               solverModeString(mode).c_str(),
+               MigrationGraph::getPatternString(pattern).c_str(),
                binarizationString(binarization).c_str());
       std::ofstream outT(buf);
       T.writeDOT(outT, solver.lPlus(), colorMap);
@@ -164,7 +131,7 @@ void runSolver(const NonBinaryCloneTree& T,
       snprintf(buf, 1024, "%s/G-%s-%s%s.dot",
                outputPrefix.c_str(),
                primary.c_str(),
-               solverModeString(mode).c_str(),
+               MigrationGraph::getPatternString(pattern).c_str(),
                binarizationString(binarization).c_str());
       
       std::ofstream outG(buf);
@@ -178,7 +145,7 @@ void runSolver(const NonBinaryCloneTree& T,
     TT.mergeSameSampleSiblingLeaves();
     IlpBinarizationSolver solver(TT,
                                  primary,
-                                 mode,
+                                 pattern,
                                  filenameGurobiLog,
                                  forcedComigrations);
     solver.init(UB);
@@ -195,7 +162,7 @@ void runSolver(const NonBinaryCloneTree& T,
       snprintf(buf, 1024, "%s/ilp-%s-%s%s.ilp",
                outputPrefix.c_str(),
                primary.c_str(),
-               solverModeString(mode).c_str(),
+               MigrationGraph::getPatternString(pattern).c_str(),
                binarizationString(binarization).c_str());
       solver.exportModel(buf);
     }
@@ -208,7 +175,9 @@ void runSolver(const NonBinaryCloneTree& T,
     }
     MigrationGraph G(solver.getCloneTree(), solver.lPlus());
     
-    std::cerr << "With primary '" << primary << "', " << solverModeFullString(mode) << " and " << binarizationFullString(binarization) << ": "
+    std::cerr << "With primary '" << primary << "', "
+      << MigrationGraph::getPatternLongString(pattern) << " and "
+      << binarizationFullString(binarization) << ": "
       << G.getNrMigrations() << " migrations, "
       << G.getNrComigrations(solver.getCloneTree(), solver.lPlus()) << " comigrations, "
       << G.getNrNonUniqueParentageSamples() << " non-unique parentage sites and "
@@ -217,14 +186,15 @@ void runSolver(const NonBinaryCloneTree& T,
     {
       std::cerr << " including reseeding";
     }
-    std::cerr << ". [LB, UB] = [" << solver.LB() << ", " << solver.UB() << "]. " << timer.realTime() << " seconds" << std::endl;
+    std::cerr << ". [LB, UB] = [" << solver.LB() << ", " << solver.UB() << "]. "
+      << timer.realTime() << " seconds" << std::endl;
     
     if (!outputPrefix.empty())
     {
       snprintf(buf, 1024, "%s/T-%s-%s%s.dot",
                outputPrefix.c_str(),
                primary.c_str(),
-               solverModeString(mode).c_str(),
+               MigrationGraph::getPatternString(pattern).c_str(),
                binarizationString(binarization).c_str());
       std::ofstream outT(buf);
       solver.getCloneTree().writeDOT(outT, solver.lPlus(), colorMap);
@@ -233,7 +203,7 @@ void runSolver(const NonBinaryCloneTree& T,
       snprintf(buf, 1024, "%s/G-%s-%s%s.dot",
                outputPrefix.c_str(),
                primary.c_str(),
-               solverModeString(mode).c_str(),
+               MigrationGraph::getPatternString(pattern).c_str(),
                binarizationString(binarization).c_str());
       
       std::ofstream outG(buf);
@@ -269,17 +239,20 @@ bool parseSampleTree(const std::string& sampleTreeFile,
       
       if (s.size() < 2)
       {
-        std::cerr << "Line " << idx << " is invalid in '" << sampleTreeFile << "'" << std::endl;
+        std::cerr << "Line " << idx << " is invalid in '" << sampleTreeFile
+          << "'" << std::endl;
         return false;
       }
       if (samples.count(s[0]) != 1)
       {
-        std::cerr << "Line " << idx << " is invalid in '" << sampleTreeFile << "'. Sample '" << s[0] << "' is incorrect." << std::endl;
+        std::cerr << "Line " << idx << " is invalid in '" << sampleTreeFile
+          << "'. Sample '" << s[0] << "' is incorrect." << std::endl;
         return false;
       }
       if (samples.count(s[1]) != 1)
       {
-        std::cerr << "Line " << idx << " is invalid in '" << sampleTreeFile << "'. Sample '" << s[1] << "' is incorrect." << std::endl;
+        std::cerr << "Line " << idx << " is invalid in '" << sampleTreeFile
+          << "'. Sample '" << s[1] << "' is incorrect." << std::endl;
         return false;
       }
       forcedComigrations.push_back(StringPair(s[0], s[1]));
@@ -301,7 +274,7 @@ int main(int argc, char** argv)
   std::string filenameOutCloneTree;
   std::string outputPrefix;
   std::string primary;
-  int mode = -1;
+  int pattern = -1;
   int nrThreads = -1;
   bool binarization = false;
   int timeLimit = -1;
@@ -321,7 +294,7 @@ int main(int argc, char** argv)
                     "       0 : Single-site parallel seeding"\
                     "       1 : Single-site seeding\n" \
                     "       2 : Multi-site seeding\n" \
-                    "       3 : Reseeding", mode)
+                    "       3 : Reseeding", pattern)
     .refOption("s", "Fix comigrations according to provided sample tree", sampleTreeFile)
     .refOption("e", "Export ILP", outputILP)
     .refOption("p", "Primary", primary)
@@ -354,7 +327,8 @@ int main(int argc, char** argv)
   std::ifstream inLeafLabeling(filenameLeafLabeling.c_str());
   if (!inLeafLabeling.good())
   {
-    std::cerr << "Could not open '" << filenameLeafLabeling << "' for reading" << std::endl;
+    std::cerr << "Could not open '" << filenameLeafLabeling << "' for reading"
+      << std::endl;
     return 1;
   }
   
@@ -372,7 +346,8 @@ int main(int argc, char** argv)
     std::ifstream inColorMap(filenameColorMap.c_str());
     if (!inColorMap.good())
     {
-      std::cerr << "Could not open '" << filenameColorMap << "' for reading" << std::endl;
+      std::cerr << "Could not open '" << filenameColorMap << "' for reading"
+        << std::endl;
       return 1;
     }
     
@@ -392,10 +367,10 @@ int main(int argc, char** argv)
   }
 //  if (!forcedComigrations.empty())
 //  {
-//    mode = 1;
+//    pattern = 1;
 //  }
 
-  if (mode != -1)
+  if (pattern != -1)
   {
     if (primaryVector.empty())
     {
@@ -405,7 +380,7 @@ int main(int argc, char** argv)
                   primary,
                   outputPrefix,
                   colorMap,
-                  static_cast<IlpSolver::Mode>(mode),
+                  static_cast<MigrationGraph::Pattern>(pattern),
                   binarization,
                   nrThreads,
                   outputILP,
@@ -419,7 +394,8 @@ int main(int argc, char** argv)
       {
         if (T.getSamples().count(primary) != 1)
         {
-          std::cerr << "Warning: primary sample '" << primary << "' missing in leaf labeling. Skipping." << std::endl;
+          std::cerr << "Warning: primary sample '" << primary
+                    << "' missing in leaf labeling. Skipping." << std::endl;
         }
         else
         {
@@ -427,7 +403,7 @@ int main(int argc, char** argv)
                     primary,
                     outputPrefix,
                     colorMap,
-                    static_cast<IlpSolver::Mode>(mode),
+                    static_cast<MigrationGraph::Pattern>(pattern),
                     binarization,
                     nrThreads,
                     outputILP,
@@ -443,13 +419,13 @@ int main(int argc, char** argv)
     {
       for (const std::string& primary : T.getSamples())
       {
-        for (int mode = 0; mode < IlpSolver::_nrModes; ++mode)
+        for (int pattern = 0; pattern < MigrationGraph::_nrPatterns; ++pattern)
         {
           runSolver(T,
                     primary,
                     outputPrefix,
                     colorMap,
-                    static_cast<IlpSolver::Mode>(mode),
+                    static_cast<MigrationGraph::Pattern>(pattern),
                     false,
                     nrThreads,
                     outputILP,
@@ -459,7 +435,7 @@ int main(int argc, char** argv)
                     primary,
                     outputPrefix,
                     colorMap,
-                    static_cast<IlpSolver::Mode>(mode),
+                    static_cast<MigrationGraph::Pattern>(pattern),
                     true,
                     nrThreads,
                     outputILP,
@@ -472,11 +448,12 @@ int main(int argc, char** argv)
     {
       for (const std::string& primary : primaryVector)
       {
-        for (int mode = 0; mode < IlpSolver::_nrModes; ++mode)
+        for (int pattern = 0; pattern < MigrationGraph::_nrPatterns; ++pattern)
         {
           if (T.getSamples().count(primary) != 1)
           {
-            std::cerr << "Warning: primary sample '" << primary << "' missing in leaf labeling. Skipping." << std::endl;
+            std::cerr << "Warning: primary sample '" << primary
+                      << "' missing in leaf labeling. Skipping." << std::endl;
           }
           else
           {
@@ -484,7 +461,7 @@ int main(int argc, char** argv)
                       primary,
                       outputPrefix,
                       colorMap,
-                      static_cast<IlpSolver::Mode>(mode),
+                      static_cast<MigrationGraph::Pattern>(pattern),
                       false,
                       nrThreads,
                       outputILP,
@@ -494,7 +471,7 @@ int main(int argc, char** argv)
                       primary,
                       outputPrefix,
                       colorMap,
-                      static_cast<IlpSolver::Mode>(mode),
+                      static_cast<MigrationGraph::Pattern>(pattern),
                       true,
                       nrThreads,
                       outputILP,

@@ -10,6 +10,7 @@
 
 #include "utils.h"
 #include "nonbinaryclonetree.h"
+#include "migrationgraph.h"
 #include <gurobi_c++.h>
 
 /// This class implements an ILP for solving the Parsimonious Migration History
@@ -20,29 +21,17 @@
 class IlpSolver
 {
 public:
-  const static int _nrModes = 4;
-  enum Mode {
-    /// Parallel single source seeding (PS)
-    PARALLEL_SINGLE_SOURCE_SEEDING,
-    /// Single source seeding (S)
-    SINGLE_SOURCE_SEEDING,
-    /// Multi-source seeding (MS)
-    MULTI_SOURCE_SEEDING,
-    /// Reseeding (R)
-    RESEEDING
-  };
-  
   /// Constructor
   ///
   /// @param T Non-binary clone tree
   /// @param primary Primary tumor
-  /// @param mode Topological constraint
+  /// @param pattern Topological constraint
   /// @param gurobiLogFilename Gurobi logging filename
   /// @param forcedComigrations List of ordered pairs of anatomical sites
   /// that must be present
   IlpSolver(const NonBinaryCloneTree& T,
             const std::string& primary,
-            Mode mode,
+            MigrationGraph::Pattern pattern,
             const std::string& gurobiLogFilename,
             const StringPairList& forcedComigrations);
   
@@ -87,31 +76,42 @@ public:
 protected:
   /// Initialize indices and mappings
   virtual void initIndices();
+  
   /// Initialize ILP variables
   virtual void initVariables();
+  
   /// Initialize ILP constraints on the leaves
   virtual void initLeafConstraints();
+  
   /// Initialize ILP constraints
   virtual void initConstraints();
+  
   /// Initialize ILP single source seeding constraints
   virtual void initSingleSourceSeedingConstraints();
+  
   /// Initialize ILP parallel single source seeding constraints
   virtual void initParallelSingleSourceSeedingConstraints();
+  
   /// Initialize ILP multi source seeding constraints
   virtual void initMultiSourceSeedingConstraints();
+  
   /// Initialize ILP objective
   ///
   /// @param upperBound Upper bound on objective function
   virtual void initObjective(double upperBound);
+  
   /// Initialize ILP constraints regarding primary tumor anatomical site
   /// (only applicable for PS and S)
   ///
-  /// @param v_j Node
+  /// @param v_j Node in T
   virtual void initPrimaryConstraint(Node v_j);
+  
   /// Initialized ILP constraints regarding forced comigrations
   virtual void initForcedComigrations();
+  
   /// Process ILP solution
   virtual void processSolution();
+  
   /// Add ILP contraint involving matching anatomical sites of adjacent vertices
   ///
   /// @param sum_z Sum of z variables
@@ -120,6 +120,7 @@ protected:
   {
     _model.addConstr(sum_z + _y[ij] == 1);
   }
+  
   /// Add ILP comigration constraint
   ///
   /// @param s Source anatomical site
@@ -131,34 +132,39 @@ protected:
   {
     _model.addConstr(_c[s][t] - _x[i][s] - _x[j][t] >= -1);
   }
+  
   /// Return underlying LEMON tree
   virtual const Digraph& tree() const
   {
     return _T.tree();
   }
+  
   /// Return node identifier
   ///
-  /// @param v Node
+  /// @param v Node in T
   virtual const std::string& label(Node v) const
   {
     return _T.label(v);
   }
+  
   /// Return leaf anatomical site label
   ///
-  /// @param v Node
+  /// @param v Node in T
   virtual const std::string& l(Node v) const
   {
     assert(_T.isLeaf(v));
     return _T.l(v);
   }
+  
   /// Return root node
   virtual Node root() const
   {
     return _T.root();
   }
+  
   /// Return whether given node is a leaf
   ///
-  /// @param v Node
+  /// @param v Node in T
   virtual bool isLeaf(Node v) const
   {
     return _T.isLeaf(v);
@@ -188,7 +194,7 @@ protected:
   /// Label of primary tumor anatomical site
   const std::string& _primary;
   /// Topological constraint
-  const Mode _mode;
+  const MigrationGraph::Pattern _pattern;
   /// List of ordered pairs of anatomical sites that must be present
   const StringPairList& _forcedComigrations;
   /// Index to arc map

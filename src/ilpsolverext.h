@@ -11,201 +11,285 @@
 #include "utils.h"
 #include "frequencymatrix.h"
 #include "nonbinaryclonetree.h"
+#include "ilpsolver.h"
 #include <gurobi_c++.h>
 
 /// This class implements an ILP for solving PMH-CTI under topological constraints
-class IlpSolverExt
+class IlpSolverExt : public IlpSolver
 {
 public:
-  const static int _nrModes = 4;
-  
-  enum Mode {
-    PARALLEL_SINGLE_SOURCE_SEEDING,
-    SINGLE_SOURCE_SEEDING,
-    MULTI_SOURCE_SEEDING,
-    RESEEDING
-  };
-  
+  /// Constructor
+  ///
+  /// @param T Non-binary clone tree
+  /// @param F Frequency matrices F- and F+
+  /// @param primary Primary tumor
+  /// @param pattern Topological constraint
+  /// @param gurobiLogFilename Gurobi logging filename
+  /// @param forcedComigrations List of ordered pairs of anatomical sites
+  /// that must be present
   IlpSolverExt(const NonBinaryCloneTree& T,
                const FrequencyMatrix& F,
                const std::string& primary,
-               Mode mode,
+               MigrationGraph::Pattern pattern,
                const std::string& gurobiLogFilename,
                const StringPairList& forcedComigrations);
   
+  /// Destructor
   virtual ~IlpSolverExt();
   
-  bool solve(int nrThreads, int timeLimit);
-  
-  void exportModel(const std::string& filename);
-  
+  /// Return vertex labeling
   virtual const StringNodeMap& lPlus() const
   {
     return *_pResLPlus;
   }
   
+  /// Return resulting clone tree
   virtual const NonBinaryCloneTree& T() const
   {
     return *_pResCloneTree;
   }
   
+  /// Initialize ILP
   virtual void init(double upperBound);
   
-  double LB() const
-  {
-    return _LB;
-  }
-  
-  double UB() const
-  {
-    return _UB;
-  }
-  
+  /// Return resulting frequencies
   const DoubleVectorNodeMap& getF() const
   {
     return *_pResF;
   }
   
+  /// Return resulting mixing proportions
   const DoubleNodeMap& getU() const
   {
     return *_pResU;
   }
   
+  /// Return resulting character labeling
   const IntNodeMap& getCharacterLabel() const
   {
     return *_pResCharacterLabel;
   }
   
+  /// Print search graph G
+  ///
+  /// @param out Output stream
   void writeDOT(std::ostream& out) const;
   
+  /// Print search graph G
+  ///
+  /// @param out Output stream
+  /// @param colorMap Color map
   void writeDOT(std::ostream& out,
                 const StringToIntMap& colorMap) const;
   
 protected:
+  /// Construct search graph G
   virtual void constructG();
+  
+  /// Construct search graph G recursively
+  ///
+  /// @param v Node
+  void constructG(Node v);
+  
+  /// Initialize indices and mappings
   virtual void initIndices();
+  
+  /// Initialize ILP variables
   virtual void initVariables();
+  
+  /// Initialize ILP constraints
   virtual void initLeafConstraints();
+  
+  /// Process ILP solution
   virtual void initConstraints();
-  virtual void initSingleSourceSeedingConstraints();
-  virtual void initParallelSingleSourceSeedingConstraints();
-  virtual void initMultiSourceSeedingConstraints();
+  
+  /// Initialize ILP objective
+  ///
+  /// @param upperBound Upper bound on objective function
   virtual void initObjective(double upperBound);
-  virtual void initPrimaryConstraint(Node v_j);
-  virtual void initForcedComigrations();
+  
+  /// Process ILP solution
   virtual void processSolution();
 
-  virtual int getNrBackBoneVertices() const
+  /// Return the number of mutation tree vertices
+  virtual int getNrMutationTreeVertices() const
   {
     return _F.getNrCharacters();
   }
   
-  virtual void addMatchingColorsConstraint(GRBLinExpr sum_z, int ij)
+  /// Add ILP contraint involving matching anatomical sites of adjacent vertices
+  ///
+  /// @param sum_z Sum of z variables
+  /// @param ij Index of arc (v_i, v_j)
+  virtual void addMatchingColorsConstraint(GRBLinExpr sum_z,
+                                           int ij)
   {
-    _model.addConstr(sum_z + _y[ij] == 1);
+    _model.addConstr(sum_z + _y[ij] == _w[ij]);
   }
   
-  virtual void addMatchingColorsAndUsageConstraint(int ij, int mapped_i, int t)
+  /// Return underlying LEMON search graph
+  virtual const Digraph& tree() const
+  {
+    return _G;
+  }
+  
+  /// Add ILP usage constraint
+  ///
+  /// @param ij Arc (v_i, v_j) index
+  /// @param mapped_i Character index
+  /// @param t Sample index
+  virtual void addMatchingColorsAndUsageConstraint(int ij,
+                                                   int mapped_i,
+                                                   int t)
   {
     const int nrSamples = _indexToSample.size();
     _model.addConstr(_z[ij][nrSamples] <= 1 - _u[t][mapped_i]);
   }
   
+  /// Add ILP comigration constraint
+  ///
+  /// @param s Source anatomical site
+  /// @param t Target anatomical site
+  /// @param ij Arc (v_i, v_j) index
+  /// @param i Node v_i index
+  /// @param j Node v_j index
   virtual void addComigrationConstraint(int s, int t,
                                         int ij, int i, int j)
   {
-    _model.addConstr(_c[s][t] - _x[i][s] - _x[j][t] >= -1);
+    _model.addConstr(_c[s][t] - _x[i][s] - _x[j][t] >= -1 - (1-_w[ij]));
   }
   
+  /// Return leaf anatomical site label
+  ///
+  /// @param v Node in G
   virtual const std::string& l(Node v) const
   {
     assert(isLeaf(v));
     return _l[v];
   }
   
+  /// Return node identifier
+  ///
+  /// @param v Node in G
   virtual const std::string& label(Node v) const
   {
     return _label[v];
   }
-   
+  
+  /// Return root node
   virtual Node root() const
   {
     return _root;
   }
   
+  /// Return whether given node is a leaf
+  ///
+  /// @param v Node in G
   virtual bool isLeaf(Node v) const
   {
     return OutArcIt(_G, v) == lemon::INVALID;
   }
   
-  typedef std::vector<Arc> ArcVector;
-  
-  typedef std::vector<GRBVar> VarArray;
-  typedef std::vector<VarArray> VarMatrix;
-  typedef std::vector<VarMatrix> Var3Matrix;
-  typedef std::vector<Var3Matrix> Var4Matrix;
-  typedef std::vector<Var4Matrix> Var5Matrix;
-  typedef std::vector<Var5Matrix> Var6Matrix;
-
-  static bool next(BoolVector& mets);
-  
+  /// Compute Fmin
+  ///
+  /// @param v_i Node in mutation tree T
   void computeFmin(Node v_i);
+
+  /// Compute Fmax
+  ///
+  /// @param v_i Node in mutation tree T
   void computeFmax(Node v_i);
+  
+  /// Compute Umax
   void computeUmax();
   
+  /// Label edges by introduced characters recursively
+  ///
+  /// @param resT LEMON clone tree
+  /// @param resNodeToIndex Node to index mapping
+  /// @param v_i Current node
+  /// @param characterLabel Output node labeling by introduced characters
+  /// @param visited Marks characters as introduced
+  void labelEdges(const Digraph& resT,
+                  const IntNodeMap& resNodeToIndex,
+                  Node v_i,
+                  IntNodeMap& characterLabel,
+                  BoolVector& visited);
+  
+  /// Return introduced character index for given node
+  ///
+  /// @param resT LEMON clone tree
+  /// @param resNodeToIndex Node to index mapping
+  /// @param v_i Node
+  int getCharacterIndex(const Digraph& resT,
+                        const IntNodeMap& resNodeToIndex,
+                        Node v_i) const
+  {
+    int i = -1;
+    if (OutArcIt(resT, v_i) == lemon::INVALID)
+    {
+      Node parent = resT.source(InArcIt(resT, v_i));
+      i = resNodeToIndex[parent];
+    }
+    else
+    {
+      i = resNodeToIndex[v_i];
+    }
+    
+    Node org_v_i = _indexToNode[i];
+    Node tree_v_i  = _GtoT[org_v_i];
+    
+    int mapped_i = _F.characterToIndex(_T.label(tree_v_i));
+    return mapped_i;
+  }
+  
 protected:
-  const NonBinaryCloneTree& _T;
+  /// Frequency matrices F- and F+
   const FrequencyMatrix& _F;
+  /// Inferred frequency lowerbounds given mutation tree
   DoubleMatrix _Fmin;
+  /// Inferred frequency upperbounds given mutation tree
   DoubleMatrix _Fmax;
+  /// Inferred mixing proportion upper bounds given mutation tree
   DoubleMatrix _Umax;
-  const std::string& _primary;
-  const Mode _mode;
-  const StringPairList& _forcedComigrations;
   
+  /// Search graph
   Digraph _G;
+  /// Root node of _G
   Node _root;
+  /// Node identifier
   StringNodeMap _label;
+  /// Leaf labeling
   StringNodeMap _l;
+  /// Vertex labeling
   StringNodeMap _lPlus;
+  /// Node mapping from V(T) to V(G)
   NodeNodeMap _TtoG;
+  /// Node mapping from V(G) to V(T)
   NodeNodeMap _GtoT;
+  /// Denotes whether a node is a sample attachment node
+  BoolNodeMap _isSampleNode;
   
-  ArcVector _indexToArc;
-  IntArcMap _arcToIndex;
-  NodeVector _indexToNode;
-  IntNodeMap _nodeToIndex;
-  StringToIntMap _sampleToIndex;
-  StringVector _indexToSample;
-  int _primaryIndex;
-  
-  GRBEnv _env;
-  GRBModel _model;
-  /// x[i][s] = 1 iff vertex v_i is labeled by sample s
-  VarMatrix _x;
-  /// y[ij] = 1 iff edge (v_i, v_j) is a migration edge
-  VarArray _y;
-  /// z[ij][s] = 1 iff v_i and v_j are labeled by sample s
-  VarMatrix _z;
-  /// c[s][t] = 1 iff there exists a migration edge (v_i, v_j) where l(v_i) = s and l(v_j) = t
-  VarMatrix _c;
-  /// d[s] = 1 iff there exists a migration edge (v_i, v_j) where l(v_i) = s
-  VarArray _d;
-  /// f[s][i] = frequency of mutation incoming to clone i in sample s
+  /// Variable f[s][i] is frequency of mutation incoming to clone i in sample s
   VarMatrix _f;
-  /// u[s][i] = usage of clone i in sample s
+  /// Variable u[s][i] is mixing proportion of clone i in sample s
   VarMatrix _u;
+  /// Variable w[ij] = 1 iff edge (v_i, v_j) is in the tree
+  VarArray _w;
   
-  double _LB;
-  double _UB;
-  
-  // Result
+  /// Resulting frequencies
   DoubleVectorNodeMap _resF;
+  /// Resulting mixing proportions
   DoubleVectorNodeMap _resU;
+  /// Resulting clone tree
   NonBinaryCloneTree* _pResCloneTree;
+  /// Resulting vertex labeling
   StringNodeMap* _pResLPlus;
+  /// Resulting frequencies in resulting clone tree
   DoubleVectorNodeMap* _pResF;
+  /// Resulting mixing proportions of leaves of resulting clone
   DoubleNodeMap* _pResU;
+  /// Resulting character labeling of vertices of resulting clone tree
   IntNodeMap* _pResCharacterLabel;
 };
 

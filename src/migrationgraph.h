@@ -17,14 +17,21 @@
 class MigrationGraph
 {
 public:
-  enum MigrationPattern
+  /// Migration pattern
+  enum Pattern
   {
-    PMSSS,
-    PSSS,
-    SSS,
-    MSS,
-    RS
+    /// Parallel single-source seeding (PS)
+    PS,
+    /// Single-source seeding (S)
+    S,
+    /// Mutli-source seeding (M)
+    M,
+    /// Reseeding (R)
+    R
   };
+  
+  /// Number of migration patterns
+  static const int _nrPatterns;
   
   /// Default constructor
   MigrationGraph();
@@ -95,14 +102,20 @@ public:
   /// @param T Clone tree
   /// @param lPlus Vertex labeling
   template <class CLONETREE>
-  MigrationPattern getMigrationPattern(const CLONETREE& T,
+  Pattern getPattern(const CLONETREE& T,
                                        const StringNodeMap& lPlus) const;
   
-  /// Return a string corresponding to the migration pattern
+  /// Return a short string corresponding to the migration pattern
   /// of the migration graph
   ///
   /// @param pattern Migration pattern
-  static std::string getMigrationPatternString(MigrationPattern pattern);
+  static std::string getPatternString(Pattern pattern);
+  
+  /// Return a long string corresponding to the migration pattern
+  /// of the migration graph
+  ///
+  /// @param pattern Migration pattern
+  static std::string getPatternLongString(Pattern pattern);
   
   /// Return the number of seeding sites
   int getNrSeedingSamples() const
@@ -249,51 +262,60 @@ inline int MigrationGraph::getNrComigrations(const CLONETREE& T,
 }
 
 template <class CLONETREE>
-inline MigrationGraph::MigrationPattern MigrationGraph::getMigrationPattern(const CLONETREE& T,
+inline MigrationGraph::Pattern MigrationGraph::getPattern(const CLONETREE& T,
                                                                       const StringNodeMap& lPlus) const
 {
   if (getNrSeedingSamples() == 1)
   {
-    if (getNrMigrations() == getNrSamples() - 1)
-    {
-      return PMSSS;
-    }
-    else
-    {
-      return PSSS;
-    }
+    return PS;
   }
   else if (getNrComigrations(T, lPlus) == getNrSamples() - 1)
   {
-    return SSS;
+    return S;
   }
   else if (lemon::dag(_G))
   {
-    return MSS;
+    return M;
   }
   else
   {
-    return RS;
+    return R;
   }
 }
 
-inline std::string MigrationGraph::getMigrationPatternString(MigrationPattern pattern)
+inline std::string MigrationGraph::getPatternString(Pattern pattern)
 {
   switch (pattern)
   {
-    case PMSSS:
-      return "PMSSS";
-    case PSSS:
-      return "PSSS";
-    case SSS:
-      return "SSS";
-    case MSS:
-      return "MSS";
-    case RS:
-      return "RS";
+    case PS:
+      return "PS";
+    case S:
+      return "S";
+    case M:
+      return "M";
+    case R:
+      return "R";
     default:
       assert(false);
-      return "";
+      return "ERROR";
+  }
+}
+
+inline std::string MigrationGraph::getPatternLongString(Pattern pattern)
+{
+  switch (pattern)
+  {
+    case PS:
+      return "parallel single-source seeding";
+    case S:
+      return "single-source seeding";
+    case M:
+      return "multi-source seeding";
+    case R:
+      return "reeeding";
+    default:
+      assert(false);
+      return "ERROR";
   }
 }
 

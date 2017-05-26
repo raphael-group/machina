@@ -24,13 +24,13 @@ public:
   ///
   /// @param T Non-binary clone tree
   /// @param primary Primary tumor
-  /// @param mode Topological constraint
+  /// @param pattern Topological constraint
   /// @param gurobiLogFilename Gurobi logging filename
   /// @param forcedComigrations List of ordered pairs of anatomical sites
   /// that must be present
   IlpBinarizationSolver(const NonBinaryCloneTree& T,
                         const std::string& primary,
-                        Mode mode,
+                        MigrationGraph::Pattern pattern,
                         const std::string& gurobiLogFilename,
                         const StringPairList& forcedComigrations);
   
@@ -69,12 +69,16 @@ public:
 protected:
   /// Initialize indices and mappings
   virtual void initIndices();
+  
   /// Initialize ILP variables
   virtual void initVariables();
+  
   /// Initialize ILP constraints
   virtual void initConstraints();
+  
   /// Process ILP solution
   virtual void processSolution();
+  
   /// Add ILP contraint involving matching anatomical sites of adjacent vertices
   ///
   /// @param sum_z Sum of z variables
@@ -83,6 +87,7 @@ protected:
   {
     _model.addConstr(sum_z + _y[ij] == _w[ij]);
   }
+  
   /// Add ILP comigration constraint
   ///
   /// @param s Source anatomical site
@@ -95,31 +100,38 @@ protected:
   {
     _model.addConstr(_c[s][t] - _x[i][s] - _x[j][t] >= -1 - (1-_w[ij]));
   }
+  
   /// Construct search graph G recursively
   ///
   /// @param T Clone tree
   /// @param v Node
   void constructG(const Digraph& T, Node v);
+
   /// Return node identifier
   virtual const std::string& label(Node v) const
   {
     return _label[v];
   }
+  
   /// Return leaf anatomical site label
+  ///
+  /// @param v Node in G
   virtual const std::string& l(Node v) const
   {
     Node org_v = _GtoT[v];
     assert(_T.isLeaf(org_v));
     return _T.l(org_v);
   }
+  
   /// Return root node
   virtual Node root() const
   {
     return _TtoG[_T.root()];
   }
+  
   /// Return whether given node is a leaf
   ///
-  /// @param v Node
+  /// @param v Node in G
   virtual bool isLeaf(Node v) const
   {
     return _T.isLeaf(_GtoT[v]);

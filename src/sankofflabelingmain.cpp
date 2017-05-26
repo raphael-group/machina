@@ -1,5 +1,5 @@
 /*
- * sankofflabelingmain.cpp
+ * pmh_sankoff.cpp
  *
  *  Created on: 12-jan-2017
  *      Author: M. El-Kebir
@@ -26,7 +26,7 @@ void runSankoff(const NonBinaryCloneTree& T,
   SankoffLabeling::IntTripleToIntMap result = sankoff.classify();
   for (const auto& kv : result)
   {
-    std::cerr << "Found " << kv.second << " labelings with " << kv.first.first << " comigrations, " << kv.first.second.first << " seeding sites and " << MigrationGraph::getMigrationPatternString(static_cast<MigrationGraph::MigrationPattern>(kv.first.second.second)) << std::endl;
+    std::cerr << "Found " << kv.second << " labelings with " << kv.first.first << " comigrations, " << kv.first.second.first << " seeding sites and " << MigrationGraph::getPatternString(static_cast<MigrationGraph::Pattern>(kv.first.second.second)) << std::endl;
   }
   
   char buf[1024];
@@ -36,10 +36,8 @@ void runSankoff(const NonBinaryCloneTree& T,
     std::cerr << "Labeling " << solIdx << ": "
       << G.getNrMigrations() << " migrations, "
       << G.getNrComigrations(T, sankoff.getLabeling(solIdx)) << " comigrations, "
-      << G.getNrSeedingSamples() << " seeding sites, "
-      << G.getNrNonUniqueParentageSamples() << " non-unique parentage sites"
-      << " and "
-      << G.getMigrationPatternString(G.getMigrationPattern(T, sankoff.getLabeling(solIdx)));
+      << G.getNrSeedingSamples() << " seeding sites and "
+      << G.getPatternString(G.getPattern(T, sankoff.getLabeling(solIdx)));
     std::cerr << std::endl;
     
     if (!outputPrefix.empty())

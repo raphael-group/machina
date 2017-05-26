@@ -66,7 +66,7 @@ public:
       MigrationGraph G(_T, getLabeling(solIdx));
       int nrComigrations = G.getNrComigrations(_T, getLabeling(solIdx));
       int nrSeedingSamples = G.getNrSeedingSamples();
-      int migrationPattern = static_cast<int>(G.getMigrationPattern(_T, getLabeling(solIdx)));
+      int migrationPattern = static_cast<int>(G.getPattern(_T, getLabeling(solIdx)));
       IntTriple triple = std::make_pair(nrComigrations,
                                         std::make_pair(nrSeedingSamples,
                                                        migrationPattern));

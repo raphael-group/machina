@@ -8,6 +8,8 @@
 #include "migrationgraph.h"
 #include <lemon/bfs.h>
 
+const int MigrationGraph::_nrPatterns = 4;
+
 MigrationGraph::MigrationGraph()
   : _G()
   , _root(lemon::INVALID)
