@@ -14,7 +14,6 @@
 #include "ilpbinarizationsolver.h"
 #include "migrationgraph.h"
 #include <boost/algorithm/string.hpp>
-#include <lemon/time_measure.h>
 
 int main(int argc, char** argv)
 {

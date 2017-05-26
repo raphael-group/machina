@@ -39,11 +39,11 @@ EXECUTABLE | DESCRIPTION
 `pmh` | Solves the Parsimonious Migration History (PMH) problem under various topological constraints (PS, S, M or R) given a clone tree
 `pmh-pr`    | Solves the Parsimonious Migration History with Polytomy Resolution (PMH-PR) under various topological constraints given a clone tree
 `pmh-cti`     | Sorts solution trees by the fraction of common edges (solution with rank 0 is the most representative tree)
+`generatemigrationtrees` | Generates all migration trees given anatomical site labels
 
 ## Usage instructions
 
 ### Input formats
-
 
 
 ### Output formats
