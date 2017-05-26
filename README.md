@@ -1,12 +1,12 @@
-#mFINCH - migration Framework for INferring Cancer Histories
+# mFINCH - migration Framework for INferring Cancer Histories
 
 ![overview.png](doc/overview.png)
 
 mFINCH is a omputational framework for inferring migration patterns between a primary tumor and metastases using DNA sequencing data.
 
-##Compilation instructions
+## Compilation instructions
 
-###Dependencies
+### Dependencies
 
 mFINCH is written in C++11 and as such requires a modern C++ compiler
 (GCC >= 4, or CLANG). In addition, mFINCH has the following
@@ -21,7 +21,7 @@ dependencies.
 
 In case [doxygen](http://www.stack.nl/~dimitri/doxygen/) is available, extended source code documentation will be generated.
 
-###Compilation
+### Compilation
 
 To compile SPRUCE, execute the following commands from the root of the repository:
 
