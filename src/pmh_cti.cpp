@@ -35,20 +35,22 @@ int main(int argc, char** argv)
   
   lemon::ArgParser ap(argc, argv);
   ap.refOption("c", "Color map file", filenameColorMap, true)
-    .other("T", "Clone tree")
+    .other("T", "Mutation tree")
     .other("frequencies", "Frequencies")
     .refOption("g", "Output search graph", outputSearchGraph)
     .refOption("log", "Gurobi logging", gurobiLog)
-    .refOption("t", "Number of threads (default: -1)", nrThreads)
+    .refOption("t", "Number of threads (default: -1, #cores)", nrThreads)
     .refOption("o", "Output prefix" , outputDirectory)
     .refOption("m", "Migration pattern:\n"\
-                    "       0 : Single-site parallel seeding\n"\
-                    "       1 : Single-site seeding\n" \
-                    "       2 : Multi-site seeding\n" \
-                    "       3 : Reseeding", pattern)
-    .refOption("s", "Fix comigrations according to provided sample tree", sampleTreeFile)
+               "       0 : Parallel single-source seeding\n"\
+               "       1 : Single-source seeding\n" \
+               "       2 : Multi-source seeding\n" \
+               "       3 : Reseeding\n" \
+               "     If no pattern is specified, all patterns will be enumerated.", pattern)
+    .refOption("s", "Fix comigrations according to provided migration graph", sampleTreeFile)
     .refOption("e", "Export ILP", outputILP)
-    .refOption("p", "Primary", primary)
+    .refOption("p", "Primary samples separated by commas (if omitted, every sample will be\n" \
+               "     considered iteratively as the primary)", primary)
     .refOption("UB", "Upper bound (default: -1, disabled)", UB)
     .refOption("l", "Time limit in seconds (default: -1)", timeLimit);
   ap.parse();

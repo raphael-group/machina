@@ -687,7 +687,7 @@ void IlpSolver::run(const NonBinaryCloneTree& T,
     std::cerr << " including reseeding";
   }
   std::cerr << ". [LB, UB] = [" << solver.LB() << ", " << solver.UB() << "]. "
-  << timer.realTime() << " seconds" << std::endl;
+    << timer.realTime() << " seconds" << std::endl;
   
   if (!outputDirectory.empty())
   {
@@ -703,9 +703,16 @@ void IlpSolver::run(const NonBinaryCloneTree& T,
              outputDirectory.c_str(),
              primary.c_str(),
              MigrationGraph::getPatternString(pattern).c_str());
-    
     std::ofstream outG(buf);
     G.writeDOT(outG, colorMap);
     outG.close();
+    
+    snprintf(buf, 1024, "%s/T-%s-%s.labeling",
+             outputDirectory.c_str(),
+             primary.c_str(),
+             MigrationGraph::getPatternString(pattern).c_str());
+    std::ofstream outLabeling(buf);
+    T.writeVertexLabeling(outLabeling, solver.lPlus());
+    outLabeling.close();
   }
 }

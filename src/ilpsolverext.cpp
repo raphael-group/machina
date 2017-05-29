@@ -1143,10 +1143,25 @@ void IlpSolverExt::run(const NonBinaryCloneTree& T,
                outputDirectory.c_str(),
                primary.c_str(),
                MigrationGraph::getPatternString(pattern).c_str());
-      
       std::ofstream outG(buf);
       G.writeDOT(outG, colorMap);
       outG.close();
+      
+      snprintf(buf, 1024, "%s/T-%s-%s-binarized.tree",
+               outputDirectory.c_str(),
+               primary.c_str(),
+               MigrationGraph::getPatternString(pattern).c_str());
+      std::ofstream outTree(buf);
+      T.write(outTree);
+      outTree.close();
+      
+      snprintf(buf, 1024, "%s/T-%s-%s-binarized.labeling",
+               outputDirectory.c_str(),
+               primary.c_str(),
+               MigrationGraph::getPatternString(pattern).c_str());
+      std::ofstream outLabeling(buf);
+      T.writeVertexLabeling(outLabeling, solver.lPlus());
+      outLabeling.close();
     }
   }
 }

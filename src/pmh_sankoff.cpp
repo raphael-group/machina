@@ -19,7 +19,8 @@ int main(int argc, char** argv)
   std::string filenameColorMap;
   
   lemon::ArgParser ap(argc, argv);
-  ap.refOption("p", "Primary sample (if omitted, every sample is considered iteratively as the primary)", primarySample)
+  ap.refOption("p", "Primary samples separated by commas (if omitted, every sample will be\n" \
+               "     considered iteratively as the primary)", primarySample)
     .refOption("o", "Output prefix", outputDirectory)
     .refOption("c", "Color map file", filenameColorMap)
     .other("T", "Clone tree")

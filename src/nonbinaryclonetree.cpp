@@ -102,6 +102,15 @@ void NonBinaryCloneTree::writeLeafLabeling(std::ostream& out) const
   }
 }
 
+void NonBinaryCloneTree::writeVertexLabeling(std::ostream& out,
+                                             const StringNodeMap& lPlus) const
+{
+  for (NodeIt u(_tree); u != lemon::INVALID; ++u)
+  {
+    out << _nodeToId[u] << " " << lPlus[u] << std::endl;
+  }
+}
+
 void NonBinaryCloneTree::writeDOT(std::ostream& out,
                                   const StringNodeMap& lPlus) const
 {

@@ -38,18 +38,20 @@ int main(int argc, char** argv)
     .other("leaf_labeling", "Leaf labeling")
     .refOption("g", "Output search graph", outputSearchGraph)
     .refOption("log", "Gurobi logging", gurobiLog)
-    .refOption("t", "Number of threads (default: -1)", nrThreads)
+    .refOption("t", "Number of threads (default: -1, #cores)", nrThreads)
     .refOption("o", "Output prefix" , outputDirectory)
     .refOption("m", "Migration pattern:\n"\
-                    "       0 : Parallel single-source seeding"\
+                    "       0 : Parallel single-source seeding\n"\
                     "       1 : Single-source seeding\n" \
                     "       2 : Multi-source seeding\n" \
-                    "       3 : Reseeding", pattern)
+                    "       3 : Reseeding\n" \
+                    "     If no pattern is specified, all patterns will be enumerated.", pattern)
     .refOption("s", "Fix comigrations according to provided migration graph", sampleTreeFile)
     .refOption("e", "Export ILP", outputILP)
-    .refOption("p", "Primary", primary)
+    .refOption("p", "Primary samples separated by commas (if omitted, every sample will be\n" \
+               "     considered iteratively as the primary)", primary)
     .refOption("UB", "Upper bound (default: -1, disabled)", UB)
-    .refOption("l", "Time limit in seconds (default: -1)", timeLimit);
+    .refOption("l", "Time limit in seconds (default: -1, no time limit)", timeLimit);
   ap.parse();
   
   if (ap.files().size() != 2)
@@ -147,6 +149,7 @@ int main(int argc, char** argv)
           << "' missing in leaf labeling. Skipping." << std::endl;
         continue;
       }
+      
       IlpSolver::run(T,
                      primary,
                      outputDirectory,

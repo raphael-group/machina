@@ -76,6 +76,14 @@ void SankoffLabeling::run(const NonBinaryCloneTree& T,
       std::ofstream outG(buf);
       G.writeDOT(outG, colorMap);
       outG.close();
+      
+      snprintf(buf, 1024, "%s/T-%s-%d.labeling",
+               outputDirectory.c_str(),
+               primary.c_str(),
+               solIdx);
+      std::ofstream outLabeling(buf);
+      T.writeVertexLabeling(outLabeling, sankoff.getLabeling(solIdx));
+      outLabeling.close();
     }
   }
 }

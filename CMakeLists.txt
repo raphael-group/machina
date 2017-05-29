@@ -262,8 +262,8 @@ target_link_libraries( pmh_cti ${CommonLibs} ${GUROBI_LIBRARIES} )
 add_executable( generatemigrationtrees ${generatemigrationtrees_src} ${generatemigrationtrees_hdr} )
 target_link_libraries( generatemigrationtrees ${CommonLibs} )
 
-add_executable( visualizemigrationgraph EXCLUDE_FROM_ALL ${visualizemigrationgraph_src} ${visualizemigrationgraph_hdr} )
+add_executable( visualizemigrationgraph ${visualizemigrationgraph_src} ${visualizemigrationgraph_hdr} )
 target_link_libraries( visualizemigrationgraph ${CommonLibs} )
 
-add_executable( visualizeclonetree EXCLUDE_FROM_ALL ${visualizeclonetree_src} ${visualizeclonetree_hdr} )
+add_executable( visualizeclonetree ${visualizeclonetree_src} ${visualizeclonetree_hdr} )
 target_link_libraries( visualizeclonetree ${CommonLibs} )

@@ -79,6 +79,13 @@ public:
   /// @param out Output stream
   void writeLeafLabeling(std::ostream& out) const;
   
+  /// Write vertex labeling
+  ///
+  /// @param out Output stream
+  /// @param lPlus Vertex labeling
+  void writeVertexLabeling(std::ostream& out,
+                           const StringNodeMap& lPlus) const;
+  
   /// Print tree in DOT format
   ///
   /// @param out Output stream

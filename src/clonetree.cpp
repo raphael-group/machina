@@ -135,6 +135,15 @@ void CloneTree::writeLeafLabeling(std::ostream& out) const
   }
 }
 
+void CloneTree::writeVertexLabeling(std::ostream& out,
+                                    const StringNodeMap& lPlus) const
+{
+  for (NodeIt u(_tree); u != lemon::INVALID; ++u)
+  {
+    out << _nodeToId[u] << " " << lPlus[u] << std::endl;
+  }
+}
+
 void CloneTree::writeDOT(std::ostream& out) const
 {
   StringToIntMap colorMap = generateColorMap();
