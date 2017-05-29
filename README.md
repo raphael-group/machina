@@ -128,6 +128,7 @@ A mutation tree is formatted in the same way as a clone tree. Each line encodes 
     (cluster_1,(1,1,1)) (cluster_4,(1,1,1))
     (cluster_2,(1,1,1)) (cluster_5,(1,1,1))
     (cluster_2,(1,1,1)) (cluster_6,(1,1,1))
+    ...
 
 See [sol0.tree](data/hoadley_2016/A7/sol0.tree) for the complete mutation tree.
 
