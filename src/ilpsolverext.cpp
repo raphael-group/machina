@@ -1104,8 +1104,7 @@ void IlpSolverExt::run(const NonBinaryCloneTree& T,
     MigrationGraph G(solver.T(), solver.lPlus());
     
     std::cerr << G.getNrMigrations() << " migrations, "
-      << G.getNrComigrations(solver.T(), solver.lPlus()) << " comigrations, "
-      << G.getNrNonUniqueParentageSamples() << " non-unique parentage sites and "
+      << G.getNrComigrations(solver.T(), solver.lPlus()) << " comigrations and "
       << G.getNrSeedingSamples() << " seeding sites";
     if (G.hasReseeding())
     {
