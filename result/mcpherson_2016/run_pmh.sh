@@ -19,4 +19,3 @@ do
     fi
     $1 ../../data/mcpherson_2016/patient${i}.tree ../../data/mcpherson_2016/patient${i}.labeling -t 4 -l 3600 -p LOv,ROv,RUt -c ../../data/mcpherson_2016/coloring.txt -o pmh/patient${i}/ 2> pmh/patient${i}/result.txt
 done
-#wait
