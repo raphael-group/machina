@@ -385,4 +385,4 @@ An example execution:
     2> A7/result.txt
 
     $ cat A7/result.txt
-    With primary 'breast', single-source seeding and binarization: 5 migrations, 5 comigrations, 0 non-unique parentage sites and 2 seeding sites. [LB, UB] = [5.0242, 5.0242]. 1.13471 seconds (A7)
+    With primary 'breast', single-source seeding and binarization: 5 migrations, 5 comigrations and 2 seeding sites. [LB, UB] = [5.0242, 5.0242]. 1.13471 seconds (A7)
