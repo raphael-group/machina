@@ -19,11 +19,11 @@ mFINCH is a computational framework for inferring migration patterns between a p
      * [Parsimonious Migration History with Polytomy Resolution](#pmh_pr)
      * [Parsimonious Migration History and Clone Tree Inference](#pmh_cti)
 
-## Compilation instructions
 <a name="compilation"></a>
+## Compilation instructions
 
-### Dependencies
 <a name="dep"></a>
+### Dependencies
 
 mFINCH is written in C++11 and thus requires a modern C++ compiler (GCC >= 4.8.1, or Clang). In addition, mFINCH has the following dependencies.
 
@@ -36,8 +36,8 @@ mFINCH is written in C++11 and thus requires a modern C++ compiler (GCC >= 4.8.1
 
 In case [doxygen](http://www.stack.nl/~dimitri/doxygen/) is available, extended source code documentation will be generated.
 
-### Compilation
 <a name="comp"></a>
+### Compilation
 
 To compile SPRUCE, execute the following commands from the root of the repository:
 
@@ -65,16 +65,16 @@ EXECUTABLE | DESCRIPTION
 `visualizeclonetree` | Visualizes a clone tree and optional vertex labeling.
 `visualizemigrationgraph` | Visualizes the migration graph given a clone tree and vertex labeling.
 
-## Usage instructions
 <a name="usage"></a>
+## Usage instructions
 
-### I/O formats
 <a name="io"></a>
+### I/O formats
 
 Below we describe the various formats used by the algorithms of the `mFINCH` framework.
 
-#### Clone tree
 <a name="clonetree"></a>
+#### Clone tree
 
 A clone tree is provided as an edge list. Each line specifies an edge by listing the labels of the incident vertices separated by a space or tab character. For example:
 
@@ -88,8 +88,8 @@ A clone tree is provided as an edge list. Each line specifies an edge by listing
 
 See [patient1.tree](data/mcpherson_2016/patient1.tree) for the complete clone tree.
 
-#### Leaf labeling
 <a name="leaflabeling"></a>
+#### Leaf labeling
 
 A leaf labeling assigns an anatomical site label to each leaf of a clone tree. Each line contains two values, the leaf label and the anatomical site label separated by a space or tab character. For example:
 
@@ -103,8 +103,8 @@ A leaf labeling assigns an anatomical site label to each leaf of a clone tree. E
 
 See [patient1.labeling](data/mcpherson_2016/patient1.labeling) for the complete leaf labeling.
 
-#### Vertex labeling
 <a name="vertexlabeling"></a>
+#### Vertex labeling
 
 A vertex labeling assigns an anatomical site label to each vertex of a clone tree (including the leaves). Each line contains two values, the vertex label and the anatomical site label separated by a space or tab character. For example:
 
@@ -119,8 +119,8 @@ A vertex labeling assigns an anatomical site label to each vertex of a clone tre
 
 See [patient1.reported.labeling](data/mcpherson_2016/patient1.reported.labeling) for the complete vertex labeling.
 
-#### Mutation tree
 <a name="mutationtree"></a>
+#### Mutation tree
 
 A mutation tree is formatted in the same way as a clone tree. Each line encodes an edge by listing the vertex labels of the incident vertices separated by a space or tab character. For example:
 
@@ -131,8 +131,8 @@ A mutation tree is formatted in the same way as a clone tree. Each line encodes 
 
 See [sol0.tree](data/hoadley_2016/A7/sol0.tree) for the complete mutation tree.
 
-#### Frequencies
 <a name="frequencies"></a>
+#### Frequencies
 
 A frequency file encodes the frequency of every mutation (cluster) in an anatomical site (sample). It is a tab separated file. The first line lists the number of anatomical sites followed by the number of mutations on a separate line. The third line is ignored but describes the format of the rest of the file. Each subsequent line encodes the cell frequency of a mutation in an anatomical site: first the anatomical site 0-based index is given, followed by the label of the site, the 0-based index of the mutation, the label of the mutation, the frequency lower bound and upper bound.
 
@@ -145,8 +145,8 @@ A frequency file encodes the frequency of every mutation (cluster) in an anatomi
 
 See [F.tsv](data/hoadley_2016/A7/F.tsv) for the complete frequency file.
 
-### Parsimonious Migration History (`pmh_sankoff` and `pmh`)
 <a name="pmh"></a>
+### Parsimonious Migration History (`pmh_sankoff` and `pmh`)
 
 In the parsimonious migration history we are given a clone tree `T` whose leaves are labeled by anatomical sites. The task is to label the inner vertices of `T` such that the resulting migration graph `G` has minimum number of migrations and comigrations. It is possible to specify constraints on the topology of the migration graph.
 
@@ -261,9 +261,8 @@ An example execution of the `pmh` algorithm:
     With primary 'LOv', reeeding and no binarization: 13 migrations, 7 comigrations and 2 seeding sites including reseeding. [LB, UB] = [13.3021, 13.3021]. 0.00364995 seconds
     With primary 'ROv', reeeding and no binarization: 13 migrations, 10 comigrations and 2 seeding sites. [LB, UB] = [13.4271, 13.4271]. 0.00458717 seconds
 
-
-### Parsimonious Migration History with Polytomy Resolution (`pmh_pr`)
 <a name="pmh_pr"></a>
+### Parsimonious Migration History with Polytomy Resolution (`pmh_pr`)
 
 In the parsimonious migration history with polytomy resolution we are given a clone tree `T` whose leaves are labeled by anatomical sites. The task is to find a binarization `T'` of T and label its inner vertices of such that the resulting migration graph `G` has minimum number of migrations and comigrations. It is possible to specify constraints on the topology of the migration graph.
 
@@ -327,9 +326,10 @@ An example execution:
     With primary 'LOv', reeeding and binarization: 11 migrations, 7 comigrations and 3 seeding sites including reseeding. [LB, UB] = [6.05184, 11.061]. 10.0031 seconds
     With primary 'ROv', reeeding and binarization: 12 migrations, 7 comigrations and 2 seeding sites. [LB, UB] = [6.05112, 12.0599]. 10.0025 seconds
 
-### Parsimonious Migration History and Clone Tree Inference (`pmh_cti`) <a name="pmh_cti"></a>
+<a name="pmh_cti"></a>
+### Parsimonious Migration History and Clone Tree Inference (`pmh_cti`)
 
-Given a mutation tree `T` with mutation frequencies `F-` and `F+`, the task is to find a frequency assignment `F` yielding binarized clone tree `T'` that admits a vertex labeling `l `l`` such that the resulting migration graph `G` has minimum number of migrations and comigrations. It is possible to specify constraints on the topology of the migration graph.
+Given a mutation tree `T` with mutation frequencies `F-` and `F+`, the task is to find a frequency assignment `F` yielding binarized clone tree `T'` that admits a vertex labeling `l` such that the resulting migration graph `G` has minimum number of migrations and comigrations. It is possible to specify constraints on the topology of the migration graph.
 
 ```
 Usage:
