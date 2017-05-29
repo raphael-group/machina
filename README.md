@@ -327,8 +327,7 @@ An example execution:
     With primary 'LOv', reeeding and binarization: 11 migrations, 7 comigrations and 3 seeding sites including reseeding. [LB, UB] = [6.05184, 11.061]. 10.0031 seconds
     With primary 'ROv', reeeding and binarization: 12 migrations, 7 comigrations and 2 seeding sites. [LB, UB] = [6.05112, 12.0599]. 10.0025 seconds
 
-### Parsimonious Migration History and Clone Tree Inference (`pmh_cti`)
-<a name="pmh_cti"></a>
+### Parsimonious Migration History and Clone Tree Inference (`pmh_cti`) <a name="pmh_cti"></a>
 
 Given a mutation tree `T` with mutation frequencies `F-` and `F+`, the task is to find a frequency assignment `F` yielding binarized clone tree `T'` that admits a vertex labeling `l `l`` such that the resulting migration graph `G` has minimum number of migrations and comigrations. It is possible to specify constraints on the topology of the migration graph.
 
