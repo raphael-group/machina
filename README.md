@@ -298,12 +298,12 @@ Where:
   -log
      Gurobi logging
   -m int
-     Migration pattern:
-       0 : Parallel single-source seeding
-       1 : Single-source seeding
-       2 : Multi-source seeding
-       3 : Reseeding
-     If no pattern is specified, all patterns will be enumerated.
+     Allowed migration patterns:
+       0 : PS
+       1 : PS, S
+       2 : PS, S, M
+       3 : PS, S, M, R
+     If no pattern is specified, all allowed patterns will be enumerated.
   -o str
      Output prefix
   -p str
