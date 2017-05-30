@@ -22,6 +22,7 @@ Using [SPRUCE](https://github.com/raphael-group/spruce) and the provided read co
 ## References
 <a name="ref1"></a>
 [1] McPherson *et al.* Divergent modes of clonal spread and intraperitoneal mixing in high-grade serous ovarian cancer. [*Nature Genetics*, May 2016.](http://www.nature.com/ng/journal/v48/n7/abs/ng.3573.html)
+
 <a name="ref2"></a>
 [2] Hoadley *et al.* Tumor Evolution in Two Patients with Basal-like Breast Cancer: A Retrospective Genomics Study of Multiple Metastases. [*PLOS Med*, 13(12):e1002174, December 2016.](http://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1002174)
 
