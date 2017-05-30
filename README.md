@@ -1,7 +1,7 @@
-# mFINCH - migration Framework for INferring Cancer Histories
+# MACHINA - Metastatic And Clonal History INtegrative Analysis
 
-mFINCH is a computational framework for inferring migration patterns between a primary tumor and metastases using DNA sequencing data.
-![Overview of mFINCH](doc/overview.png)
+MACHINA is a computational framework for inferring migration patterns between a primary tumor and metastases using DNA sequencing data.
+![Overview of MACHINA](doc/overview.png)
 
 ## Contents
 
@@ -25,7 +25,7 @@ mFINCH is a computational framework for inferring migration patterns between a p
 <a name="dep"></a>
 ### Dependencies
 
-mFINCH is written in C++11 and thus requires a modern C++ compiler (GCC >= 4.8.1, or Clang). In addition, mFINCH has the following dependencies.
+MACHINA is written in C++11 and thus requires a modern C++ compiler (GCC >= 4.8.1, or Clang). In addition, MACHINA has the following dependencies.
 
 * [CMake](http://www.cmake.org/) (>= 2.8)
 * [Boost](http://www.boost.org) (>= 1.38)
@@ -59,9 +59,9 @@ EXECUTABLE | DESCRIPTION
 -----------|-------------
 `pmh_sankoff`  | Enumerates all minimum-migration vertex labelings given a clone tree.
 `pmh` | Solves the Parsimonious Migration History (PMH) problem under various topological constraints (PS, S, M or R) given a clone tree.
-`pmh-pr`    | Solves the Parsimonious Migration History with Polytomy Resolution (PMH-PR) problem under various topological constraints given a clone tree.
-`pmh-cti`     | Solves the Parsimonious Migration History and Clone Tree Inference (PMH-CTI) under various topological constraints.
-`generatemigrationtrees` | Generates all migration trees given anatomical site labels. These migration trees can be used to constraint the search space of the `pmh`, `pmh-pr` and `pmh-cti` algorithms.
+`pmh_pr`    | Solves the Parsimonious Migration History with Polytomy Resolution (PMH-PR) problem under various topological constraints given a clone tree.
+`pmh_cti`     | Solves the Parsimonious Migration History and Clone Tree Inference (PMH-CTI) under various topological constraints.
+`generatemigrationtrees` | Generates all migration trees given anatomical site labels. These migration trees can be used to constraint the search space of the `pmh`, `pmh_pr` and `pmh_cti` algorithms.
 `visualizeclonetree` | Visualizes a clone tree and optional vertex labeling.
 `visualizemigrationgraph` | Visualizes the migration graph given a clone tree and vertex labeling.
 
@@ -71,7 +71,7 @@ EXECUTABLE | DESCRIPTION
 <a name="io"></a>
 ### I/O formats
 
-Below we describe the various formats used by the algorithms of the `mFINCH` framework.
+Below we describe the various formats used by the algorithms of the `MACHINA` framework.
 
 <a name="clonetree"></a>
 #### Clone tree
@@ -158,7 +158,14 @@ S (single-source seeding) | Each metastatic site is seeded from only one other a
 M (multi-source seeding) | A metastatic site may be seeded from multiple anatomical sites, but no directed cycles are introduced. That is, `G` is multi-DAG.
 R (reseeding) | Directed cycles in `G` are allowed.
 
-Note that the patterns above a subsumptive, i.e. R generalizes M, which in turn is a generalization of S and PS. As such, constraining the migration graph to an R pattern amounts to not specifying any constraints. The unconstrained PMH problem can be solved by running `pmh_sankoff`, which is an adaptation of the Sankoff algorithm and enumerates all migration histories:
+In our algorithms we allow for the following restrictions on the migration pattern:
+
+1. Unrestricted: PS, S, M and R
+2. No reseeding: PS, S, M
+3. No reseeding and no multi-source seeding: PS and S
+4. No reseeding, no multi-source seeding and no single-source seeding: PS
+
+The unconstrained PMH problem can be solved by running `pmh_sankoff`, which is an adaptation of the Sankoff algorithm and enumerates all migration histories:
 
     Usage:
       ./pmh_sankoff [--help|-h|-help] [-c str] [-o str] [-p str] T leaf_labeling
@@ -226,12 +233,12 @@ Where:
   -log
      Gurobi logging
   -m int
-     Migration pattern:
-       0 : Parallel single-source seeding
-       1 : Single-source seeding
-       2 : Multi-source seeding
-       3 : Reseeding
-     If no pattern is specified, all patterns will be enumerated.
+     Allowed migration patterns:
+       0 : PS
+       1 : PS, S
+       2 : PS, S, M
+       3 : PS, S, M, R
+     If no pattern is specified, all allowed patterns will be enumerated.
   -o str
      Output prefix
   -p str
@@ -253,19 +260,19 @@ An example execution of the `pmh` algorithm:
     
     $ cat patient1_constrained/result.txt
     Clone tree has 7 samples
-    With primary 'LOv', parallel single-source seeding and no binarization: 15 migrations, 6 comigrations and 1 seeding sites. [LB, UB] = [15.2552, 15.2552]. 0.00199914 seconds
-    With primary 'ROv', parallel single-source seeding and no binarization: 14 migrations, 6 comigrations and 1 seeding sites. [LB, UB] = [14.2552, 14.2552]. 0.00138092 seconds
-    With primary 'LOv', single-source seeding and no binarization: 15 migrations, 6 comigrations and 1 seeding sites. [LB, UB] = [15.2552, 15.2552]. 0.00131297 seconds
-    With primary 'ROv', single-source seeding and no binarization: 14 migrations, 6 comigrations and 1 seeding sites. [LB, UB] = [14.2552, 14.2552]. 0.00171089 seconds
-    With primary 'LOv', multi-source seeding and no binarization: 15 migrations, 6 comigrations and 1 seeding sites. [LB, UB] = [15.2552, 15.2552]. 0.0028851 seconds
-    With primary 'ROv', multi-source seeding and no binarization: 13 migrations, 10 comigrations and 2 seeding sites. [LB, UB] = [13.4271, 13.4271]. 0.00557113 seconds
-    With primary 'LOv', reeeding and no binarization: 13 migrations, 7 comigrations and 2 seeding sites including reseeding. [LB, UB] = [13.3021, 13.3021]. 0.00364995 seconds
-    With primary 'ROv', reeeding and no binarization: 13 migrations, 10 comigrations and 2 seeding sites. [LB, UB] = [13.4271, 13.4271]. 0.00458717 seconds
+    With primary 'LOv', allowed patterns: (PS) and no binarization: 15 migrations, 6 comigrations and 1 seeding sites. [LB, UB] = [15.2552, 15.2552]. 0.00908494 seconds
+    With primary 'ROv', allowed patterns: (PS) and no binarization: 14 migrations, 6 comigrations and 1 seeding sites. [LB, UB] = [14.2552, 14.2552]. 0.00143409 seconds
+    With primary 'LOv', allowed patterns: (PS, S) and no binarization: 15 migrations, 6 comigrations and 1 seeding sites. [LB, UB] = [15.2552, 15.2552]. 0.00133801 seconds
+    With primary 'ROv', allowed patterns: (PS, S) and no binarization: 14 migrations, 6 comigrations and 1 seeding sites. [LB, UB] = [14.2552, 14.2552]. 0.00125289 seconds
+    With primary 'LOv', allowed patterns: (PS, S, M) and no binarization: 15 migrations, 6 comigrations and 1 seeding sites. [LB, UB] = [15.2552, 15.2552]. 0.00285292 seconds
+    With primary 'ROv', allowed patterns: (PS, S, M) and no binarization: 13 migrations, 10 comigrations and 2 seeding sites. [LB, UB] = [13.4271, 13.4271]. 0.00408292 seconds
+    With primary 'LOv', allowed patterns: (PS, S, M, R) and no binarization: 13 migrations, 7 comigrations and 2 seeding sites including reseeding. [LB, UB] = [13.3021, 13.3021]. 0.00917792 seconds
+    With primary 'ROv', allowed patterns: (PS, S, M, R) and no binarization: 13 migrations, 10 comigrations and 2 seeding sites. [LB, UB] = [13.4271, 13.4271]. 0.00402594 seconds
 
 <a name="pmh_pr"></a>
 ### Parsimonious Migration History with Polytomy Resolution (`pmh_pr`)
 
-In the parsimonious migration history with polytomy resolution we are given a clone tree `T` whose leaves are labeled by anatomical sites. The task is to find a binarization `T'` of T and label its inner vertices of such that the resulting migration graph `G` has minimum number of migrations and comigrations. It is possible to specify constraints on the topology of the migration graph.
+In the parsimonious migration history with polytomy resolution we are given a clone tree `T` whose leaves are labeled by anatomical sites. The task is to find a binarization `T'` of `T` and label its inner vertices of such that the resulting migration graph `G` has minimum number of migrations and comigrations. It is possible to specify constraints on the topology of the migration graph.
 
 ```
 Usage:
@@ -310,22 +317,24 @@ Where:
 
 An example execution:
 
-    $ mkdir patient1_pr
-    $ ./pmh_pr -p LOv,ROv -c ../data/mcpherson_2016/coloring.txt \
-    ../data/mcpherson_2016/patient1.tree \
-    ../data/mcpherson_2016/patient1.labeling \
-    -o patient1_pr/ 2> patient1_pr/result.txt
+```
+$ mkdir patient1_pr
+$ ./pmh_pr -p LOv,ROv -c ../data/mcpherson_2016/coloring.txt \
+../data/mcpherson_2016/patient1.tree \
+../data/mcpherson_2016/patient1.labeling \
+-o patient1_pr/ 2> patient1_pr/result.txt
 
-    $ cat patient1_pr/result.txt
-    Clone tree has 7 samples
-    With primary 'LOv', parallel single-source seeding and binarization: 12 migrations, 6 comigrations and 1 seeding sites. [LB, UB] = [12.0506, 12.0506]. 0.0701549 seconds
-    With primary 'ROv', parallel single-source seeding and binarization: 13 migrations, 6 comigrations and 1 seeding sites. [LB, UB] = [13.0506, 13.0506]. 0.077975 seconds
-    With primary 'LOv', single-source seeding and binarization: 12 migrations, 6 comigrations and 1 seeding sites. [LB, UB] = [8.80139, 12.0506]. 10.0014 seconds
-    With primary 'ROv', single-source seeding and binarization: 12 migrations, 6 comigrations and 2 seeding sites. [LB, UB] = [8.21798, 12.0517]. 10.0022 seconds
-    With primary 'LOv', multi-source seeding and binarization: 12 migrations, 6 comigrations and 1 seeding sites. [LB, UB] = [9.11376, 12.0506]. 10.0036 seconds
-    With primary 'ROv', multi-source seeding and binarization: 12 migrations, 7 comigrations and 3 seeding sites. [LB, UB] = [6.05165, 12.061]. 10.0015 seconds
-    With primary 'LOv', reeeding and binarization: 11 migrations, 7 comigrations and 3 seeding sites including reseeding. [LB, UB] = [6.05184, 11.061]. 10.0031 seconds
-    With primary 'ROv', reeeding and binarization: 12 migrations, 7 comigrations and 2 seeding sites. [LB, UB] = [6.05112, 12.0599]. 10.0025 seconds
+$ cat patient1_pr/result.txt
+Clone tree has 7 samples
+With primary 'LOv', allowed patterns: (PS) and binarization: 12 migrations, 6 comigrations and 1 seeding sites. [LB, UB] = [12.0506, 12.0506]. 0.0693879 seconds
+With primary 'ROv', allowed patterns: (PS) and binarization: 13 migrations, 6 comigrations and 1 seeding sites. [LB, UB] = [13.0506, 13.0506]. 0.0793171 seconds
+With primary 'LOv', allowed patterns: (PS, S) and binarization: 12 migrations, 6 comigrations and 1 seeding sites. [LB, UB] = [8.80139, 12.0506]. 10.0016 seconds
+With primary 'ROv', allowed patterns: (PS, S) and binarization: 12 migrations, 6 comigrations and 2 seeding sites. [LB, UB] = [8.2178, 12.0517]. 10.0042 seconds
+With primary 'LOv', allowed patterns: (PS, S, M) and binarization: 12 migrations, 6 comigrations and 1 seeding sites. [LB, UB] = [8.75506, 12.0506]. 10.0034 seconds
+With primary 'ROv', allowed patterns: (PS, S, M) and binarization: 12 migrations, 7 comigrations and 3 seeding sites. [LB, UB] = [6.05165, 12.061]. 10.0079 seconds
+With primary 'LOv', allowed patterns: (PS, S, M, R) and binarization: 11 migrations, 8 comigrations and 3 seeding sites including reseeding. [LB, UB] = [6.05158, 11.0692]. 10.0039 seconds
+With primary 'ROv', allowed patterns: (PS, S, M, R) and binarization: 12 migrations, 7 comigrations and 2 seeding sites. [LB, UB] = [6.05084, 12.0599]. 10.0033 seconds
+```
 
 <a name="pmh_cti"></a>
 ### Parsimonious Migration History and Clone Tree Inference (`pmh_cti`)
@@ -356,12 +365,12 @@ Where:
   -log
      Gurobi logging
   -m int
-     Migration pattern:
-       0 : Parallel single-source seeding
-       1 : Single-source seeding
-       2 : Multi-source seeding
-       3 : Reseeding
-     If no pattern is specified, all patterns will be enumerated.
+     Allowed migration patterns:
+       0 : PS
+       1 : PS, S
+       2 : PS, S, M
+       3 : PS, S, M, R
+     If no pattern is specified, all allowed patterns will be enumerated.
   -o str
      Output prefix
   -p str
@@ -375,15 +384,17 @@ Where:
 
 An example execution:
 
-    $ mkdir migrationtrees_A7
-    $ cd migrationtrees_A7
-    $ ../generatemigrationtrees breast brain kidney liver lung rib
-    $ cd ..
-    $ mkdir A7
-    $ ./pmh_cti -p breast -c ../data/hoadley_2016/coloring.txt \ 
-    -m 1 -s migrationtrees_A7/1045.txt -o A7 
-    ../data/hoadley_2016/A7/sol1.tree ../data/hoadley_2016/A7/F.tsv
-    2> A7/result.txt
+```
+$ mkdir migrationtrees_A7
+$ cd migrationtrees_A7
+$ ../generatemigrationtrees breast brain kidney liver lung rib
+$ cd ..
+$ mkdir A7
+$ ./pmh_cti -p breast -c ../data/hoadley_2016/coloring.txt \ 
+-m 1 -s migrationtrees_A7/1045.txt -o A7 \
+../data/hoadley_2016/A7/sol1.tree ../data/hoadley_2016/A7/F.tsv \
+2> A7/result.txt
 
-    $ cat A7/result.txt
-    With primary 'breast', single-source seeding and binarization: 5 migrations, 5 comigrations and 2 seeding sites. [LB, UB] = [5.0242, 5.0242]. 1.13471 seconds (A7)
+$ cat A7/result.txt
+With primary 'breast', allowed patterns: (PS, S) and binarization: 5 migrations, 5 comigrations and 2 seeding sites. [LB, UB] = [5.0242, 5.0242]. 1.19276 seconds (A7)
+```

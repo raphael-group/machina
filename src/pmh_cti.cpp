@@ -41,12 +41,12 @@ int main(int argc, char** argv)
     .refOption("log", "Gurobi logging", gurobiLog)
     .refOption("t", "Number of threads (default: -1, #cores)", nrThreads)
     .refOption("o", "Output prefix" , outputDirectory)
-    .refOption("m", "Migration pattern:\n"\
-               "       0 : Parallel single-source seeding\n"\
-               "       1 : Single-source seeding\n" \
-               "       2 : Multi-source seeding\n" \
-               "       3 : Reseeding\n" \
-               "     If no pattern is specified, all patterns will be enumerated.", pattern)
+    .refOption("m", "Allowed migration patterns:\n"\
+               "       0 : PS\n"\
+               "       1 : PS, S\n" \
+               "       2 : PS, S, M\n" \
+               "       3 : PS, S, M, R\n" \
+               "     If no pattern is specified, all allowed patterns will be enumerated.", pattern)
     .refOption("s", "Fix comigrations according to provided migration graph", sampleTreeFile)
     .refOption("e", "Export ILP", outputILP)
     .refOption("p", "Primary samples separated by commas (if omitted, every sample will be\n" \

@@ -117,6 +117,12 @@ public:
   /// @param pattern Migration pattern
   static std::string getPatternLongString(Pattern pattern);
   
+  /// Return a short string corresponding to the allowed migration patterns
+  /// of the migration graph
+  ///
+  /// @param pattern Migration pattern
+  static std::string getAllowedPatternsString(Pattern pattern);
+  
   /// Return the number of seeding sites
   int getNrSeedingSamples() const
   {
@@ -295,6 +301,25 @@ inline std::string MigrationGraph::getPatternString(Pattern pattern)
       return "M";
     case R:
       return "R";
+    default:
+      assert(false);
+      return "ERROR";
+  }
+}
+
+
+inline std::string MigrationGraph::getAllowedPatternsString(Pattern pattern)
+{
+  switch (pattern)
+  {
+    case PS:
+      return "PS";
+    case S:
+      return "PS, S";
+    case M:
+      return "PS, S, M";
+    case R:
+      return "PS, S, M, R";
     default:
       assert(false);
       return "ERROR";

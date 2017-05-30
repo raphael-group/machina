@@ -308,8 +308,8 @@ void IlpBinarizationSolver::run(const NonBinaryCloneTree& T,
   }
   
   lemon::Timer timer;
-  std::cerr << "With primary '" << primary << "', "
-    << MigrationGraph::getPatternLongString(pattern) << " and "
+  std::cerr << "With primary '" << primary << "', allowed patterns: ("
+    << MigrationGraph::getAllowedPatternsString(pattern) << ") and "
     << "binarization" << ": " << std::flush;
   if (!solver.solve(nrThreads, timeLimit))
   {
