@@ -1,0 +1,8 @@
+breast 3
+adrenal 1
+liver 2
+spinal 4
+lung 5
+rib 9
+kidney 7
+brain 8
