@@ -1,0 +1,4 @@
+primary Primary, left ear
+lymph_node Lymph node metastasis, left cervical node
+locoregional Locoregional metastasis, left ear
+distant Distant skin metastasis, back

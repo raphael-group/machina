@@ -1,0 +1,4 @@
+primary Primary, right ankle
+lymph_node Lymph node metastasis, right groin
+locoregional_1 Locoregional skin metastasis 1, right ankle
+locoregional_2 Locoregional skin metastasis 2, right ankle

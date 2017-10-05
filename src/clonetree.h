@@ -9,15 +9,20 @@
 #define CLONETREE_H
 
 #include "utils.h"
-#include "binarytree.h"
-#include "nonbinaryclonetree.h"
+#include "basetree.h"
 
-/// This class models a full binary clone tree
-class CloneTree : public BinaryTree
+/// This class models a clone tree
+class CloneTree : public BaseTree
 {
 public:
   /// Default constructor
   CloneTree();
+  
+  /// Copy constructor
+  CloneTree(const CloneTree& other);
+  
+  /// Assignment operator
+  CloneTree& operator =(const CloneTree& other);
   
   /// Constructor
   ///
@@ -30,36 +35,6 @@ public:
             const StringNodeMap& id,
             const StringNodeMap& l);
   
-  /// Copy constructor
-  CloneTree(const CloneTree& other);
-  
-  /// Initialize a clone tree given a Dyck word and randomly assigns anatomical
-  /// sites to its leaves.
-  ///
-  /// @param dyckWord Dyck word
-  /// @param nrSamples Number of anatomical sites
-  CloneTree(const BoolVector& dyckWord, int nrSamples);
-  
-  /// Return all migration edges of the provided vertex labeling
-  ///
-  /// @param lPlus Labeling of each node by an anatomical site
-  ArcSet getMigrationEdges(const StringNodeMap& lPlus) const
-  {
-    ArcSet res;
-    
-    for (ArcIt a(_tree); a != lemon::INVALID; ++a)
-    {
-      Node u = _tree.source(a);
-      Node v = _tree.target(a);
-      if (lPlus[u] != lPlus[v])
-      {
-        res.insert(a);
-      }
-    }
-    
-    return res;
-  }
-  
   /// Return the leaf label of the given node
   ///
   /// @param u Node
@@ -67,6 +42,19 @@ public:
   {
     assert(_isLeaf[u]);
     return _l[u];
+  }
+  
+  /// Return the set of leaf labels of subtree rooted at the given node
+  ///
+  /// @param u Node
+  StringSet ll(Node u) const
+  {
+    StringSet res;
+    for (Node v : _leafSubset[u])
+    {
+      res.insert(l(v));
+    }
+    return res;
   }
   
   /// Read leaf labeling
@@ -114,14 +102,98 @@ public:
                 const StringNodeMap& lPlus,
                 const StringToIntMap& colorMap) const;
   
+  /// Print tree in DOT format using the given vertex labeling and color map
+  ///
+  /// @param out Output stream
+  /// @param lPlus Labeling of each node by an anatomical site
+  /// @param colorMap Color map
+  /// @param F Frequencies
+  /// @param U Mixing proportions of the leaves
+  void writeDOT(std::ostream& out,
+                const StringNodeMap& lPlus,
+                const StringToIntMap& colorMap,
+                const DoubleVectorNodeMap& F,
+                const DoubleNodeMap& U) const;
+  
+  /// Print tree in DOT format using the given color map
+  ///
+  /// @param out Output stream
+  /// @param colorMap Color map
+  /// @param U Mixing proportions of the leaves
+  void writeDOT(std::ostream& out,
+                const StringToIntMap& colorMap,
+                const DoubleNodeMap& U) const;
+  
+  /// Print tree in DOT format using the given color map
+  ///
+  /// @param out Output stream
+  /// @param lPlus Vertex labeling
+  /// @param colorMap Color map
+  /// @param U Mixing proportions of the leaves
+  void writeDOT(std::ostream& out,
+                const StringNodeMap& lPlus,
+                const StringToIntMap& colorMap,
+                const DoubleVectorNodeMap& U) const;
+  
+  /// Print tree in DOT format using the given color map
+  ///
+  /// @param out Output stream
+  /// @param colorMap Color map
+  /// @param U Mixing proportions of the leaves
+  void writeDOT(std::ostream& out,
+                const StringToIntMap& colorMap,
+                const DoubleVectorNodeMap& U) const;
+
+  /// Print tree in DOT format using the given vertex labeling and color map
+  ///
+  /// @param out Output stream
+  /// @param lPlus Labeling of each node by an anatomical site
+  /// @param colorMap Color map
+  /// @param U Mixing proportions of the leaves
+  /// @param characterLabel Character index of the character
+  ///        introduced on the incoming edge of a node
+  void writeDOT(std::ostream& out,
+                const StringNodeMap& lPlus,
+                const StringToIntMap& colorMap,
+                const DoubleNodeMap& U,
+                const IntNodeMap& characterLabel) const;
+  
+  /// Print tree in DOT format using the given vertex labeling and color map
+  ///
+  /// @param out Output stream
+  /// @param lPlus Labeling of each node by an anatomical site
+  /// @param colorMap Color map
+  /// @param U Mixing proportions of the leaves
+  /// @param characterLabel Character index of the character
+  ///        introduced on the incoming edge of a node
+  void writeDOT(std::ostream& out,
+                const StringNodeMap& lPlus,
+                const StringToIntMap& colorMap,
+                const DoubleVectorNodeMap& U,
+                const StringNodeMap& characterLabel) const;
+  
+  /// Print tree in DOT format using the given vertex labeling and color map
+  ///
+  /// @param out Output stream
+  /// @param lPlus Labeling of each node by an anatomical site
+  /// @param colorMap Color map
+  /// @param U Mixing proportions of the leaves
+  /// @param characterLabel Character index of the character
+  ///        introduced on the incoming edge of a node
+  void writeDOT(std::ostream& out,
+                const StringNodeMap& lPlus,
+                const StringToIntMap& colorMap,
+                const DoubleNodeMap& U,
+                const StringNodeMap& characterLabel) const;
+  
   /// Return number of anatomical sites
-  int getNrSamples() const
+  int getNrAnatomicalSites() const
   {
-    return getSamples().size();
+    return getAnatomicalSites().size();
   }
   
   /// Return anatomical site labels
-  StringSet getSamples() const
+  StringSet getAnatomicalSites() const
   {
     StringSet res;
     
@@ -135,6 +207,38 @@ public:
     
     return res;
   }
+  
+  /// Return all migration edges of the provided vertex labeling
+  ///
+  /// @param lPlus Labeling of each node by an anatomical site
+  ArcSet getMigrationEdges(const StringNodeMap& lPlus) const
+  {
+    ArcSet res;
+    
+    for (ArcIt a(_tree); a != lemon::INVALID; ++a)
+    {
+      Node u = _tree.source(a);
+      Node v = _tree.target(a);
+      if (lPlus[u] != lPlus[v])
+      {
+        res.insert(a);
+      }
+    }
+    
+    return res;
+  }
+  
+  /// Merge sibling leaves labeled by the same anatomical site
+  void mergeSameSiblingLeaves();
+  
+  /// Return leaf labeling
+  const StringNodeMap& getLeafLabeling() const
+  {
+    return _l;
+  }
+  
+  /// Return split set
+  SplitSet getSplits() const;
   
 protected:
   /// Leaf labeling L(T) -> Sigma

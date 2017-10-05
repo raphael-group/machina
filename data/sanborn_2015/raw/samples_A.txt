@@ -1,0 +1,4 @@
+primary forehead primary
+parotid_gland metastasis
+locoregional_1 skin metastasis 1, forehead
+locoregional_2 skin metastasis 2, angle jaw

@@ -1,0 +1,95 @@
+\begin{comment} 
+
+
+\noindent 
+\textbf{Variation events on each edge:} 
+\footnotesize 
+\begin{itemize} 
+	\item \textbf{Germline A1 to SC 1}: \\ 
+Acquired mutations: 10__134354633__X>Y (INPP5A), 10__98963266__X>Y (SLIT1), 19__44778597__X>Y (LGALS13), 6__131730938__X>Y (-), 6__50519104__X>Y (-), 9__101950362__X>Y (INVS), 9__105825009__X>Y (-), 9__116716911__X>Y (TNFSF8)
+
+	\item \textbf{SC 1 to SC 2}: \\ 
+Acquired mutations: 10__117941181__X>Y (GFRA1), 10__120345140__X>Y (PRLHR), 10__124594542__X>Y (CUZD1), 10__132896117__X>Y (TCERG1L), 10__30169005__X>Y (-), 10__43989381__X>Y (-), 10__56960415__X>Y (PCDH15), 10__57955358__X>Y (-), 10__67259978__X>Y (-), 10__75747164__X>Y (ADK), 10__87785576__X>Y (GRID1), 11__57818048__X>Y (OR10W1), 11__82237372__X>Y (PRCP), 11__83660465__X>Y (DLG2), 12__126933980__X>Y (-), 16__26054565__X>Y (HS3ST4), 16__5214155__X>Y (ENSG00000221809), 16__5851742__X>Y (-), 16__7733510__X>Y (ENSG00000209555), 16__8001212__X>Y (-), 18__12905622__X>Y (SEH1L), 18__15045444__X>Y (LOC100131500), 19__35552353__X>Y (ZNF536), 19__36351696__X>Y (-), 19__44652253__X>Y (SUPT5H), 19__57897877__X>Y (ZNF83), 6__100130338__X>Y (ENSG00000219755), 6__101334520__X>Y (ASCC3), 6__103034674__X>Y (LOC100132919), 6__103810336__X>Y (-), 6__117127430__X>Y (KPNA5), 6__119480716__X>Y (FAM184A), 6__130021483__X>Y (ARHGAP18), 6__141812628__X>Y (LOC729076), 6__144496653__X>Y (STX11), 6__50534952__X>Y (-), 6__57180847__X>Y (RAB23), 6__97417052__X>Y (GPR63), 7__2798617__X>Y (GNA12), 9__100276456__X>Y (GABBR2), 9__101815469__X>Y (ERP44), 9__107431799__X>Y (FKTN), 9__108142026__X>Y (-), 9__118892426__X>Y (ASTN2), 9__119966859__X>Y (-), 9__78648387__X>Y (PRUNE2), 9__78768991__X>Y (ENSG00000220243), 9__79451567__X>Y (GNA14), 9__88816952__X>Y (ENSG00000186882), 9__90860126__X>Y (SHC3)
+
+	\item \textbf{SC 1 to SC 3}: \\ 
+Acquired mutations: 10__103185549__X>Y (BTRC), 10__103851083__X>Y (PPRC1), 10__105029604__X>Y (INA), 10__109684059__X>Y (LOC100128304), 10__111440844__X>Y (LOC100132843), 10__119809535__X>Y (CASC2), 10__121672136__X>Y (SEC23IP), 10__123142748__X>Y (ENSG00000222979), 10__123176990__X>Y (ENSG00000222979), 10__129930864__X>Y (-), 10__129995611__X>Y (-), 10__130355724__X>Y (-), 10__131089946__X>Y (-), 10__36464896__X>Y (-), 10__37680767__X>Y (LOC646360), 10__52157626__X>Y (LOC653895), 10__56698159__X>Y (PCDH15), 10__57030481__X>Y (PCDH15), 10__58639860__X>Y (-), 10__58963125__X>Y (ENSG00000218583), 10__59261669__X>Y (-), 10__60728325__X>Y (FAM13C), 10__62934765__X>Y (-), 10__66289971__X>Y (ANXA2P3), 10__67522524__X>Y (CTNNA3), 10__84237719__X>Y (NRG3), 10__85037579__X>Y (LOC728027), 10__85385165__X>Y (LOC728050), 10__86683874__X>Y (-), 10__87497692__X>Y (GRID1), 10__91253403__X>Y (SLC16A12), 10__95991906__X>Y (PLCE1), 10__96954888__X>Y (C10orf129), 11__40229086__X>Y (LRRC4C), 11__40993183__X>Y (-), 11__41006427__X>Y (-), 11__41306602__X>Y (LOC729901), 11__59495943__X>Y (ENSG00000214788), 11__61666104__X>Y (INCENP), 11__81008903__X>Y (-), 11__81013414__X>Y (-), 11__81013867__X>Y (-), 12__126641560__X>Y (LOC644489), 12__126845541__X>Y (-), 12__127279792__X>Y (-), 12__128358480__X>Y (TMEM132D), 12__129547396__X>Y (RIMBP2), 12__130583256__X>Y (-), 15__22871365__X>Y (SNORD116-19), 15__27411102__X>Y (-), 16__13038906__X>Y (-), 16__17118848__X>Y (XYLT1), 16__17168566__X>Y (XYLT1), 16__17454144__X>Y (XYLT1), 16__17828151__X>Y (-), 16__18760365__X>Y (SMG1), 16__20150769__X>Y (LOC100129329), 16__22560185__X>Y (-), 16__25573603__X>Y (HS3ST4), 16__26519321__X>Y (ENSG00000221481), 16__5973467__X>Y (A2BP1), 16__6748701__X>Y (A2BP1), 16__7330884__X>Y (A2BP1), 16__8206373__X>Y (-), 16__8384449__X>Y (-), 16__8956415__X>Y (USP7), 18__1101401__X>Y (-), 18__13079146__X>Y (CEP192), 18__14844752__X>Y (ENSG00000206323), 18__2114715__X>Y (-), 18__5862587__X>Y (TTMA), 18__8554742__X>Y (RAB12), 19__34750995__X>Y (POP4), 19__35400145__X>Y (-), 19__35618611__X>Y (ZNF536), 19__35635072__X>Y (ZNF536), 19__36821124__X>Y (-), 19__40094764__X>Y (ZNF30), 19__42312834__X>Y (ZNF420), 19__44991316__X>Y (DYRK1B), 19__46786035__X>Y (ENSG00000210066), 19__58326020__X>Y (ZNF415), 19__58483172__X>Y (ZNF677), 19__61142880__X>Y (NLRP8), 20__14463421__X>Y (MACROD2), 20__14833014__X>Y (MACROD2), 20__26062570__X>Y (C20orf191), 6__103399899__X>Y (-), 6__103477515__X>Y (-), 6__103604780__X>Y (ENSG00000217120), 6__119817960__X>Y (-), 6__122215854__X>Y (ENSG00000220184), 6__129508904__X>Y (LAMA2), 6__142312187__X>Y (-), 6__53035144__X>Y (ICK), 6__55918529__X>Y (ENSG00000214604), 6__58602457__X>Y (LOC727842), 6__96859305__X>Y (ENSG00000223167), 6__98144517__X>Y (-), 6__99123934__X>Y (-), 9__117468997__X>Y (-), 9__118381668__X>Y (ASTN2), 9__121221226__X>Y (DBC1), 9__72590416__X>Y (TRPM3), 9__76957621__X>Y (ENSG00000212316), 9__82200493__X>Y (ENSG00000218777), 9__83417270__X>Y (TLE1)
+
+	\item \textbf{SC 2 to SC 4}: \\ 
+Acquired mutations: 10__108403050__X>Y (SORCS1), 10__110054257__X>Y (ENSG00000217870), 10__110710074__X>Y (ENSG00000222436), 10__117497577__X>Y (ATRNL1), 10__130230535__X>Y (-), 10__32654300__X>Y (EPC1), 10__33920504__X>Y (-), 10__33978032__X>Y (-), 10__52263467__X>Y (A1CF), 10__57689541__X>Y (-), 10__57944469__X>Y (-), 10__66422894__X>Y (-), 10__71255829__X>Y (COL13A1), 11__21127304__X>Y (NELL1), 11__40432908__X>Y (-), 11__83658548__X>Y (DLG2), 12__126730170__X>Y (LOC644489), 12__128113143__X>Y (TMEM132D), 12__128845242__X>Y (TMEM132D), 15__24276991__X>Y (-), 15__27129009__X>Y (APBA2), 18__11582759__X>Y (AMAC1L1), 18__4110314__X>Y (-), 19__57034973__X>Y (ZNF649), 6__117752227__X>Y (ROS1), 6__118310721__X>Y (SLC35F1), 6__50568504__X>Y (-), 6__99144022__X>Y (-), 9__102564991__X>Y (ENSG00000219293), 9__105790749__X>Y (-), 9__119906713__X>Y (LOC389787), 9__77620839__X>Y (-), 9__97892203__X>Y (ENSG00000201938)
+
+	\item \textbf{SC 2 to spinal_0}: \\ 
+Acquired mutations: 10__101107797__X>Y (CNNM1), 10__109260503__X>Y (ENSG00000200079), 10__110011608__X>Y (ENSG00000217870), 10__110505831__X>Y (-), 10__118904382__X>Y (KCNK18), 10__128306852__X>Y (-), 10__130217114__X>Y (-), 10__34419041__X>Y (PARD3), 10__54329123__X>Y (ENSG00000201196), 10__56286085__X>Y (PCDH15), 10__66289693__X>Y (ANXA2P3), 10__70445764__X>Y (KIAA1279), 10__71632452__X>Y (SAR1A), 10__89525467__X>Y (ATAD1), 11__21612687__X>Y (-), 11__23115916__X>Y (-), 11__83285209__X>Y (DLG2), 11__83652317__X>Y (DLG2), 12__126853896__X>Y (-), 12__128268516__X>Y (TMEM132D), 12__128550411__X>Y (TMEM132D), 12__128642204__X>Y (TMEM132D), 12__128680715__X>Y (TMEM132D), 15__23664750__X>Y (ATP10A), 15__25783910__X>Y (OCA2), 15__27787091__X>Y (TJP1), 16__11075432__X>Y (CLEC16A), 16__17888791__X>Y (-), 16__5818404__X>Y (-), 16__5881592__X>Y (-), 16__5903125__X>Y (-), 16__6329002__X>Y (A2BP1), 16__6836550__X>Y (A2BP1), 16__7318796__X>Y (A2BP1), 18__10177961__X>Y (FLJ34223), 18__14740390__X>Y (ANKRD30B), 19__36621094__X>Y (-), 19__39059284__X>Y (-), 19__42129322__X>Y (ZNF568), 19__44578501__X>Y (MED29), 19__57610720__X>Y (ZNF528), 19__59464954__X>Y (LILRB3), 20__14276029__X>Y (MACROD2), 20__14809183__X>Y (MACROD2), 20__25429155__X>Y (NLP), 6__102992907__X>Y (LOC100132919), 6__104027186__X>Y (-), 6__119610996__X>Y (MAN1A1), 6__124021182__X>Y (TRDN), 6__144924303__X>Y (UTRN), 6__49276467__X>Y (-), 6__50173697__X>Y (DEFB112), 6__51288265__X>Y (-), 6__97473303__X>Y (KLHL32), 7__3768336__X>Y (SDK1), 7__7439179__X>Y (COL28A1), 7__8478845__X>Y (NXPH1), 7__8765760__X>Y (NXPH1), 7__9812796__X>Y (LOC340268), 9__103356303__X>Y (RNF20), 9__105709515__X>Y (-), 9__110136656__X>Y (ENSG00000222512), 9__79928379__X>Y (ENSG00000222452), 9__83267462__X>Y (ENSG00000217894), 9__99878405__X>Y (TRIM14)
+
+	\item \textbf{SC 3 to liver_0}: \\ 
+Acquired mutations: 10__110299526__X>Y (-), 10__110441149__X>Y (-), 10__120608275__X>Y (LOC729340), 10__55990127__X>Y (PCDH15), 10__58187546__X>Y (-), 10__66554900__X>Y (ENSG00000219154), 10__84909021__X>Y (-), 10__92678250__X>Y (ANKRD1), 10__97714894__X>Y (LOC100130696), 12__127478127__X>Y (-), 12__127553074__X>Y (-), 12__128320409__X>Y (TMEM132D), 12__129034081__X>Y (-), 16__24089332__X>Y (PRKCB), 16__31462404__X>Y (C16orf58), 18__52907898__X>Y (-), 18__54062878__X>Y (NEDD4L), 18__7066925__X>Y (LAMA1), 18__7340525__X>Y (ENSG00000212626), 19__59741948__X>Y (KIR3DX1), 1__110359957__X>Y (AHCYL1), 20__14753799__X>Y (MACROD2), 6__120890851__X>Y (ENSG00000206857), 6__121308670__X>Y (-), 6__123538582__X>Y (TRDN), 6__145591500__X>Y (-), 6__145717562__X>Y (ENSG00000221796), 6__97912586__X>Y (-), 7__9237639__X>Y (-), 9__87569416__X>Y (LOC100129901)
+
+	\item \textbf{SC 3 to adrenal_0}: \\ 
+Acquired mutations: 10__102226253__X>Y (WNT8B), 10__29461916__X>Y (-), 10__29919312__X>Y (SVIL), 10__34647328__X>Y (PARD3), 10__56493989__X>Y (PCDH15), 10__84904764__X>Y (-), 10__92437193__X>Y (ENSG00000197911), 10__98841741__X>Y (SLIT1), 11__21728969__X>Y (-), 11__41595795__X>Y (-), 15__24014359__X>Y (-), 18__3602475__X>Y (DLGAP1), 18__54242870__X>Y (MIRN122), 19__58850716__X>Y (MIRN520F), 6__130937388__X>Y (ENSG00000202438), 6__132319804__X>Y (LOC100131774), 6__145323291__X>Y (-), 6__48902663__X>Y (ENSG00000221175), 6__50179508__X>Y (-), 7__3882114__X>Y (SDK1), 9__111851665__X>Y (PALM2-AKAP2), 9__79055566__X>Y (VPS13A), 9__93339819__X>Y (ROR2)
+
+	\item \textbf{SC 4 to lung_0}: 	\item \textbf{SC 4 to breast_0}: \\ 
+Acquired mutations: 10__110512707__X>Y (-), 10__34419015__X>Y (PARD3), 10__73230224__X>Y (CDH23), 11__23740966__X>Y (ENSG00000213742), 11__40628227__X>Y (-), 12__127741648__X>Y (TMEM132C), 16__34450096__X>Y (-), 16__9643678__X>Y (LOC100134139), 20__25706058__X>Y (FAM182B), 6__132075413__X>Y (ENPP3), 6__50909762__X>Y (TFAP2B), 9__110925162__X>Y (C9orf5), 9__116561273__X>Y (LOC100129633)
+
+\end{itemize} 
+\end{comment} 
+
+
+\begin{comment} 
+Putative false-positive - (10__110299526__X>Y) in sample breast_0 (Cov: 204, var-reads: 10).
+Putative false-positive - (6__99123934__X>Y) in sample breast_0 (Cov: 158, var-reads: 12).
+Putative false-positive - (6__103477515__X>Y) in sample breast_0 (Cov: 212, var-reads: 12).
+Putative false-positive - (19__35400145__X>Y) in sample breast_0 (Cov: 211, var-reads: 15).
+Putative false-positive - (16__8384449__X>Y) in sample breast_0 (Cov: 231, var-reads: 14).
+Putative false-positive - (10__84909021__X>Y) in sample breast_0 (Cov: 226, var-reads: 10).
+Putative false-positive - (16__8206373__X>Y) in sample breast_0 (Cov: 232, var-reads: 12).
+Putative false-positive - (12__127279792__X>Y) in sample breast_0 (Cov: 149, var-reads: 11).
+Putative false-positive - (10__36464896__X>Y) in sample breast_0 (Cov: 252, var-reads: 12).
+Putative false-positive - (11__81013867__X>Y) in sample breast_0 (Cov: 202, var-reads: 13).
+Putative false-positive - (11__40993183__X>Y) in sample breast_0 (Cov: 140, var-reads: 7).
+Putative false-positive - (16__17828151__X>Y) in sample breast_0 (Cov: 239, var-reads: 16).
+Putative false-positive A2BP1 (16__5973467__X>Y) in sample breast_0 (Cov: 198, var-reads: 9).
+Putative false-positive A2BP1 (16__7330884__X>Y) in sample breast_0 (Cov: 157, var-reads: 8).
+Putative false-positive C10orf129 (10__96954888__X>Y) in sample breast_0 (Cov: 132, var-reads: 9).
+Putative false-positive C20orf191 (20__26062570__X>Y) in sample breast_0 (Cov: 117, var-reads: 8).
+Putative false-positive DBC1 (9__121221226__X>Y) in sample breast_0 (Cov: 169, var-reads: 13).
+Putative false-positive ENSG00000214604 (6__55918529__X>Y) in sample breast_0 (Cov: 214, var-reads: 11).
+Putative false-positive ENSG00000218777 (9__82200493__X>Y) in sample breast_0 (Cov: 126, var-reads: 12).
+Putative false-positive ENSG00000223167 (6__96859305__X>Y) in sample breast_0 (Cov: 178, var-reads: 11).
+Putative false-positive FAM13C (10__60728325__X>Y) in sample breast_0 (Cov: 194, var-reads: 15).
+Putative false-positive INA (10__105029604__X>Y) in sample breast_0 (Cov: 231, var-reads: 14).
+Putative false-positive LOC100128304 (10__109684059__X>Y) in sample breast_0 (Cov: 118, var-reads: 7).
+Putative false-positive LOC100132843 (10__111440844__X>Y) in sample breast_0 (Cov: 175, var-reads: 10).
+Putative false-positive LOC653895 (10__52157626__X>Y) in sample breast_0 (Cov: 99, var-reads: 8).
+Putative false-positive LOC729901 (11__41306602__X>Y) in sample breast_0 (Cov: 280, var-reads: 12).
+Putative false-positive NLRP8 (19__61142880__X>Y) in sample breast_0 (Cov: 131, var-reads: 7).
+Putative false-positive PCDH15 (10__57030481__X>Y) in sample breast_0 (Cov: 173, var-reads: 12).
+Putative false-positive PPRC1 (10__103851083__X>Y) in sample breast_0 (Cov: 230, var-reads: 10).
+Putative false-positive RIMBP2 (12__129547396__X>Y) in sample breast_0 (Cov: 150, var-reads: 8).
+Putative false-positive SEC23IP (10__121672136__X>Y) in sample breast_0 (Cov: 246, var-reads: 14).
+Putative false-positive TMEM132D (12__128358480__X>Y) in sample breast_0 (Cov: 137, var-reads: 12).
+Putative false-positive TTMA (18__5862587__X>Y) in sample breast_0 (Cov: 199, var-reads: 10).
+Putative false-positive USP7 (16__8956415__X>Y) in sample breast_0 (Cov: 188, var-reads: 17).
+Putative false-positive ZNF415 (19__58326020__X>Y) in sample breast_0 (Cov: 178, var-reads: 11).
+Putative false-positive ZNF536 (19__35635072__X>Y) in sample breast_0 (Cov: 179, var-reads: 13).
+False-positives: coverage: mean 184.86111111111111, median 183.5; vars: mean 11.25, median 11.5
+False-positives: VAF: mean 6.24%, median 6.06%
+
+Putative powered false-negative - (6__50519104__X>Y) in sample spinal_0 (Cov: 197, var-reads: 0).
+Putative powered false-negative - (6__131730938__X>Y) in sample spinal_0 (Cov: 83, var-reads: 0).
+Putative powered false-negative INPP5A (10__134354633__X>Y) in sample spinal_0 (Cov: 179, var-reads: 0).
+Powered false-negatives: Coverage: mean 153.0, median 179.0
+
+Putative under-powered false-negative - (6__131730938__X>Y) in sample lung_0 (Cov: 86, var-reads: 4).
+Putative under-powered false-negative - (10__57944469__X>Y) in sample lung_0 (Cov: 106, var-reads: 5).
+Putative under-powered false-negative INPP5A (10__134354633__X>Y) in sample lung_0 (Cov: 138, var-reads: 6).
+Under-powered false-negatives: Coverage: mean 110.0, median 106.0
+
+\end{comment} 
+
+\begin{comment} 
+\textbf{Sample} & \textbf{adrenal~0} & \textbf{breast~0} & \textbf{liver~0} & \textbf{lung~0} & \textbf{spinal~0}\\
+\hline 
+\textbf{Under-powered false-negatives} & $0$ & $0$ & $0$ & $3$ & $0$ \\
+\textbf{Powered false-negatives} & $0$ & $0$ & $0$ & $0$ & $3$ \\
+\textbf{False-positives} & $0$ & $36$ & $0$ & $0$ & $0$ \\
+\end{comment} 
+

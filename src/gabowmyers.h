@@ -9,6 +9,7 @@
 #define GABOWMYERS_H
 
 #include "utils.h"
+#include <lemon/bfs.h>
 
 /// This class uses the Gabow-Myers algorithm to enumerate
 /// all rooted spanning trees in a directed graph.
@@ -22,7 +23,8 @@ public:
   ///
   /// @param G Directed graph
   /// @param root Root
-  GabowMyers(const Digraph& G, Node root);
+  /// @param limit Maximum number of trees to enumerate
+  GabowMyers(const Digraph& G, Node root, int limit = -1);
   
   /// Run enumeration
   void run();
@@ -47,6 +49,7 @@ public:
   }
   
 protected:
+  typedef lemon::Bfs<SubDigraph> SubBfs;
   typedef std::list<Arc> ArcList;
   typedef ArcList::const_iterator ArcListIt;
   typedef ArcList::iterator ArcListNonConstIt;
@@ -64,19 +67,28 @@ protected:
 private:
   /// Directed graph
   const Digraph& _G;
+  /// Limit
+  const int _limit;
   /// Root node
   Node _root;
   /// Resulting list of lists of arcs
   ArcListList _result;
+  /// Number of vertices
+  int _nrVertices;
   
   /// Extend the provided spanning tree using arcs present
   /// in the provided frontier and directed graph
+  /// Returns false if limit reached
   ///
   /// @param G Directed graph
   /// @param T Tree to extend
+  /// @param L Last reported tree
+  /// @param bfsL BFS levels for L used for the bridge test
   /// @param F Frontier
-  void grow(SubDigraph& G,
+  bool grow(SubDigraph& G,
             SubDigraph& T,
+            SubDigraph& L,
+            SubBfs& bfsL,
             ArcList& F);
 
   /// Initialize the enumeration algorithm.
@@ -88,26 +100,6 @@ private:
   void init(SubDigraph& G,
             SubDigraph& T,
             ArcList& F);
-  
-  /// Add the given arc to the subtree
-  ///
-  /// @param T Subtree
-  /// @param a_cidj Arc to add
-  void addArc(SubDigraph& T,
-              Arc a_cidj) const;
-  
-  /// Remove the given arc from the subtree
-  ///
-  /// @param T Subtree
-  /// @param a_cidj Arc to remove
-  void removeArc(SubDigraph& T,
-                 Arc a_cidj) const;
-  
-  /// Decide whether the given subtree is a directed tree
-  bool isArborescence(const SubDigraph& T) const;
-  
-  /// Report the enumerated spanning tree
-  void finalize(const SubDigraph& T);
 };
 
 #endif // GABOWMYERS_H

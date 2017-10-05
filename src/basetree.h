@@ -50,13 +50,13 @@ public:
   virtual void writeDOT(std::ostream& out) const;
   
   /// Return number of anatomical sites
-  virtual int getNrSamples() const
+  virtual int getNrAnatomicalSites() const
   {
     return 0;
   }
   
   /// Return anatomical site labels
-  virtual StringSet getSamples() const
+  virtual StringSet getAnatomicalSites() const
   {
     return StringSet();
   }
@@ -88,6 +88,33 @@ public:
         return true;
       else
         v = _tree.source(InArcIt(_tree, v));
+    }
+    
+    return u == v;
+  }
+  
+  static bool isAncestor(const Digraph& tree,
+                         Node u,
+                         Node v)
+  {
+    while (v != lemon::INVALID)
+    {
+      if (u == v)
+      {
+        return true;
+      }
+      else
+      {
+        InArcIt a(tree, v);
+        if (a == lemon::INVALID)
+        {
+          v = lemon::INVALID;
+        }
+        else
+        {
+          v = tree.source(a);
+        }
+      }
     }
     
     return u == v;
@@ -144,7 +171,7 @@ public:
     return _level[u];
   }
   
-  /// Return the set of leaves that occur in the subtree rooted at the provided node.
+  /// Return the set of leaves that occur in the subtree rooted at the provided node
   ///
   /// @param u Node
   const NodeSet& leafSubset(Node u) const
@@ -160,18 +187,30 @@ public:
   
   /// Return the LCA of the provided set of nodes
   ///
+  /// @param T Tree
   /// @param nodes Node set
-  Node getLCA(const NodeSet& nodes) const;
+  static Node getLCA(const Digraph& T,
+                     const NodeSet& nodes);
+  
+  /// Return the LCA of the provided set of nodes
+  ///
+  /// @param nodes Node set
+  Node getLCA(const NodeSet& nodes) const
+  {
+    return getLCA(_tree, nodes);
+  }
   
   /// Decides whether the given set of nodes is connected
   ///
   /// @param nodes Node set
   bool isConnected(const NodeSet& nodes) const;
   
-  /// Initialize auxilliary data structures (_isLeaf, _leafSet, _leafSubset, _level)
+  /// Initialize auxilliary data structures
+  /// (_isLeaf, _leafSet, _leafSubset, _level)
   void init();
   
-  /// Return a node corresponding to the given identifier. If there is no node with the given identifier, lemon::INVALID is returned.
+  /// Return a node corresponding to the given identifier.
+  /// If there is no node with the given identifier, lemon::INVALID is returned.
   ///
   /// @param lbl Identifier
   Node getNodeByLabel(const std::string& lbl) const
@@ -188,7 +227,19 @@ public:
   }
   
   /// Return the unique path from the root to u
-  NodeList pathFromRoot(Node u) const;
+  ///
+  /// @param u Node
+  NodeList pathFromRoot(Node u) const
+  {
+    return pathFromRoot(_tree, u);
+  }
+  
+  /// Return the unique path from the root to u
+  ///
+  /// @param T Tree
+  /// @param u Node
+  static NodeList pathFromRoot(const Digraph& T,
+                               Node u);
   
   /// Return the unique path from u to v
   NodeList path(Node u, Node v) const;
@@ -212,11 +263,11 @@ public:
   /// Return a generated color map based on the anatomical sites present in the current tree
   StringToIntMap generateColorMap() const
   {
-    StringSet samples = getSamples();
+    StringSet Sigma = getAnatomicalSites();
     
     StringToIntMap colorMap;
     int idx = 0;
-    for (const std::string& s : samples)
+    for (const std::string& s : Sigma)
     {
       colorMap[s] = ++idx;
     }
@@ -236,6 +287,29 @@ public:
       res.push_back(StringPair(_nodeToId[u], _nodeToId[v]));
     }
     return res;
+  }
+  
+  /// Return the edge list
+  std::string getEdgeListString() const
+  {
+    std::string res;
+    for (ArcIt a(_tree); a != lemon::INVALID; ++a)
+    {
+      Node u = _tree.source(a);
+      Node v = _tree.target(a);
+      
+      if (!res.empty())
+        res += " ; ";
+      
+      res += "(" + _nodeToId[u] + "," + _nodeToId[v] + ")";
+    }
+    return res;
+  }
+  
+  /// Return node id map
+  const StringNodeMap& getIdMap() const
+  {
+    return _nodeToId;
   }
 
 protected:

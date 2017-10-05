@@ -1,0 +1,9 @@
+primary 3
+parotid_gland 1
+locoregional_1 4
+locoregional_2 5
+lymph_node 2
+distant 8
+lung 7
+locoregional 5
+brain 8

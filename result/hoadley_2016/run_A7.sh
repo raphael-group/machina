@@ -1,7 +1,7 @@
 #!/bin/bash
-if [ ! $# -eq 2 ]
+if [ ! $# -eq 3 ]
 then
-    echo "Usage: $0 <pmh_cti_executable> <generatemigrationtrees_executable>" >&2
+    echo "Usage: $0 <pmh_ti_executable> <generatemigrationtrees_executable> <generatemutationtrees_executable>" >&2
     exit 1
 fi
 
@@ -10,24 +10,8 @@ then
     mkdir A7
 fi
 
-if [ ! -e A7/sample_trees ]
-then
-    mkdir A7/sample_trees
-fi
-cd A7/sample_trees
-../../$2 breast brain kidney liver lung rib
-cd ../..
+$2 breast brain kidney liver lung rib > A7/migration_trees.txt
 
-for T in A7/sample_trees/*.txt
-do
-    for i in {0,1}
-    do
-	dir=A7/T`basename ${T} .txt`_sol${i}
-	if [ ! -e $dir ]
-	then
-	    mkdir $dir
-	fi
-	echo "Solving $dir..."
-	$1 -c ../../data/hoadley_2016/coloring.txt ../../data/hoadley_2016/A7/sol${i}.tree ../../data/hoadley_2016/A7/F.tsv -p breast -t 4 -m 1 -o $dir -l 30 -s $T &> $dir/result.txt
-    done
-done
+$3 ../../data/hoadley_2016/A7/F.tsv > A7/mutation_trees.txt
+
+$1 -c ../../data/hoadley_2016/coloring.txt -barT A7/mutation_trees.txt -G A7/migration_trees.txt -F ../../data/hoadley_2016/A7/A7_MACHINA_0.95.tsv -p breast -t 4 -m 1 -o A7/ > A7/results.txt

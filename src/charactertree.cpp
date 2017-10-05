@@ -16,31 +16,31 @@ CharacterTree::CharacterTree()
 {
 }
 
-CharacterTree::CharacterTree(const NonBinaryCloneTree& T,
+CharacterTree::CharacterTree(const CloneTree& T,
                              const std::string& primary,
-                             StringVector& stateToSample,
-                             StringToIntMap& sampleToState)
+                             StringVector& stateToAnatomicalSite,
+                             StringToIntMap& anatomicalSiteToState)
   : BaseTree(T)
   , _stateVector(_tree, IntVector(1, -1))
-  , _nrStates(1, T.getNrSamples())
+  , _nrStates(1, T.getNrAnatomicalSites())
   , _indexToCharacter()
   , _characterToIndex()
 {
-  _characterToIndex["sample"] = 0;
-  _indexToCharacter.push_back("sample");
+  _characterToIndex["SITE"] = 0;
+  _indexToCharacter.push_back("SITE");
   
   // set the states, starting with the primary
-  assert(T.getSamples().count(primary) == 1);
-  stateToSample.push_back(primary);
-  sampleToState[primary] = 0;
+  assert(T.getAnatomicalSites().count(primary) == 1);
+  stateToAnatomicalSite.push_back(primary);
+  anatomicalSiteToState[primary] = 0;
   
-  for (const std::string& sample : T.getSamples())
+  for (const std::string& s : T.getAnatomicalSites())
   {
-    if (sample == primary)
+    if (s == primary)
       continue;
     
-    sampleToState[sample] = stateToSample.size();
-    stateToSample.push_back(sample);
+    anatomicalSiteToState[s] = stateToAnatomicalSite.size();
+    stateToAnatomicalSite.push_back(s);
   }
   
   for (NodeIt u(_tree); u != lemon::INVALID; ++u)
@@ -50,9 +50,9 @@ CharacterTree::CharacterTree(const NonBinaryCloneTree& T,
       Node uu = T.getNodeByLabel(label(u));
       assert(uu != lemon::INVALID);
       
-      const std::string& sample = T.l(uu);
-      assert(sampleToState.count(sample) == 1);
-      _stateVector[u] = IntVector(1, sampleToState[sample]);
+      const std::string& s = T.l(uu);
+      assert(anatomicalSiteToState.count(s) == 1);
+      _stateVector[u] = IntVector(1, anatomicalSiteToState[s]);
     }
     else
     {
@@ -119,7 +119,7 @@ bool CharacterTree::readLeafLabeling(std::istream& in)
   StringSetNodeMap characterSet(_tree);
   StringSet characters;
 
-  // first line is the sample set
+  // first line is the anatomical site set
   std::string line;
   getline(in, line);
 

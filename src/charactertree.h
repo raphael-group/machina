@@ -10,7 +10,7 @@
 
 #include "utils.h"
 #include "basetree.h"
-#include "nonbinaryclonetree.h"
+#include "clonetree.h"
 
 /// This class models a character-based (phylogenetic) tree
 class CharacterTree : public BaseTree
@@ -27,14 +27,14 @@ public:
   
   /// Constructor
   ///
-  /// @param T Non binary clone tree
+  /// @param T Clone tree
   /// @param primary Primary tumor anatomical site label
-  /// @param stateToSample State index to anatomical site label
-  /// @param sampleToState Anatomical site label to state index
-  CharacterTree(const NonBinaryCloneTree& T,
+  /// @param stateToAnatomicalSite State index to anatomical site label
+  /// @param anatomicalSiteToState Anatomical site label to state index
+  CharacterTree(const CloneTree& T,
                 const std::string& primary,
-                StringVector& stateToSample,
-                StringToIntMap& sampleToState);
+                StringVector& stateToAnatomicalSite,
+                StringToIntMap& anatomicalSiteToState);
   
   /// Read leaf labeling
   ///

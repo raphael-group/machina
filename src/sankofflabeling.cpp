@@ -32,7 +32,7 @@ void SankoffLabeling::run()
   } while (sankoff.nextSolution());
 }
 
-void SankoffLabeling::run(const NonBinaryCloneTree& T,
+void SankoffLabeling::run(const CloneTree& T,
                           const std::string& primary,
                           const std::string& outputDirectory,
                           const StringToIntMap& colorMap)
@@ -46,11 +46,12 @@ void SankoffLabeling::run(const NonBinaryCloneTree& T,
   SankoffLabeling::IntTripleToIntMap result = sankoff.classify();
   for (const auto& kv : result)
   {
-    MigrationGraph::Pattern pattern = static_cast<MigrationGraph::Pattern>(kv.first.second.second);
+    MigrationGraph::Pattern pattern = static_cast<MigrationGraph::Pattern>(kv.first.second.second.second);
+    bool monoclonal = kv.first.second.second.first;
     std::cerr << "Found " << kv.second
       << " labelings with " << kv.first.first << " comigrations, "
       << kv.first.second.first << " seeding sites and "
-      << MigrationGraph::getPatternString(pattern)
+      << MigrationGraph::getPatternString(pattern, monoclonal)
       << std::endl;
   }
   
@@ -61,8 +62,8 @@ void SankoffLabeling::run(const NonBinaryCloneTree& T,
     std::cerr << "Labeling " << solIdx << ": "
       << G.getNrMigrations() << " migrations, "
       << G.getNrComigrations(T, sankoff.getLabeling(solIdx)) << " comigrations, "
-      << G.getNrSeedingSamples() << " seeding sites and "
-      << G.getPatternString(G.getPattern(T, sankoff.getLabeling(solIdx)));
+      << G.getNrSeedingSites() << " seeding sites and "
+      << G.getPatternString(G.getPattern(), G.isMonoclonal());
     std::cerr << std::endl;
     
     if (!outputDirectory.empty())

@@ -1,0 +1,6 @@
+cluster.colour	presence	A	C
+dark green	C	0.017263814	0.565239584
+light blue	C	0	0.66
+gold	A	0.979974838	0.001294061
+dark pink	A C	1.010630588	0.349768165
+grey	A C	1.069879511	0.950108789

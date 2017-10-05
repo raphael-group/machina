@@ -1,0 +1,3 @@
+primary Primary, right lower calf
+locoregional_1 Locoregional skin metastasis 1, right calf
+locoregional_2 Locoregional skin metastasis 2, right mid-calf

@@ -1,0 +1,120 @@
+digraph T {
+	{
+		rank=same
+		57 [penwidth=3,colorscheme=set19,color=8,label="light_purpleE\nleft_adrenal_gland"]
+		56 [penwidth=3,colorscheme=set19,color=2,label="light_brownI\nleft_pelvic_lymph_node_8"]
+		55 [penwidth=3,colorscheme=set19,color=3,label="dark_brownC\nprostate"]
+		54 [penwidth=3,colorscheme=set19,color=1,label="dark_greenK\nleft_pelvic_lymph_node_5"]
+		53 [penwidth=3,colorscheme=set19,color=2,label="dark_greenI\nleft_pelvic_lymph_node_8"]
+		52 [penwidth=3,colorscheme=set19,color=1,label="yellowK\nleft_pelvic_lymph_node_5"]
+		51 [penwidth=3,colorscheme=set19,color=4,label="yellowH\npelvic_lymph_node_7"]
+		50 [penwidth=3,colorscheme=set19,color=1,label="light_blueK\nleft_pelvic_lymph_node_5"]
+		49 [penwidth=3,colorscheme=set19,color=4,label="light_blueH\npelvic_lymph_node_7"]
+		48 [penwidth=3,colorscheme=set19,color=9,label="dark_blueJ\nright_pelvic_lymph_node_12"]
+		47 [penwidth=3,colorscheme=set19,color=7,label="dark_blueG\nbladder"]
+		46 [penwidth=3,colorscheme=set19,color=10,label="dark_blueD\nseminal_vesicle"]
+		45 [penwidth=3,colorscheme=set19,color=9,label="mid_blueJ\nright_pelvic_lymph_node_12"]
+		44 [penwidth=3,colorscheme=set19,color=7,label="mid_blueG\nbladder"]
+		43 [penwidth=3,colorscheme=set19,color=10,label="mid_blueD\nseminal_vesicle"]
+		42 [penwidth=3,colorscheme=set19,color=5,label="goldF\nright_adrenal_gland"]
+		41 [penwidth=3,colorscheme=set19,color=1,label="redK\nleft_pelvic_lymph_node_5"]
+		40 [penwidth=3,colorscheme=set19,color=10,label="redD\nseminal_vesicle"]
+		39 [penwidth=3,colorscheme=set19,color=3,label="redC\nprostate"]
+		38 [penwidth=3,colorscheme=set19,color=1,label="light_greenK\nleft_pelvic_lymph_node_5"]
+		37 [penwidth=3,colorscheme=set19,color=9,label="light_greenJ\nright_pelvic_lymph_node_12"]
+		36 [penwidth=3,colorscheme=set19,color=2,label="light_greenI\nleft_pelvic_lymph_node_8"]
+		35 [penwidth=3,colorscheme=set19,color=4,label="light_greenH\npelvic_lymph_node_7"]
+		34 [penwidth=3,colorscheme=set19,color=7,label="light_greenG\nbladder"]
+		33 [penwidth=3,colorscheme=set19,color=5,label="light_greenF\nright_adrenal_gland"]
+		32 [penwidth=3,colorscheme=set19,color=9,label="orangeJ\nright_pelvic_lymph_node_12"]
+		31 [penwidth=3,colorscheme=set19,color=7,label="orangeG\nbladder"]
+		30 [penwidth=3,colorscheme=set19,color=8,label="orangeE\nleft_adrenal_gland"]
+		29 [penwidth=3,colorscheme=set19,color=2,label="orangeA\nleft_humerus_bone_marrow"]
+		28 [penwidth=3,colorscheme=set19,color=1,label="dark_purpleK\nleft_pelvic_lymph_node_5"]
+		27 [penwidth=3,colorscheme=set19,color=9,label="dark_purpleJ\nright_pelvic_lymph_node_12"]
+		26 [penwidth=3,colorscheme=set19,color=2,label="dark_purpleI\nleft_pelvic_lymph_node_8"]
+		25 [penwidth=3,colorscheme=set19,color=4,label="dark_purpleH\npelvic_lymph_node_7"]
+		24 [penwidth=3,colorscheme=set19,color=7,label="dark_purpleG\nbladder"]
+		23 [penwidth=3,colorscheme=set19,color=5,label="dark_purpleF\nright_adrenal_gland"]
+		22 [penwidth=3,colorscheme=set19,color=8,label="dark_purpleE\nleft_adrenal_gland"]
+		21 [penwidth=3,colorscheme=set19,color=5,label="mid_greenF\nright_adrenal_gland"]
+		20 [penwidth=3,colorscheme=set19,color=8,label="mid_greenE\nleft_adrenal_gland"]
+		19 [penwidth=3,colorscheme=set19,color=10,label="greyD\nseminal_vesicle"]
+		18 [penwidth=3,colorscheme=set19,color=3,label="greyC\nprostate"]
+		17 [penwidth=3,colorscheme=set19,color=9,label="pinkJ\nright_pelvic_lymph_node_12"]
+		16 [penwidth=3,colorscheme=set19,color=2,label="pinkA\nleft_humerus_bone_marrow"]
+	}
+	15 [label="light_purple"]
+	14 [label="pink"]
+	13 [label="light_brown"]
+	12 [label="yellow"]
+	11 [label="light_blue"]
+	10 [label="dark_green"]
+	9 [label="gold"]
+	8 [label="mid_green"]
+	7 [label="orange"]
+	6 [label="dark_blue"]
+	5 [label="dark_purple"]
+	4 [label="light_green"]
+	3 [label="mid_blue"]
+	2 [label="dark_brown"]
+	1 [label="red"]
+	0 [label="grey"]
+	15 -> 57
+	14 -> 17
+	14 -> 16
+	13 -> 56
+	12 -> 52
+	12 -> 51
+	11 -> 50
+	11 -> 49
+	10 -> 54
+	10 -> 53
+	10 -> 13
+	10 -> 12
+	10 -> 11
+	9 -> 42
+	8 -> 21
+	8 -> 20
+	8 -> 9
+	7 -> 32
+	7 -> 31
+	7 -> 30
+	7 -> 29
+	7 -> 15
+	7 -> 14
+	6 -> 48
+	6 -> 47
+	6 -> 46
+	5 -> 28
+	5 -> 27
+	5 -> 26
+	5 -> 25
+	5 -> 24
+	5 -> 23
+	5 -> 22
+	5 -> 10
+	5 -> 8
+	5 -> 7
+	4 -> 38
+	4 -> 37
+	4 -> 36
+	4 -> 35
+	4 -> 34
+	4 -> 33
+	4 -> 6
+	4 -> 5
+	3 -> 45
+	3 -> 44
+	3 -> 43
+	2 -> 55
+	1 -> 41
+	1 -> 40
+	1 -> 39
+	1 -> 4
+	1 -> 3
+	0 -> 19
+	0 -> 18
+	0 -> 2
+	0 -> 1
+}

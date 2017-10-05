@@ -1,0 +1,226 @@
+digraph T {
+	{
+		rank=same
+		108 [penwidth=3,colorscheme=set19,color=3,label="0;1_P\nP\n60%"]
+		106 [penwidth=3,colorscheme=set19,color=3,label="2_P\nP\n3.2%"]
+		104 [penwidth=3,colorscheme=set19,color=3,label="3_P\nP\n6.6%"]
+		102 [penwidth=3,colorscheme=set19,color=3,label="4_P\nP\n13%"]
+		100 [penwidth=3,colorscheme=set19,color=3,label="5;7_P\nP\n5.5%"]
+		98 [penwidth=3,colorscheme=set19,color=3,label="6_P\nP\n12%"]
+		96 [penwidth=3,colorscheme=set19,color=2,label="15;22;28;33_M1\nM1\n6.6%"]
+		94 [penwidth=3,colorscheme=set19,color=2,label="16;17;18_M1\nM1\n14%"]
+		92 [penwidth=3,colorscheme=set19,color=2,label="29;30_M1\nM1\n7.9%"]
+		90 [penwidth=3,colorscheme=set19,color=2,label="34_M1\nM1\n5.7%"]
+		88 [penwidth=3,colorscheme=set19,color=2,label="37;40_M1\nM1\n0.22%"]
+		86 [penwidth=3,colorscheme=set19,color=2,label="45;50_M1\nM1\n0.03%"]
+		84 [penwidth=3,colorscheme=set19,color=2,label="61;67_M1\nM1\n47%"]
+		82 [penwidth=3,colorscheme=set19,color=2,label="70;71_M1\nM1\n11%"]
+		80 [penwidth=3,colorscheme=set19,color=2,label="72_M1\nM1\n7.8%"]
+		78 [penwidth=3,colorscheme=set19,color=8,label="8_M2\nM2\n21%"]
+		76 [penwidth=3,colorscheme=set19,color=8,label="43;46_M2\nM2\n5.3%"]
+		74 [penwidth=3,colorscheme=set19,color=8,label="63_M2\nM2\n0.15%"]
+		72 [penwidth=3,colorscheme=set19,color=8,label="73_M2\nM2\n29%"]
+		70 [penwidth=3,colorscheme=set19,color=8,label="77_M2\nM2\n31%"]
+		68 [penwidth=3,colorscheme=set19,color=8,label="82_M2\nM2\n6.3%"]
+		65 [penwidth=3,colorscheme=set19,color=8,label="27_M2\nM2\n7.4%"]
+		63 [penwidth=3,colorscheme=set19,color=9,label="20;39;48_M3\nM3\n15%"]
+		61 [penwidth=3,colorscheme=set19,color=9,label="21;47;51_M3\nM3\n47%"]
+		59 [penwidth=3,colorscheme=set19,color=9,label="53_M3\nM3\n14%"]
+		57 [penwidth=3,colorscheme=set19,color=9,label="55_M3\nM3\n9.2%"]
+		55 [penwidth=3,colorscheme=set19,color=9,label="57_M3\nM3\n5.6%"]
+		53 [penwidth=3,colorscheme=set19,color=9,label="56_M3\nM3\n8.8%"]
+		51 [penwidth=3,colorscheme=set19,color=7,label="9;11;12;13;24_M4\nM4\n8.9%"]
+		49 [penwidth=3,colorscheme=set19,color=7,label="58_M4\nM4\n11%"]
+		47 [penwidth=3,colorscheme=set19,color=7,label="60_M4\nM4\n6.7%"]
+		45 [penwidth=3,colorscheme=set19,color=7,label="32;35;41;49_M4\nM4\n28%"]
+		43 [penwidth=3,colorscheme=set19,color=7,label="36;38_M4\nM4\n3.2%"]
+		41 [penwidth=3,colorscheme=set19,color=7,label="59_M4\nM4\n36%"]
+		39 [penwidth=3,colorscheme=set19,color=7,label="64_M4\nM4\n6.8%"]
+		37 [penwidth=3,colorscheme=set19,color=5,label="42_M5\nM5\n19%"]
+		35 [penwidth=3,colorscheme=set19,color=5,label="74_M5\nM5\n36%"]
+		33 [penwidth=3,colorscheme=set19,color=5,label="75_M5\nM5\n20%"]
+		31 [penwidth=3,colorscheme=set19,color=5,label="78_M5\nM5\n7.2%"]
+		29 [penwidth=3,colorscheme=set19,color=5,label="79_M5\nM5\n8.4%"]
+		27 [penwidth=3,colorscheme=set19,color=5,label="80_M5\nM5\n9.4%"]
+		25 [penwidth=3,colorscheme=set19,color=4,label="54;62;68;69_M6\nM6\n39%"]
+		23 [penwidth=3,colorscheme=set19,color=4,label="76_M6\nM6\n20%"]
+		21 [penwidth=3,colorscheme=set19,color=4,label="85_M6\nM6\n12%"]
+		19 [penwidth=3,colorscheme=set19,color=4,label="83_M6\nM6\n9.1%"]
+		17 [penwidth=3,colorscheme=set19,color=4,label="86_M6\nM6\n12%"]
+		15 [penwidth=3,colorscheme=set19,color=4,label="87_M6\nM6\n8.6%"]
+		14 [penwidth=3,colorscheme=set19,color=1,label="0;1_M7\nM7\n0.14%"]
+		12 [penwidth=3,colorscheme=set19,color=1,label="19;23;25;26;31;44;52;65;66;81;84_M7\nM7\n44%"]
+		10 [penwidth=3,colorscheme=set19,color=1,label="88_M7\nM7\n11%"]
+		8 [penwidth=3,colorscheme=set19,color=1,label="89_M7\nM7\n15%"]
+		6 [penwidth=3,colorscheme=set19,color=1,label="90;91_M7\nM7\n4.6%"]
+		4 [penwidth=3,colorscheme=set19,color=1,label="94_M7\nM7\n5.9%"]
+		2 [penwidth=3,colorscheme=set19,color=1,label="92_M7\nM7\n9.1%"]
+		0 [penwidth=3,colorscheme=set19,color=1,label="93_M7\nM7\n11%"]
+	}
+	110 [label="GL"]
+	109 [label="0;1"]
+	107 [label="2"]
+	105 [label="3"]
+	103 [label="4"]
+	101 [label="5;7"]
+	99 [label="6"]
+	97 [label="15;22;28;33"]
+	95 [label="16;17;18"]
+	93 [label="29;30"]
+	91 [label="34"]
+	89 [label="37;40"]
+	87 [label="45;50"]
+	85 [label="61;67"]
+	83 [label="70;71"]
+	81 [label="72"]
+	79 [label="8"]
+	77 [label="43;46"]
+	75 [label="63"]
+	73 [label="73"]
+	71 [label="77"]
+	69 [label="82"]
+	67 [label="10;14"]
+	66 [label="27"]
+	64 [label="20;39;48"]
+	62 [label="21;47;51"]
+	60 [label="53"]
+	58 [label="55"]
+	56 [label="57"]
+	54 [label="56"]
+	52 [label="9;11;12;13;24"]
+	50 [label="58"]
+	48 [label="60"]
+	46 [label="32;35;41;49"]
+	44 [label="36;38"]
+	42 [label="59"]
+	40 [label="64"]
+	38 [label="42"]
+	36 [label="74"]
+	34 [label="75"]
+	32 [label="78"]
+	30 [label="79"]
+	28 [label="80"]
+	26 [label="54;62;68;69"]
+	24 [label="76"]
+	22 [label="85"]
+	20 [label="83"]
+	18 [label="86"]
+	16 [label="87"]
+	13 [label="19;23;25;26;31;44;52;65;66;81;84"]
+	11 [label="88"]
+	9 [label="89"]
+	7 [label="90;91"]
+	5 [label="94"]
+	3 [label="92"]
+	1 [label="93"]
+	110 -> 109
+	109 -> 108
+	109 -> 107
+	109 -> 103
+	109 -> 101
+	109 -> 99
+	109 -> 97
+	109 -> 95
+	109 -> 67
+	109 -> 62
+	109 -> 14
+	107 -> 106
+	107 -> 105
+	107 -> 46
+	105 -> 104
+	105 -> 52
+	103 -> 102
+	103 -> 79
+	103 -> 64
+	101 -> 100
+	101 -> 13
+	99 -> 98
+	97 -> 96
+	95 -> 94
+	95 -> 93
+	93 -> 92
+	93 -> 91
+	93 -> 89
+	91 -> 90
+	91 -> 38
+	89 -> 88
+	89 -> 87
+	87 -> 86
+	87 -> 85
+	85 -> 84
+	85 -> 83
+	85 -> 81
+	83 -> 82
+	81 -> 80
+	79 -> 78
+	79 -> 77
+	79 -> 26
+	77 -> 76
+	77 -> 75
+	75 -> 74
+	75 -> 73
+	73 -> 72
+	73 -> 71
+	73 -> 69
+	71 -> 70
+	69 -> 68
+	67 -> 66
+	67 -> 44
+	66 -> 65
+	64 -> 63
+	62 -> 61
+	62 -> 60
+	62 -> 54
+	60 -> 59
+	60 -> 58
+	60 -> 56
+	58 -> 57
+	56 -> 55
+	54 -> 53
+	52 -> 51
+	52 -> 50
+	50 -> 49
+	50 -> 48
+	48 -> 47
+	46 -> 45
+	44 -> 43
+	44 -> 42
+	42 -> 41
+	42 -> 40
+	40 -> 39
+	38 -> 37
+	38 -> 36
+	38 -> 28
+	36 -> 35
+	36 -> 34
+	36 -> 32
+	36 -> 30
+	34 -> 33
+	32 -> 31
+	30 -> 29
+	28 -> 27
+	26 -> 25
+	26 -> 24
+	26 -> 20
+	26 -> 18
+	26 -> 16
+	24 -> 23
+	24 -> 22
+	22 -> 21
+	20 -> 19
+	18 -> 17
+	16 -> 15
+	13 -> 12
+	13 -> 11
+	13 -> 9
+	13 -> 7
+	13 -> 3
+	13 -> 1
+	11 -> 10
+	9 -> 8
+	7 -> 6
+	7 -> 5
+	5 -> 4
+	3 -> 2
+	1 -> 0
+}

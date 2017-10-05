@@ -17,5 +17,6 @@ do
     then
 	mkdir pmh/patient${i}
     fi
-    $1 ../../data/mcpherson_2016/patient${i}.tree ../../data/mcpherson_2016/patient${i}.labeling -t 4 -l 3600 -p LOv,ROv,RUt -c ../../data/mcpherson_2016/coloring.txt -o pmh/patient${i}/ 2> pmh/patient${i}/result.txt
+    $1 ../../data/mcpherson_2016/patient${i}.tree ../../data/mcpherson_2016/patient${i}.labeling -t 4 -p LOv -c ../../data/mcpherson_2016/coloring.txt -o pmh/patient${i}/ > pmh/patient${i}/result_LOv.txt
+    $1 ../../data/mcpherson_2016/patient${i}.tree ../../data/mcpherson_2016/patient${i}.labeling -t 4 -p ROv -c ../../data/mcpherson_2016/coloring.txt -o pmh/patient${i}/ > pmh/patient${i}/result_ROv.txt
 done

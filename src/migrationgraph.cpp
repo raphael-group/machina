@@ -18,6 +18,27 @@ MigrationGraph::MigrationGraph()
 {
 }
 
+MigrationGraph::MigrationGraph(const Digraph& G,
+                               Node root,
+                               const StringNodeMap& id)
+: _G()
+, _root(lemon::INVALID)
+, _nodeToId(_G)
+, _idToNode()
+{
+  lemon::digraphCopy(G, _G)
+    .node(root, _root)
+    .nodeMap(id, _nodeToId)
+    .run();
+  
+  for (NodeIt u(_G); u != lemon::INVALID; ++u)
+  {
+    const std::string& str = _nodeToId[u];
+    assert(_idToNode.count(str) == 0);
+    _idToNode[str] = u;
+  }
+}
+
 MigrationGraph::MigrationGraph(const MigrationGraph& other)
   : _G()
   , _root(lemon::INVALID)
@@ -36,42 +57,6 @@ MigrationGraph::MigrationGraph(const MigrationGraph& other)
   }
 }
 
-MigrationGraph::MigrationGraph(const NonBinaryCloneTree& T,
-                               const StringNodeMap& lPlus)
-  : _G()
-  , _root(lemon::INVALID)
-  , _nodeToId(_G)
-  , _idToNode()
-{
-  StringSet Sigma = T.getSamples();
-  
-  for (const std::string& s : Sigma)
-  {
-    Node x = _G.addNode();
-    _nodeToId[x] = s;
-    _idToNode[s] = x;
-  }
-  
-  assert(_idToNode.count(lPlus[T.root()]) == 1);
-  _root = _idToNode[lPlus[T.root()]];
-  
-  for (ArcIt a(T.tree()); a != lemon::INVALID; ++a)
-  {
-    Node u = T.tree().source(a);
-    Node v = T.tree().target(a);
-    
-    assert(_idToNode.count(lPlus[u]) == 1);
-    assert(_idToNode.count(lPlus[v]) == 1);
-    Node x = _idToNode[lPlus[u]];
-    Node y = _idToNode[lPlus[v]];
-    
-    if (x != y)
-    {
-      _G.addArc(x, y);
-    }
-  }
-}
-
 MigrationGraph::MigrationGraph(const CloneTree& T,
                                const StringNodeMap& lPlus)
   : _G()
@@ -79,7 +64,7 @@ MigrationGraph::MigrationGraph(const CloneTree& T,
   , _nodeToId(_G)
   , _idToNode()
 {
-  StringSet Sigma = T.getSamples();
+  StringSet Sigma = T.getAnatomicalSites();
   
   for (const std::string& s : Sigma)
   {
@@ -98,6 +83,7 @@ MigrationGraph::MigrationGraph(const CloneTree& T,
     
     assert(_idToNode.count(lPlus[u]) == 1);
     assert(_idToNode.count(lPlus[v]) == 1);
+
     Node x = _idToNode[lPlus[u]];
     Node y = _idToNode[lPlus[v]];
     
@@ -168,7 +154,7 @@ bool MigrationGraph::read(std::istream& in)
 
   if (!isConnected())
   {
-    std::cerr << "Error: sample graph is not connected" << std::endl;
+    std::cerr << "Error: migration graph is not connected" << std::endl;
     return false;
   }
 
@@ -206,11 +192,11 @@ void MigrationGraph::write(std::ostream& out) const
 
 void MigrationGraph::writeDOT(std::ostream& out) const
 {
-  StringSet samples = getSamples();
+  StringSet Sigma = getAnatomicalSites();
   
   StringToIntMap colorMap;
   int idx = 0;
-  for (const std::string& s : samples)
+  for (const std::string& s : Sigma)
   {
     colorMap[s] = ++idx;
   }

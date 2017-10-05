@@ -9,7 +9,7 @@
 #define SANKOFFLABELING_H
 
 #include "sankoff.h"
-#include "nonbinaryclonetree.h"
+#include "clonetree.h"
 #include "migrationgraph.h"
 
 /// This class is a wrapper for solving the Parsimonious Migration Problem
@@ -19,15 +19,15 @@ class SankoffLabeling
 {
 public:
   typedef Digraph::NodeMap<std::string> StringNodeMap;
-  typedef std::pair<int, std::pair<int, int> > IntTriple;
+  typedef std::pair<int, std::pair<int, std::pair<bool, int> > > IntTriple;
   typedef std::map<IntTriple, int> IntTripleToIntMap;
   
 public:
   /// Constructor
   ///
-  /// @param T Non-binary clone tree
+  /// @param T Clone tree
   /// @param primary Primary tumor label
-  SankoffLabeling(const NonBinaryCloneTree& T,
+  SankoffLabeling(const CloneTree& T,
                   const std::string& primary)
     : _T(T)
     , _primary(primary)
@@ -65,11 +65,12 @@ public:
     {
       MigrationGraph G(_T, getLabeling(solIdx));
       int nrComigrations = G.getNrComigrations(_T, getLabeling(solIdx));
-      int nrSeedingSamples = G.getNrSeedingSamples();
-      int migrationPattern = static_cast<int>(G.getPattern(_T, getLabeling(solIdx)));
+      int nrSeedingSamples = G.getNrSeedingSites();
+      int migrationPattern = static_cast<int>(G.getPattern());
       IntTriple triple = std::make_pair(nrComigrations,
                                         std::make_pair(nrSeedingSamples,
-                                                       migrationPattern));
+                                                       std::make_pair(G.isMonoclonal(),
+                                                                      migrationPattern)));
       
       if (result.count(triple) == 0)
       {
@@ -104,11 +105,11 @@ public:
   /// Run Sankoff enumeration algorithm to infer all vertex labelings
   /// with minimum number of migrations
   ///
-  /// @param T Non-binary clone tree
+  /// @param T Clone tree
   /// @param primary Primary tumor label
   /// @param outputDirectory Output directory
   /// @param colorMap Color map
-  static void run(const NonBinaryCloneTree& T,
+  static void run(const CloneTree& T,
                   const std::string& primary,
                   const std::string& outputDirectory,
                   const StringToIntMap& colorMap);
@@ -118,8 +119,8 @@ private:
   typedef std::vector<StringNodeMap*> StringNodeMapVector;
   
 private:
-  /// Non-binary clone tree
-  const NonBinaryCloneTree& _T;
+  /// Clone tree
+  const CloneTree& _T;
   /// Primary tumor label
   const std::string& _primary;
   /// Mapping from state to anatomical state label

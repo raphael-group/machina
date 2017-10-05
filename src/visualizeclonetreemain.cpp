@@ -7,7 +7,7 @@
 
 #include <iostream>
 #include "utils.h"
-#include "nonbinaryclonetree.h"
+#include "clonetree.h"
 #include <fstream>
 #include <lemon/arg_parser.h>
 
@@ -45,10 +45,18 @@ int main(int argc, char** argv)
     std::cerr << "Could not open '" << filenameLeafLabeling << "' for reading" << std::endl;
     return 1;
   }
-  
-  NonBinaryCloneTree T;
-  if (!T.read(inT)) return 1;
-  if (!T.readLeafLabeling(inLeafLabeling)) return 1;
+
+  CloneTree T;
+  try
+  {
+    if (!T.read(inT)) return 1;
+    if (!T.readLeafLabeling(inLeafLabeling)) return 1;
+  }
+  catch (std::runtime_error& e)
+  {
+    std::cerr << e.what() << std::endl;
+    return 1;
+  }
   
   StringToIntMap colorMap;
   if (filenameColorMap.empty())

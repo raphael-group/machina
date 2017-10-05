@@ -1,0 +1,5 @@
+primary Primary, left heel
+locoregional_1 Locoregional skin metastasis 1, left heel
+locoregional_2 Locoregional skin metastasis 2, left heel
+lymph_node Lymph node metastasis, left groin
+locoregional_3 Locoregional skin metastasis 3, left heel

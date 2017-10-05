@@ -7,20 +7,20 @@
 
 #include "utils.h"
 #include "sankofflabeling.h"
-#include "nonbinaryclonetree.h"
+#include "clonetree.h"
 #include <lemon/arg_parser.h>
 #include <fstream>
 #include <boost/algorithm/string.hpp>
 
 int main(int argc, char** argv)
 {
-  std::string primarySample;
+  std::string primaryAnatomicalSite;
   std::string outputDirectory;
   std::string filenameColorMap;
   
   lemon::ArgParser ap(argc, argv);
-  ap.refOption("p", "Primary samples separated by commas (if omitted, every sample will be\n" \
-               "     considered iteratively as the primary)", primarySample)
+  ap.refOption("p", "Primary anatomical sites separated by commas (if omitted, every\n" \
+               "     anatomical site will be considered iteratively as the primary)", primaryAnatomicalSite)
     .refOption("o", "Output prefix", outputDirectory)
     .refOption("c", "Color map file", filenameColorMap)
     .other("T", "Clone tree")
@@ -28,9 +28,9 @@ int main(int argc, char** argv)
   ap.parse();
   
   StringVector primaryVector;
-  if (!primarySample.empty())
+  if (!primaryAnatomicalSite.empty())
   {
-    boost::split(primaryVector, primarySample, boost::is_any_of(","));
+    boost::split(primaryVector, primaryAnatomicalSite, boost::is_any_of(","));
   }
 
   if (ap.files().size() != 2)
@@ -47,7 +47,7 @@ int main(int argc, char** argv)
     return 1;
   }
   
-  NonBinaryCloneTree T;
+  CloneTree T;
   if (!T.read(inT)) return 1;
   
   std::string filenameLabeling = ap.files()[1];
@@ -80,11 +80,12 @@ int main(int argc, char** argv)
     colorMap = T.generateColorMap();
   }
   
-  std::cerr << "Clone tree has " << T.getNrSamples() << " samples" << std::endl;
+  std::cerr << "Clone tree has " << T.getNrAnatomicalSites() << " anatomical sites" << std::endl;
 
   if (primaryVector.empty())
   {
-    for (const std::string& primary : T.getSamples())
+    StringSet Sigma = T.getAnatomicalSites();
+    for (const std::string& primary : Sigma)
     {
       SankoffLabeling::run(T, primary, outputDirectory, colorMap);
     }
@@ -93,9 +94,9 @@ int main(int argc, char** argv)
   {
     for (const std::string& primary : primaryVector)
     {
-      if (T.getSamples().count(primary) != 1)
+      if (T.getAnatomicalSites().count(primary) != 1)
       {
-        std::cerr << "Warning: primary sample '" << primary << "' missing in leaf labeling. Skipping." << std::endl;
+        std::cerr << "Warning: primary anatomical site '" << primary << "' missing in leaf labeling. Skipping." << std::endl;
       }
       else
       {

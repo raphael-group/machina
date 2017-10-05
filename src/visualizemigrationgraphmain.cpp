@@ -6,7 +6,7 @@
  */
 
 #include "utils.h"
-#include "nonbinaryclonetree.h"
+#include "clonetree.h"
 #include "migrationgraph.h"
 #include <lemon/arg_parser.h>
 #include <fstream>
@@ -46,7 +46,7 @@ int main(int argc, char** argv)
     return 1;
   }
   
-  NonBinaryCloneTree T;
+  CloneTree T;
   if (!T.read(inT)) return 1;
   if (!T.readLeafLabeling(inLeafLabeling)) return 1;
 

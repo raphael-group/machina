@@ -8,29 +8,42 @@
 #include "gabowmyers.h"
 #include <lemon/bfs.h>
 
-GabowMyers::GabowMyers(const Digraph& G, Node root)
+GabowMyers::GabowMyers(const Digraph& G, Node root, int limit)
   : _G(G)
+  , _limit(limit)
   , _root(root)
   , _result()
+  , _nrVertices(lemon::countNodes(_G))
 {
 }
 
 void GabowMyers::run()
 {
-  BoolNodeMap filterNodesT(_G, false);
-  BoolArcMap filterArcsT(_G, false);
-  SubDigraph T(_G, filterNodesT, filterArcsT);
+  _result.clear();
   
-  BoolNodeMap filterNodesG(_G, true);
-  BoolArcMap filterArcsG(_G, true);
-  SubDigraph subG(_G, filterNodesG, filterArcsG);
+  BoolNodeMap nodesG(_G, true);
+  BoolNodeMap nodesT(_G, false);
+  BoolNodeMap nodesL(_G, false);
+  
+  BoolArcMap arcsG(_G, true);
+  BoolArcMap arcsT(_G, false);
+  BoolArcMap arcsL(_G, false);
+  
+  SubDigraph G(_G, nodesG, arcsG);
+  SubDigraph T(_G, nodesT, arcsT);
+  SubDigraph L(_G, nodesL, arcsL);
+  
+  SubBfs bfsL(L);
+  bfsL.init();
   
   ArcList F;
+  for (SubOutArcIt a(G, _root); a != lemon::INVALID; ++a)
+  {
+    F.push_back(a);
+  }
   
-  init(subG, T, F);
-  grow(subG, T, F);
-  
-  std::cerr << std::endl;
+  T.enable(_root);
+  grow(G, T, L, bfsL, F);
 }
 
 void GabowMyers::init(SubDigraph& subG,
@@ -45,75 +58,110 @@ void GabowMyers::init(SubDigraph& subG,
   }
 }
 
-void GabowMyers::grow(SubDigraph& G,
+bool GabowMyers::grow(SubDigraph& G,
                       SubDigraph& T,
+                      SubDigraph& L,
+                      SubBfs& bfsL,
                       ArcList& F)
 {
-  if (F.empty())
+  if (lemon::countNodes(T) == _nrVertices)
   {
-    finalize(T);
+    // clear L
+    for (NodeIt v(_G); v != lemon::INVALID; ++v)
+    {
+      L.disable(v);
+    }
+    for (ArcIt a(_G); a != lemon::INVALID; ++a)
+    {
+      L.disable(a);
+    }
+    
+    // report T and copy to L
+    ArcList arcsL;
+    L.enable(_root);
+    for (SubArcIt a(T); a != lemon::INVALID; ++a)
+    {
+      arcsL.push_back(a);
+      L.enable((Arc)a);
+      L.enable((Node)T.target(a));
+    }
+    _result.push_back(arcsL);
+    
+    if (_limit == -1 || _result.size() < _limit)
+      return true;
+    else
+      return false;
+//    std::cerr << "\rNumber of trees of size " << arcsL.size() << ": " << _result.size() << std::flush;
   }
   else
   {
     ArcList FF;
     
+    bool done;
     do
     {
       assert(!F.empty());
       
-      Arc a_cidj = F.back();
+      Arc uv = F.back();
       F.pop_back();
+      Node u = _G.source(uv);
+      Node v = _G.target(uv);
       
-      Node v_ci = G.source(a_cidj);
-      Node v_dj = G.target(a_cidj);
+      assert(T.status(u));
+      assert(!T.status(v));
+      assert(!T.status(uv));
       
-      assert(T.status(v_ci));
-      assert(!T.status(v_dj));
-      assert(!T.status(a_cidj));
-      
-      // add a_cidj to T
-      addArc(T, a_cidj);
-      
+      // add uv to T
+      T.enable(uv);
+      T.enable(v);
+
       ArcList newF = F;
+      
+      // push each arc vw where w not in V(T) onto F
+      for (SubOutArcIt vw(G, v); vw != lemon::INVALID; ++vw)
+      {
+        Node w = G.target(vw);
+        if (!T.status(w))
+        {
+          newF.push_back(vw);
+        }
+      }
       
       // remove each arc wv where w in T from F
       for (ArcListNonConstIt it = newF.begin(); it != newF.end();)
       {
-        if (G.target(*it) == v_dj)
+        if (_G.target(*it) == v && T.status(_G.source(*it)))
         {
-          assert(T.status(G.source(*it)));
           it = newF.erase(it);
         }
-//        else if (G.source(*it) == v_ci)
-//        {
-//          it = newF.erase(it);
-//        }
         else
         {
           ++it;
         }
       }
       
-      // push each arc a_djel where v_el not in V(T) onto F
-      for (SubOutArcIt a_djel(G, v_dj); a_djel != lemon::INVALID; ++a_djel)
+      if (!grow(G, T, L, bfsL, newF))
+        return false;
+      
+      G.disable(uv);
+      T.disable(uv);
+      T.disable(v);
+      
+      FF.push_back(uv);
+      
+      done = true;
+      if (lemon::countNodes(L) != 0)
       {
-        Node v_el = G.target(a_djel);
+        bfsL.run(v);
         
-        // violation of tree constraint (no cycles)
-        if (T.status(v_el))
-          continue;
-        
-        newF.push_back(a_djel);
+        for (SubInArcIt wv(G, v); wv != lemon::INVALID; ++wv)
+        {
+          Node w = G.source(wv);
+          if (!bfsL.reached(w))
+            done = false;
+        }
       }
-      
-      grow(G, T, newF);
-      
-      G.disable(a_cidj);
-      
-      removeArc(T, a_cidj);
-      
-      FF.push_back(a_cidj);
-    } while (!F.empty());
+    } while (!done);
     
     for (ArcListRevIt it = FF.rbegin(); it != FF.rend(); ++it)
     {
@@ -124,64 +172,8 @@ void GabowMyers::grow(SubDigraph& G,
       G.enable(a);
     }
   }
-}
-
-void GabowMyers::addArc(SubDigraph& T,
-                        Arc a_cidj) const
-{
-  const Node v_dj = T.target(a_cidj);
-  
-  // add a_cidj to T
-  T.enable(v_dj);
-  T.enable(a_cidj);
-  
-  assert(isArborescence(T));
-}
-
-void GabowMyers::removeArc(SubDigraph& T,
-                           Arc a_cidj) const
-{
-  assert(T.status(a_cidj));
-  
-  const Node v_dj = T.target(a_cidj);
-  
-  // remove a_cidj from T
-  T.disable(a_cidj);
-  T.disable(v_dj);
-  
-  assert(isArborescence(T));
-}
-
-bool GabowMyers::isArborescence(const SubDigraph& T) const
-{
-  assert(T.status(_root));
-  lemon::Bfs<SubDigraph> bfs(T);
-  bfs.run(_root);
-  
-  for (SubNodeIt v_ci(T); v_ci != lemon::INVALID; ++v_ci)
-  {
-    if (!bfs.reached(v_ci))
-    {
-      return false;
-    }
-  }
   
   return true;
-}
-
-void GabowMyers::finalize(const SubDigraph& T)
-{
-  assert(isArborescence(T));
-//  writeDOT(T, std::cout);
-  
-  _result.push_back(ArcList());
-  ArcList& res = _result.back();
-  
-  for (SubArcIt a_cidj(T); a_cidj != lemon::INVALID; ++a_cidj)
-  {
-    res.push_back(a_cidj);
-  }
-  std::cerr << "\rNumber of trees of size " << res.size() << ": " << _result.size() << std::flush;
 }
 
 void GabowMyers::writeDOT(const StringNodeMap& label,

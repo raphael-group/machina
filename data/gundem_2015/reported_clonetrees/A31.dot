@@ -1,0 +1,62 @@
+digraph T {
+	{
+		rank=same
+		28 [penwidth=3,colorscheme=set19,color=2,label="light_blueF\nright_rib_7"]
+		27 [penwidth=3,colorscheme=set19,color=5,label="light_blueD\nright_inguinal_lymph_node"]
+		26 [penwidth=3,colorscheme=set19,color=2,label="dark_greenF\nright_rib_7"]
+		25 [penwidth=3,colorscheme=set19,color=1,label="dark_greenA\nright_subdural"]
+		24 [penwidth=3,colorscheme=set19,color=2,label="orangeF\nright_rib_7"]
+		23 [penwidth=3,colorscheme=set19,color=8,label="orangeE\nleft_adrenal_gland"]
+		22 [penwidth=3,colorscheme=set19,color=5,label="orangeD\nright_inguinal_lymph_node"]
+		21 [penwidth=3,colorscheme=set19,color=3,label="orangeC\nprostate"]
+		20 [penwidth=3,colorscheme=set19,color=1,label="orangeA\nright_subdural"]
+		19 [penwidth=3,colorscheme=set19,color=2,label="dark_purpleF\nright_rib_7"]
+		18 [penwidth=3,colorscheme=set19,color=8,label="dark_purpleE\nleft_adrenal_gland"]
+		17 [penwidth=3,colorscheme=set19,color=5,label="dark_purpleD\nright_inguinal_lymph_node"]
+		16 [penwidth=3,colorscheme=set19,color=3,label="dark_purpleC\nprostate"]
+		15 [penwidth=3,colorscheme=set19,color=3,label="dark_pinkC\nprostate"]
+		14 [penwidth=3,colorscheme=set19,color=3,label="mid_greenC\nprostate"]
+		13 [penwidth=3,colorscheme=set19,color=8,label="greyE\nleft_adrenal_gland"]
+		12 [penwidth=3,colorscheme=set19,color=8,label="light_brownE\nleft_adrenal_gland"]
+		11 [penwidth=3,colorscheme=set19,color=5,label="blueD\nright_inguinal_lymph_node"]
+		10 [penwidth=3,colorscheme=set19,color=1,label="goldA\nright_subdural"]
+	}
+	9 [label="gold"]
+	8 [label="light_blue"]
+	7 [label="blue"]
+	6 [label="dark_green"]
+	5 [label="orange"]
+	4 [label="light_brown"]
+	3 [label="dark_pink"]
+	2 [label="dark_purple"]
+	1 [label="mid_green"]
+	0 [label="grey"]
+	9 -> 10
+	8 -> 28
+	8 -> 27
+	7 -> 11
+	6 -> 26
+	6 -> 25
+	6 -> 9
+	5 -> 24
+	5 -> 23
+	5 -> 22
+	5 -> 21
+	5 -> 20
+	5 -> 8
+	5 -> 7
+	5 -> 6
+	4 -> 12
+	3 -> 15
+	2 -> 19
+	2 -> 18
+	2 -> 17
+	2 -> 16
+	2 -> 5
+	2 -> 4
+	1 -> 14
+	1 -> 3
+	0 -> 13
+	0 -> 2
+	0 -> 1
+}

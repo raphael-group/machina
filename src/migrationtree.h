@@ -10,12 +10,14 @@
 
 #include "utils.h"
 #include "basetree.h"
-#include "clonetree.h"
 
 class MigrationTree;
 
 /// List of migration trees
 typedef std::list<MigrationTree> MigrationTreeList;
+
+/// Vector of edge lists
+typedef std::vector<StringPairList> EdgeListVector;
 
 /// This class models a migration (multi)tree
 class MigrationTree : public BaseTree
@@ -62,6 +64,13 @@ public:
   /// @param out Output stream
   void writeDOT(std::ostream& out) const;
   
+  /// Print tree in DOT format
+  ///
+  /// @param out Output stream
+  /// @param colorMap Color map
+  void writeDOT(std::ostream& out,
+                const StringToIntMap& colorMap) const;
+  
   /// Return number of anatomical sites
   int getNrSamples() const
   {
@@ -79,6 +88,12 @@ public:
     return res;
   }
   
+  /// Deserialize
+  ///
+  /// @param in Input stream
+  /// @param primary Primary tumor
+  bool readWithPrimary(std::istream& in, const std::string& primary);
+  
   /// Enumerate all migration trees given anatomical sites
   ///
   /// @param primary Primary tumor anatomical site
@@ -87,6 +102,15 @@ public:
   static void enumerate(const std::string& primary,
                         const StringSet& metastases,
                         MigrationTreeList& listBarS);
+  
+  /// Enumerate all migration trees given anatomical sites
+  ///
+  /// @param primary Primary tumor anatomical site
+  /// @param metastases Metastatic anatomical sites
+  /// @param migrationTrees Placeholder for storing all enumerated migration trees
+  static void enumerate(const std::string& primary,
+                        const StringSet& metastases,
+                        EdgeListVector& migrationTrees);
 
 private:
   /// Serialize migration trees
@@ -117,5 +141,12 @@ std::ostream& operator<<(std::ostream& out,
 /// @param listBarS Placeholder for storing migration trees
 std::istream& operator>>(std::istream& in,
                          MigrationTreeList& listBarS);
+
+/// Deserialize
+///
+/// @param in Input stream
+/// @param listBarS Placeholder for storing migration trees
+std::istream& operator>>(std::istream& in,
+                         EdgeListVector& listBarS);
 
 #endif // MIGRATIONTREE_H

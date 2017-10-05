@@ -37,12 +37,9 @@ MigrationTree::MigrationTree(const SubDigraph& T,
                              const StringNodeMap& label)
   : BaseTree()
 {
-//  NodeNodeMap other2new(T);
- 
   lemon::digraphCopy(T, _tree)
     .node(root, _root)
     .nodeMap(label, _nodeToId)
-//    .nodeRef(other2new)
     .run();
   
   init();
@@ -57,6 +54,18 @@ MigrationTree::~MigrationTree()
 {
 }
 
+bool MigrationTree::readWithPrimary(std::istream& in, const std::string& primary)
+{
+  if (!BaseTree::read(in))
+  {
+    return false;
+  }
+  
+  _root = getNodeByLabel(primary);
+  
+  return _root != lemon::INVALID;
+}
+
 bool MigrationTree::readVertexLabeling(std::istream& in)
 {
   return true;
@@ -68,20 +77,13 @@ void MigrationTree::writeVertexLabeling(std::ostream& out) const
 
 void MigrationTree::writeDOT(std::ostream& out) const
 {
-  // construct sample to color scheme
-  std::set<std::string> samples;
-  for (NodeIt x(_tree); x != lemon::INVALID; ++x)
-  {
-    const std::string& s = l(x);
-    samples.insert(s);
-  }
-  std::map<std::string, int> colorMap;
-  int idx = 0;
-  for (const std::string& s : samples)
-  {
-    colorMap[s] = ++idx;
-  }
-  
+  StringToIntMap colorMap = generateColorMap();
+  writeDOT(out, colorMap);
+}
+
+void MigrationTree::writeDOT(std::ostream& out,
+                             const StringToIntMap& colorMap) const
+{
   out << "digraph barS {" << std::endl;
   
   out << "\t{" << std::endl;
@@ -92,7 +94,7 @@ void MigrationTree::writeDOT(std::ostream& out) const
     {
       out << "\t\t" << _tree.id(x)
       << " [penwidth=3,colorscheme=set19,color="
-      << colorMap[l(x)]
+      << colorMap.find(l(x))->second
       << ",label=\"" << l(x) << "\"]" << std::endl;
     }
   }
@@ -104,7 +106,7 @@ void MigrationTree::writeDOT(std::ostream& out) const
     {
       out << "\t" << _tree.id(x)
       << " [penwidth=3,colorscheme=set19,color="
-      << colorMap[l(x)]
+      << colorMap.find(l(x))->second
       << ",label=\"" << l(x) << "\"]" << std::endl;
     }
   }
@@ -120,17 +122,30 @@ void MigrationTree::writeDOT(std::ostream& out) const
     out << "\t" << _tree.id(x) << " -> " << _tree.id(y);
     if (s_x == s_y)
     {
-      out << " [penwidth=3,colorscheme=set19,color=" << colorMap[s_x] << "]";
+      out << " [penwidth=3,colorscheme=set19,color=" << colorMap.find(s_x)->second << "]";
     }
     else
     {
-      out << " [penwidth=3,colorscheme=set19,color=\"" << colorMap[s_x] << ";0.5:" << colorMap[s_y] << "\"]";
+      out << " [penwidth=3,colorscheme=set19,color=\"" << colorMap.find(s_x)->second << ";0.5:" << colorMap.find(s_y)->second << "\"]";
     }
     
     out << std::endl;
   }
   
   out << "}" << std::endl;
+}
+
+void MigrationTree::enumerate(const std::string& primary,
+                              const StringSet& metastases,
+                              EdgeListVector& migrationTrees)
+{
+  MigrationTreeList list;
+  MigrationTree::enumerate(primary, metastases, list);
+  
+  for (const MigrationTree& G : list)
+  {
+    migrationTrees.push_back(G.getEdgeList());
+  }
 }
 
 void MigrationTree::enumerate(const std::string& primary,
@@ -193,30 +208,32 @@ std::ostream& operator<<(std::ostream& out, const MigrationTreeList& listBarS)
     return out;
   }
   
-  out << listBarS.front().getNrSamples() << " #samples" << std::endl;
-  out << listBarS.size() << " #condensed sample trees" << std::endl;
+  out << listBarS.front().getNrSamples() << " #anatomical sites" << std::endl;
+  out << listBarS.size() << " #migration graph" << std::endl;
   
+  int idx = 0;
   for (const MigrationTree& barS : listBarS)
   {
+    out << lemon::countArcs(barS.tree()) << " #edges, graph " << idx + 1 << std::endl;
     barS.write(out);
-    out << std::endl;
+    ++idx;
   }
   
   return out;
 }
 
-std::istream& operator>>(std::istream& in, MigrationTreeList& listBarS)
+std::istream& operator>>(std::istream& in, EdgeListVector& listBarS)
 {
   std::string line;
   getline(in, line);
   
-  int nrSamples = -1;
+  int nrAnatomicalSites = -1;
   std::stringstream ss(line);
-  ss >> nrSamples;
+  ss >> nrAnatomicalSites;
   
-  if (nrSamples < 1)
+  if (nrAnatomicalSites < 1)
   {
-    throw std::runtime_error("Error: number of samples should be greater than 0");
+    throw std::runtime_error("Error: number of anatomical sites should be greater than 0");
   }
   
   int nrMigrationTrees = -1;
@@ -226,17 +243,89 @@ std::istream& operator>>(std::istream& in, MigrationTreeList& listBarS)
   
   if (nrMigrationTrees < 1)
   {
-    throw std::runtime_error("Error: number of condensed sample trees should be greater than 0");
+    throw std::runtime_error("Error: number of migration trees should be greater than 0");
   }
   
   for (int i = 0; i < nrMigrationTrees; ++i)
   {
-    MigrationTree barS;
-    if (!barS.read(in))
+    int nrEdges = -1;
+    getline(in, line);
+    ss.clear();
+    ss.str(line);
+    ss >> nrEdges;
+    if (nrEdges < 1)
     {
-      throw std::runtime_error("Error: reading condensed sample tree failed");
+      throw std::runtime_error("Error: number of edges should be greater than 0");
     }
-//    getline(in, line);
+    
+    ss.clear();
+    ss.str("");
+    for (int j = 0; j < nrEdges; ++j)
+    {
+      getline(in, line);
+      ss << line << std::endl;
+    }
+    
+    MigrationTree barS;
+    if (!barS.read(ss))
+    {
+      throw std::runtime_error("Error: reading migration tree failed");
+    }
+    
+    listBarS.push_back(barS.getEdgeList());
+  }
+  
+  return in;
+}
+
+
+std::istream& operator>>(std::istream& in, MigrationTreeList& listBarS)
+{
+  std::string line;
+  getline(in, line);
+  
+  int nrAnatomicalSites = -1;
+  std::stringstream ss(line);
+  ss >> nrAnatomicalSites;
+  
+  if (nrAnatomicalSites < 1)
+  {
+    throw std::runtime_error("Error: number of anatomical sites should be greater than 0");
+  }
+  
+  int nrMigrationTrees = -1;
+  getline(in, line);
+  ss.str(line);
+  ss >> nrMigrationTrees;
+  
+  if (nrMigrationTrees < 1)
+  {
+    throw std::runtime_error("Error: number of migration trees should be greater than 0");
+  }
+  
+  for (int i = 0; i < nrMigrationTrees; ++i)
+  {
+    int nrEdges = -1;
+    getline(in, line);
+    in >> nrEdges;
+    if (nrEdges < 1)
+    {
+      throw std::runtime_error("Error: number of edges should be greater than 0");
+    }
+    
+    ss.clear();
+    ss.str("");
+    for (int j = 0; j < nrEdges; ++j)
+    {
+      getline(in, line);
+      ss << line << std::endl;
+    }
+    
+    MigrationTree barS;
+    if (!barS.read(ss))
+    {
+      throw std::runtime_error("Error: reading migration tree failed");
+    }
     listBarS.push_back(barS);
   }
   

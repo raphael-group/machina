@@ -137,6 +137,12 @@ bool BaseTree::read(std::istream& in)
     }
   }
   
+  if (_idToNode.empty())
+  {
+    std::cerr << "Error: empty tree" << std::endl;
+    return false;
+  }
+  
   init();
   
   if (!isValid())
@@ -148,13 +154,13 @@ bool BaseTree::read(std::istream& in)
   return true;
 }
 
-NodeList BaseTree::pathFromRoot(Node u) const
+NodeList BaseTree::pathFromRoot(const Digraph& T, Node u)
 {
   NodeList result;
-  while ((InArcIt(_tree, u) != lemon::INVALID))
+  while ((InArcIt(T, u) != lemon::INVALID))
   {
     result.push_front(u);
-    u = _tree.source(InArcIt(_tree, u));
+    u = T.source(InArcIt(T, u));
   }
   result.push_front(u);
   return result;
@@ -279,22 +285,22 @@ bool BaseTree::readColorMap(std::istream& in,
     StringVector s;
     boost::split(s, line, boost::is_any_of("\t "));
     
-    std::string sample = s[0];
+    std::string anatomicalSite = s[0];
     int color = boost::lexical_cast<int>(s[1]);
     
-    if (colorMap.count(sample) != 0)
+    if (colorMap.count(anatomicalSite) != 0)
     {
-      std::cerr << "Error: sample '" << sample << "' is already assigned a color" << std::endl;
+      std::cerr << "Error: anatomical site '" << anatomicalSite << "' is already assigned a color" << std::endl;
       return false;
     }
 
-    colorMap[sample] = color;
+    colorMap[anatomicalSite] = color;
   }
   
   return true;
 }
 
-Node BaseTree::getLCA(const NodeSet& nodes) const
+Node BaseTree::getLCA(const Digraph& T, const NodeSet& nodes)
 {
   if (nodes.size() == 1)
   {
@@ -305,7 +311,7 @@ Node BaseTree::getLCA(const NodeSet& nodes) const
   NodeListItVector iteratorList;
   for (Node node : nodes)
   {
-    allPaths.push_back(pathFromRoot(node));
+    allPaths.push_back(pathFromRoot(T, node));
     iteratorList.push_back(allPaths.back().begin());
   }
   

@@ -7,9 +7,7 @@ set( CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR} ${CMAKE_MODULE_PATH} )
 set( generatemigrationtrees_src
   src/generatemigrationtreesmain.cpp
   src/utils.cpp
-  src/nonbinaryclonetree.cpp
   src/clonetree.cpp
-  src/binarytree.cpp
   src/basetree.cpp
   src/migrationtree.cpp
   src/gabowmyers.cpp
@@ -17,9 +15,7 @@ set( generatemigrationtrees_src
 
 set( generatemigrationtrees_hdr
   src/utils.h
-  src/nonbinaryclonetree.h
   src/clonetree.h
-  src/binarytree.h
   src/basetree.h
   src/migrationtree.h
   src/gabowmyers.h
@@ -27,103 +23,335 @@ set( generatemigrationtrees_hdr
 
 set( pmh_hdr
   src/utils.h
-  src/nonbinaryclonetree.h
   src/clonetree.h
-  src/binarytree.h
-  src/basetree.h
-  src/ilpsolver.h
+  src/old_ilps/ilpsolver.h
+  src/ilppmhsolver.h
   src/migrationgraph.h
+  src/migrationtree.h
+  src/gabowmyers.h
+)
+
+set( simulation_hdr
+  src/simulation/cell.h
+  src/simulation/simulation.h
+  src/simulation/beta_distribution.hpp
+  src/clonetree.h
+  src/basetree.h
+  src/migrationtree.h
+  src/migrationgraph.h
+  src/gabowmyers.h
+  src/utils.h
+)
+
+set( simulation_src
+  src/utils.cpp
+  src/clonetree.cpp
+  src/basetree.cpp
+  src/migrationtree.cpp
+  src/migrationgraph.cpp
+  src/gabowmyers.cpp
+  src/simulation/cell.cpp
+  src/simulation/simulationmain.cpp
+  src/simulation/simulation.cpp
 )
 
 set( pmh_src
   src/pmh.cpp
   src/utils.cpp
   src/clonetree.cpp
-  src/nonbinaryclonetree.cpp
-  src/binarytree.cpp
   src/basetree.cpp
-  src/ilpsolver.cpp
+  src/old_ilps/ilpsolver.cpp
+  src/ilppmhsolver.cpp
   src/migrationgraph.cpp
+  src/migrationtree.cpp
   src/utils.h
-  src/nonbinaryclonetree.h
   src/clonetree.h
-  src/binarytree.h
   src/basetree.h
-  src/ilpsolver.h
+  src/old_ilps/ilpsolver.h
   src/migrationgraph.h
+  src/gabowmyers.cpp
 )
 
-set( pmh_pr_hdr
+set( pmh_tr_hdr
   src/utils.h
-  src/nonbinaryclonetree.h
   src/clonetree.h
-  src/binarytree.h
   src/basetree.h
-  src/ilpsolver.h
-  src/ilpbinarizationsolver.h
+  src/old_ilps/ilpsolver.h
+  src/old_ilps/ilpbinarizationsolver.h
+  src/ilppmhsolver.h
+  src/ilppmhtrsolver.h
+  src/ilppmhtrsolvercallback.h
   src/migrationgraph.h
+  src/migrationtree.h
+  src/gabowmyers.h
+  src/solutiongraph.h
 )
 
-set( pmh_pr_src
-  src/pmh_pr.cpp
+set( pmh_tr_hdr
+  src/pmh_tr.cpp
   src/utils.cpp
   src/clonetree.cpp
-  src/nonbinaryclonetree.cpp
-  src/binarytree.cpp
   src/basetree.cpp
-  src/ilpsolver.cpp
-  src/ilpbinarizationsolver.cpp
+  src/old_ilps/ilpsolver.cpp
+  src/old_ilps/ilpsolver.h
+  src/old_ilps/ilpbinarizationsolver.cpp
+  src/old_ilps/ilpbinarizationsolver.h
+  src/ilppmhtrsolvercallback.cpp
+  src/ilppmhtrsolver.cpp
+  src/ilppmhtrsolver.h
+  src/ilppmhsolver.cpp
+  src/ilppmhsolver.h
+  src/solutiongraph.h
+  src/solutiongraph.cpp
   src/migrationgraph.cpp
+  src/migrationtree.cpp
   src/utils.h
-  src/nonbinaryclonetree.h
   src/clonetree.h
-  src/binarytree.h
   src/basetree.h
-  src/ilpsolver.h
-  src/ilpbinarizationsolver.h
   src/migrationgraph.h
+  src/gabowmyers.cpp
 )
 
-set( pmh_cti_hdr
+set( generatemutationtrees_hdr
   src/utils.h
-  src/nonbinaryclonetree.h
+  src/basematrix.h
+  src/frequencymatrix.h
   src/clonetree.h
-  src/binarytree.h
+  src/enumeratecanonicalclonetrees.h
+  src/enumeratemutationtrees.h
+  src/spruce/matrix.h
+  src/spruce/realmatrix.h
+  src/spruce/realtensor.h
+  src/spruce/rootedcladisticancestrygraph.h
+  src/spruce/rootedcladisticnoisyancestrygraph.h
+  src/spruce/rootedcladisticenumeration.h
+  src/spruce/rootedcladisticnoisyenumeration.h
+  src/spruce/solution.h
+  src/spruce/solutionset.h
+  src/spruce/statetree.h
+  src/spruce/tensor.h
+  src/rootedcladisticnoisysparseenumeration.h
+)
+
+set( generatemutationtrees_src
+  src/generatemutationtreesmain.cpp
+  src/utils.cpp
+  src/basematrix.cpp
+  src/frequencymatrix.cpp
+  src/enumeratecanonicalclonetrees.cpp
+  src/enumeratemutationtrees.cpp
+  src/utils.h
+  src/basematrix.h
+  src/frequencymatrix.h
   src/basetree.h
-  src/ilpsolver.h
+  src/basetree.cpp
+  src/clonetree.h
+  src/clonetree.cpp
+  src/rootedcladisticnoisysparseenumeration.h
+  src/rootedcladisticnoisysparseenumeration.cpp
+  src/spruce/matrix.h
+  src/spruce/perfectphylograph.h
+  src/spruce/perfectphylomatrix.h
+  src/spruce/perfectphylotree.h
+  src/spruce/realmatrix.h
+  src/spruce/realtensor.h
+  src/spruce/rootedcladisticancestrygraph.h
+  src/spruce/rootedcladisticnoisyancestrygraph.h
+  src/spruce/rootedcladisticenumeration.h
+  src/spruce/rootedcladisticnoisyenumeration.h
+  src/spruce/statetree.h
+  src/spruce/tensor.h
+  src/spruce/matrix.cpp
+  src/spruce/perfectphylograph.cpp
+  src/spruce/perfectphylomatrix.cpp
+  src/spruce/perfectphylotree.cpp
+  src/spruce/realmatrix.cpp
+  src/spruce/realtensor.cpp
+  src/spruce/rootedcladisticancestrygraph.cpp
+  src/spruce/rootedcladisticnoisyancestrygraph.cpp
+  src/spruce/rootedcladisticenumeration.cpp
+  src/spruce/rootedcladisticnoisyenumeration.cpp
+  src/spruce/solution.cpp
+  src/spruce/solutionset.cpp
+  src/spruce/statetree.cpp
+  src/spruce/tensor.cpp
+)
+
+set( ms_hdr
+  src/utils.h
+  src/basematrix.h
+  src/frequencymatrix.h
+  src/clonetree.h
+  src/spruce/matrix.h
+  src/spruce/realmatrix.h
+  src/spruce/realtensor.h
+  src/spruce/rootedcladisticancestrygraph.h
+  src/spruce/rootedcladisticnoisyancestrygraph.h
+  src/spruce/rootedcladisticenumeration.h
+  src/spruce/rootedcladisticnoisyenumeration.h
+  src/spruce/solution.h
+  src/spruce/solutionset.h
+  src/spruce/statetree.h
+  src/spruce/tensor.h
+  src/rootedcladisticnoisysparseenumeration.h
+)
+
+set( ms_src
+  src/ms.cpp
+  src/utils.cpp
+  src/basematrix.cpp
+  src/frequencymatrix.cpp
+  src/utils.h
+  src/basematrix.h
+  src/frequencymatrix.h
+  src/migrationtree.h
+  src/migrationtree.cpp
+  src/basetree.h
+  src/basetree.cpp
+  src/gabowmyers.h
+  src/gabowmyers.cpp
+  src/msenumeration.h
+  src/msenumeration.cpp
+  src/clonetree.h
+  src/clonetree.cpp
+  src/rootedcladisticnoisysparseenumeration.h
+  src/rootedcladisticnoisysparseenumeration.cpp
+  src/migrationgraph.cpp
   src/migrationgraph.h
+  src/spruce/matrix.h
+  src/spruce/perfectphylograph.h
+  src/spruce/perfectphylomatrix.h
+  src/spruce/perfectphylotree.h
+  src/spruce/realmatrix.h
+  src/spruce/realtensor.h
+  src/spruce/rootedcladisticancestrygraph.h
+  src/spruce/rootedcladisticnoisyancestrygraph.h
+  src/spruce/rootedcladisticenumeration.h
+  src/spruce/rootedcladisticnoisyenumeration.h
+  src/spruce/statetree.h
+  src/spruce/tensor.h
+  src/spruce/matrix.cpp
+  src/spruce/perfectphylograph.cpp
+  src/spruce/perfectphylomatrix.cpp
+  src/spruce/perfectphylotree.cpp
+  src/spruce/realmatrix.cpp
+  src/spruce/realtensor.cpp
+  src/spruce/rootedcladisticancestrygraph.cpp
+  src/spruce/rootedcladisticnoisyancestrygraph.cpp
+  src/spruce/rootedcladisticenumeration.cpp
+  src/spruce/rootedcladisticnoisyenumeration.cpp
+  src/spruce/solution.cpp
+  src/spruce/solutionset.cpp
+  src/spruce/statetree.cpp
+  src/spruce/tensor.cpp
+)
+
+set( reads_to_frequencies_hdr
+  src/utils.h
+  src/basematrix.h
+  src/frequencymatrix.h
+  src/cluster/readmatrix.h
+)
+
+set( reads_to_frequencies_src
+  src/utils.cpp
+  src/basematrix.cpp
+  src/frequencymatrix.cpp
+  src/cluster/readsmain.cpp
+  src/cluster/readmatrix.cpp
+)
+
+set( cluster_hdr
+  src/utils.h
+  src/basematrix.h
+  src/frequencymatrix.h
+  src/cluster/cluster.h
+  src/cluster/readmatrix.h
+)
+
+set( cluster_src
+  src/utils.cpp
+  src/basematrix.cpp
+  src/frequencymatrix.cpp
+  src/cluster/clustermain.cpp
+  src/cluster/cluster.cpp
+  src/cluster/readmatrix.cpp
+)
+
+set( pmh_ti_hdr
+  src/utils.h
+  src/clonetree.h
+  src/basetree.h
+  src/old_ilps/ilpsolver.h
+  src/migrationgraph.h
+  src/basematrix.h
   src/frequencymatrix.h
   src/gabowmyers.h
+  src/enumeratemutationtrees.h
+  src/ilppmhtisolver.h
+  src/ilppmhtrsolver.h
+  src/ilppmhtrsolvercallback.h
+  src/ilppmhsolver.h
 )
 
-set( pmh_cti_src
-  src/pmh_cti.cpp
+set( pmh_ti_src
+  src/pmh_ti.cpp
+  src/ilppmhtisolver.cpp
+  src/ilppmhtrsolvercallback.cpp
+  src/ilppmhtrsolver.cpp
+  src/ilppmhsolver.cpp
   src/utils.cpp
   src/clonetree.cpp
-  src/nonbinaryclonetree.cpp
-  src/binarytree.cpp
   src/basetree.cpp
-  src/ilpsolver.cpp
-  src/ilpsolverext.cpp
+  src/old_ilps/ilpsolver.cpp
+  src/old_ilps/ilpsolverext.cpp
   src/migrationgraph.cpp
+  src/basematrix.cpp
   src/frequencymatrix.cpp
   src/gabowmyers.cpp
   src/utils.h
-  src/nonbinaryclonetree.h
   src/clonetree.h
-  src/binarytree.h
   src/basetree.h
-  src/ilpsolverext.h
-  src/ilpsolver.h
+  src/old_ilps/ilpsolverext.h
+  src/old_ilps/ilpsolver.h
   src/migrationgraph.h
+  src/migrationtree.h
+  src/migrationtree.cpp
   src/gabowmyers.h
+  src/rootedcladisticnoisysparseenumeration.h
+  src/rootedcladisticnoisysparseenumeration.cpp
+  src/enumeratemutationtrees.cpp
+  src/spruce/matrix.h
+  src/spruce/perfectphylograph.h
+  src/spruce/perfectphylomatrix.h
+  src/spruce/perfectphylotree.h
+  src/spruce/realmatrix.h
+  src/spruce/realtensor.h
+  src/spruce/rootedcladisticancestrygraph.h
+  src/spruce/rootedcladisticnoisyancestrygraph.h
+  src/spruce/rootedcladisticenumeration.h
+  src/spruce/rootedcladisticnoisyenumeration.h
+  src/spruce/statetree.h
+  src/spruce/tensor.h
+  src/spruce/matrix.cpp
+  src/spruce/perfectphylograph.cpp
+  src/spruce/perfectphylomatrix.cpp
+  src/spruce/perfectphylotree.cpp
+  src/spruce/realmatrix.cpp
+  src/spruce/realtensor.cpp
+  src/spruce/rootedcladisticancestrygraph.cpp
+  src/spruce/rootedcladisticnoisyancestrygraph.cpp
+  src/spruce/rootedcladisticenumeration.cpp
+  src/spruce/rootedcladisticnoisyenumeration.cpp
+  src/spruce/solution.cpp
+  src/spruce/solutionset.cpp
+  src/spruce/statetree.cpp
+  src/spruce/tensor.cpp
 )
 
 set( visualizeclonetree_hdr
   src/utils.h
-  src/nonbinaryclonetree.h
   src/clonetree.h
-  src/binarytree.h
   src/basetree.h
 )
 
@@ -131,17 +359,26 @@ set( visualizeclonetree_src
   src/visualizeclonetreemain.cpp
   src/utils.cpp
   src/clonetree.cpp
-  src/nonbinaryclonetree.cpp
-  src/binarytree.cpp
+  src/basetree.cpp
+)
+
+set( robinson_foulds_hdr
+  src/utils.h
+  src/clonetree.h
+  src/basetree.h
+)
+
+set( robinson_foulds_src
+  src/rfmain.cpp
+  src/utils.cpp
+  src/clonetree.cpp
   src/basetree.cpp
 )
 
 set( visualizemigrationgraph_hdr
   src/migrationgraph.h
   src/utils.h
-  src/nonbinaryclonetree.h
   src/clonetree.h
-  src/binarytree.h
   src/basetree.h
   src/migrationtree.h
   src/gabowmyers.h
@@ -150,9 +387,7 @@ set( visualizemigrationgraph_hdr
 set( visualizemigrationgraph_src
   src/migrationgraph.cpp
   src/utils.cpp
-  src/nonbinaryclonetree.cpp
   src/clonetree.cpp
-  src/binarytree.cpp
   src/basetree.cpp
   src/migrationtree.cpp
   src/gabowmyers.cpp
@@ -161,12 +396,10 @@ set( visualizemigrationgraph_src
 
 set( pmh_sankoff_hdr
   src/basetree.h
-  src/binarytree.h
   src/utils.h
   src/mpbase.h
   src/sankoff.h
   src/charactertree.h
-  src/nonbinaryclonetree.h
   src/clonetree.h
   src/sankofflabeling.h
   src/migrationgraph.h
@@ -174,22 +407,20 @@ set( pmh_sankoff_hdr
 
 set( pmh_sankoff_src
   src/basetree.cpp
-  src/binarytree.cpp
   src/utils.cpp
   src/mpbase.cpp
   src/sankoff.cpp
   src/charactertree.cpp
   src/pmh_sankoff.cpp
-  src/nonbinaryclonetree.cpp
-  src/sankofflabeling.cpp
   src/clonetree.cpp
+  src/sankofflabeling.cpp
   src/migrationgraph.cpp
 )
 
 # first we can indicate the documentation build as an option and set it to ON by default
 option(BUILD_DOC "Build documentation" ON)
 
-#if (CMAKE_BUILD_TYPE MATCHES "^[Rr]elease")
+if (CMAKE_BUILD_TYPE MATCHES "^[Rr]elease")
   # check if Doxygen is installed
   find_package(Doxygen)
   if (DOXYGEN_FOUND)
@@ -210,7 +441,7 @@ option(BUILD_DOC "Build documentation" ON)
   else (DOXYGEN_FOUND) 
     message("Doxygen need to be installed to generate the doxygen documentation")
   endif (DOXYGEN_FOUND)
-#endif()
+endif()
 
 set( LIBLEMON_ROOT "$ENV{HOME}/lemon" CACHE PATH "Additional search directory for lemon library" )
 
@@ -219,6 +450,10 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11" )
 if( ${CMAKE_SYSTEM_NAME} MATCHES "Darwin" )
   set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-local-typedefs" )
 endif()
+
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build, options are: Debug Release Profile" FORCE)
+endif(NOT CMAKE_BUILD_TYPE)
 
 set( GitCommand1 "symbolic-ref HEAD 2> /dev/null | cut -b 12-" )
 execute_process( COMMAND git symbolic-ref HEAD  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
@@ -251,19 +486,39 @@ add_executable( pmh ${pmh_src} ${pmh_hdr} )
 target_include_directories( pmh PUBLIC "${LIBLEMON_ROOT}/include" "src" ${Boost_INCLUDE_DIRS} ${GUROBI_INCLUDE_DIR} )
 target_link_libraries( pmh ${CommonLibs} ${GUROBI_LIBRARIES} )
 
-add_executable( pmh_pr ${pmh_pr_src} ${pmh_pr_hdr} )
-target_include_directories( pmh_pr PUBLIC "${LIBLEMON_ROOT}/include" "src" ${Boost_INCLUDE_DIRS} ${GUROBI_INCLUDE_DIR} )
-target_link_libraries( pmh_pr ${CommonLibs} ${GUROBI_LIBRARIES} )
+add_executable( pmh_tr ${pmh_tr_src} ${pmh_tr_hdr} )
+target_include_directories( pmh_tr PUBLIC "${LIBLEMON_ROOT}/include" "src" ${Boost_INCLUDE_DIRS} ${GUROBI_INCLUDE_DIR} )
+target_link_libraries( pmh_tr ${CommonLibs} ${GUROBI_LIBRARIES} )
 
-add_executable( pmh_cti ${pmh_cti_src} ${pmh_cti_hdr} )
-target_include_directories( pmh_cti PUBLIC "${LIBLEMON_ROOT}/include" "src" ${Boost_INCLUDE_DIRS} ${GUROBI_INCLUDE_DIR} )
-target_link_libraries( pmh_cti ${CommonLibs} ${GUROBI_LIBRARIES} )
+add_executable( pmh_ti ${pmh_ti_src} ${pmh_ti_hdr} )
+target_include_directories( pmh_ti PUBLIC "${LIBLEMON_ROOT}/include" "src" ${Boost_INCLUDE_DIRS} ${GUROBI_INCLUDE_DIR} )
+target_link_libraries( pmh_ti ${CommonLibs} ${GUROBI_LIBRARIES} )
+
+add_executable( ms ${ms_src} ${ms_hdr} )
+target_include_directories( ms PUBLIC "${LIBLEMON_ROOT}/include" "src" ${Boost_INCLUDE_DIRS} ${GUROBI_INCLUDE_DIR} )
+target_link_libraries( ms ${CommonLibs} ${GUROBI_LIBRARIES})
 
 add_executable( generatemigrationtrees ${generatemigrationtrees_src} ${generatemigrationtrees_hdr} )
 target_link_libraries( generatemigrationtrees ${CommonLibs} )
+
+add_executable( generatemutationtrees ${generatemutationtrees_src} ${generatemutationtrees_hdr} )
+target_include_directories( generatemutationtrees PUBLIC "${LIBLEMON_ROOT}/include" "src" ${Boost_INCLUDE_DIRS} ${GUROBI_INCLUDE_DIR} )
+target_link_libraries( generatemutationtrees ${CommonLibs} ${GUROBI_LIBRARIES})
 
 add_executable( visualizemigrationgraph ${visualizemigrationgraph_src} ${visualizemigrationgraph_hdr} )
 target_link_libraries( visualizemigrationgraph ${CommonLibs} )
 
 add_executable( visualizeclonetree ${visualizeclonetree_src} ${visualizeclonetree_hdr} )
 target_link_libraries( visualizeclonetree ${CommonLibs} )
+
+add_executable( rf EXCLUDE_FROM_ALL ${robinson_foulds_src} ${robinson_foulds_hdr} )
+target_link_libraries( rf ${CommonLibs} )
+
+add_executable( simulate EXCLUDE_FROM_ALL ${simulation_src} ${simulation_hdr} )
+target_link_libraries( simulate ${CommonLibs} )
+
+add_executable( cluster ${cluster_src} ${cluster_hdr} )
+target_link_libraries( cluster ${CommonLibs} )
+
+add_executable( frequencies EXCLUDE_FROM_ALL ${reads_to_frequencies_src} ${reads_to_frequencies_hdr} )
+target_link_libraries( frequencies ${CommonLibs} )

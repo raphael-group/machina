@@ -1,0 +1,22 @@
+digraph T {
+	{
+		rank=same
+		8 [penwidth=3,colorscheme=set19,color=3,label="light_blueC\nprostate"]
+		7 [penwidth=3,colorscheme=set19,color=3,label="dark_pinkC\nprostate"]
+		6 [penwidth=3,colorscheme=set19,color=3,label="dark_greenC\nprostate"]
+		4 [penwidth=3,colorscheme=set19,color=5,label="goldA\nright_superficial_inguinal_lymph_node"]
+	}
+	5 [label="dark_green"]
+	3 [label="gold"]
+	2 [label="light_blue"]
+	1 [label="dark_pink"]
+	0 [label="grey"]
+	5 -> 6
+	3 -> 4
+	2 -> 8
+	2 -> 5
+	1 -> 7
+	1 -> 3
+	0 -> 2
+	0 -> 1
+}

@@ -1,0 +1,18 @@
+digraph barS {
+	{
+		rank=same
+	0 [shape=box,penwidth=3,colorscheme=set19,color=3,label="P"]
+	}
+	{
+		rank=same
+		4 [shape=box,penwidth=3,colorscheme=set19,color=7,label="M4"]
+		3 [shape=box,penwidth=3,colorscheme=set19,color=9,label="M3"]
+		2 [shape=box,penwidth=3,colorscheme=set19,color=8,label="M2"]
+	}
+	1 [shape=box,penwidth=3,colorscheme=set19,color=2,label="M1"]
+	1 -> 4 [penwidth=3,colorscheme=set19,color="2;0.5:7"]
+	0 -> 2 [penwidth=3,colorscheme=set19,color="3;0.5:8"]
+	0 -> 3 [penwidth=3,colorscheme=set19,color="3;0.5:9"]
+	0 -> 1 [penwidth=3,colorscheme=set19,color="3;0.5:2"]
+	0 -> 1 [penwidth=3,colorscheme=set19,color="3;0.5:2"]
+}

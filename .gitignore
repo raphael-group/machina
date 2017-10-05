@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+.Rproj.user
+
+doc/html/
+build/
+build2/
+.ipynb_checkpoints/
+
+# Mac stuff
+.DS_store

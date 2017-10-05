@@ -5,12 +5,11 @@
  *      Author: M. El-Kebir
  */
 
-#ifndef SAMPLEGRAPH_H
-#define SAMPLEGRAPH_H
+#ifndef MIGRATIONGRAP_H
+#define MIGRATIONGRAP_H
 
 #include "utils.h"
 #include "clonetree.h"
-#include "nonbinaryclonetree.h"
 #include <lemon/connectivity.h>
 
 /// This class models a migration graph
@@ -36,22 +35,24 @@ public:
   /// Default constructor
   MigrationGraph();
   
+  /// Constructor
+  ///
+  /// @param G Directed graph
+  /// @param root Root node
+  /// @param id Node identifier
+  MigrationGraph(const Digraph& G,
+                 Node root,
+                 const StringNodeMap& id);
+  
   /// Copy constructor
   MigrationGraph(const MigrationGraph& other);
-  
-  /// Construct migration graph given a binary clone tree and vertex labeling
-  ///
-  /// @param T Binary clone tree
-  /// @param lPlus Vertex labeling
-  MigrationGraph(const CloneTree& T,
-                 const StringNodeMap& lPlus);
   
   /// Construct migration graph given a non-binary clone tree
   /// and vertex labeling
   ///
-  /// @param T Non-binary clone tree
+  /// @param T Clone tree
   /// @param lPlus Vertex labeling
-  MigrationGraph(const NonBinaryCloneTree& T,
+  MigrationGraph(const CloneTree& T,
                  const StringNodeMap& lPlus);
   
   /// Return anatomical site label of given node
@@ -61,7 +62,7 @@ public:
   }
   
   /// Return the labels of all anatomical sites
-  StringSet getSamples() const
+  StringSet getAnatomicalSites() const
   {
     StringSet res;
     for (const auto& kv : _idToNode)
@@ -72,7 +73,7 @@ public:
   }
   
   /// Return the number of anatomical sites
-  int getNrSamples() const
+  int getNrAnatomicalSites() const
   {
     return _idToNode.size();
   }
@@ -81,6 +82,25 @@ public:
   bool hasReseeding() const
   {
     return !lemon::dag(_G);
+  }
+  
+  /// Return whether the migration graph has a PS or S topology
+  bool isSingleSourceSeeded() const
+  {
+    for (NodeIt y(_G); y != lemon::INVALID; ++y)
+    {
+      Node parent = lemon::INVALID;
+      for (InArcIt a(_G, y); a != lemon::INVALID; ++a)
+      {
+        Node x = _G.source(a);
+        if (parent == lemon::INVALID)
+          parent = x;
+        else if (parent != x)
+          return false;
+      }
+    }
+    
+    return true;
   }
   
   /// Return the number of migrations in the migration graph
@@ -98,12 +118,15 @@ public:
                         const StringNodeMap& lPlus) const;
   
   /// Return the migration pattern of the migration graph
+  Pattern getPattern() const;
+  
+  /// Return a short string corresponding to the migration pattern
+  /// of the migration graph
   ///
-  /// @param T Clone tree
-  /// @param lPlus Vertex labeling
-  template <class CLONETREE>
-  Pattern getPattern(const CLONETREE& T,
-                                       const StringNodeMap& lPlus) const;
+  /// @param pattern Migration pattern
+  /// @param monoclonal Monoclonal
+  static std::string getPatternString(Pattern pattern,
+                                      bool monoclonal);
   
   /// Return a short string corresponding to the migration pattern
   /// of the migration graph
@@ -115,7 +138,9 @@ public:
   /// of the migration graph
   ///
   /// @param pattern Migration pattern
-  static std::string getPatternLongString(Pattern pattern);
+  /// @param monoclonal Monoclonal
+  static std::string getPatternLongString(Pattern pattern,
+                                          bool monoclonal);
   
   /// Return a short string corresponding to the allowed migration patterns
   /// of the migration graph
@@ -124,7 +149,7 @@ public:
   static std::string getAllowedPatternsString(Pattern pattern);
   
   /// Return the number of seeding sites
-  int getNrSeedingSamples() const
+  int getNrSeedingSites() const
   {
     int res = 0;
     for (NodeIt x(_G); x != lemon::INVALID; ++x)
@@ -137,8 +162,33 @@ public:
     return res;
   }
   
+  /// Return whether migration graph is monoclonal
+  bool isMonoclonal() const
+  {
+    for (NodeIt x(_G); x != lemon::INVALID; ++x)
+    {
+      BoolNodeMap visited(_G, false);
+      for (OutArcIt a(_G, x); a != lemon::INVALID; ++a)
+      {
+        Node y = _G.target(a);
+        if (visited[y])
+          return false;
+        else
+          visited[y] = true;
+      }
+    }
+    
+    return true;
+  }
+  
+  /// Return whether migration graph is polyclonal
+  bool isPolyclonal() const
+  {
+    return !isMonoclonal();
+  }
+  
   /// Return the number of anatomical sites with non-unique parentage
-  int getNrNonUniqueParentageSamples() const
+  int getNrNonUniqueParentageSites() const
   {
     int res = 0;
 
@@ -206,7 +256,7 @@ private:
 
 template <class CLONETREE>
 inline int MigrationGraph::getNrComigrations(const CLONETREE& T,
-                                          const StringNodeMap& lPlus) const
+                                             const StringNodeMap& lPlus) const
 {
   const Digraph& TT = T.tree();
   
@@ -267,15 +317,13 @@ inline int MigrationGraph::getNrComigrations(const CLONETREE& T,
   return nrComigrations;
 }
 
-template <class CLONETREE>
-inline MigrationGraph::Pattern MigrationGraph::getPattern(const CLONETREE& T,
-                                                                      const StringNodeMap& lPlus) const
+inline MigrationGraph::Pattern MigrationGraph::getPattern() const
 {
-  if (getNrSeedingSamples() == 1)
+  if (getNrSeedingSites() == 1)
   {
     return PS;
   }
-  else if (getNrComigrations(T, lPlus) == getNrSamples() - 1)
+  else if (isSingleSourceSeeded() && lemon::dag(_G))
   {
     return S;
   }
@@ -307,6 +355,25 @@ inline std::string MigrationGraph::getPatternString(Pattern pattern)
   }
 }
 
+inline std::string MigrationGraph::getPatternString(Pattern pattern,
+                                                    bool monoclonal)
+{
+  std::string res = monoclonal ? "m" : "p";
+  switch (pattern)
+  {
+    case PS:
+      return res + "PS";
+    case S:
+      return res + "S";
+    case M:
+      return res + "M";
+    case R:
+      return res + "R";
+    default:
+      assert(false);
+      return "ERROR";
+  }
+}
 
 inline std::string MigrationGraph::getAllowedPatternsString(Pattern pattern)
 {
@@ -326,22 +393,24 @@ inline std::string MigrationGraph::getAllowedPatternsString(Pattern pattern)
   }
 }
 
-inline std::string MigrationGraph::getPatternLongString(Pattern pattern)
+inline std::string MigrationGraph::getPatternLongString(Pattern pattern,
+                                                        bool monoclonal)
 {
+  std::string res = monoclonal ? "monoclonal " : "polyclonal ";
   switch (pattern)
   {
     case PS:
-      return "parallel single-source seeding";
+      return res + "parallel single-source seeding";
     case S:
-      return "single-source seeding";
+      return res + "single-source seeding";
     case M:
-      return "multi-source seeding";
+      return res + "multi-source seeding";
     case R:
-      return "reeeding";
+      return res + "reseeding";
     default:
       assert(false);
       return "ERROR";
   }
 }
 
-#endif // SAMPLEGRAPH_H
+#endif // MIGRATIONGRAPH_H

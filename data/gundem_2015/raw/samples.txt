@@ -1,0 +1,77 @@
+Patient ID	Sample ID	Sanger ID	ICGC ID	PELICAN tissue reagent ID	Sample Name	Sample type	Organ site
+A10	A	PD11328a	0015_CRUK_PC_0015#M1	19916	RIliacLNMet	metastasis	right iliac lymph node
+A10	B	PD11328b	0015_CRUK_PC_0015#N	19920	LiverNL	normal	noncancerous liver
+A10	C	PD11328c	0015_CRUK_PC_0015#M2	20151	PerigastricLNMet	metastasis	perigastric lymph node
+A10	D	PD11328d	0015_CRUK_PC_0015#M3	19918	PeriportalLNMet	metastasis	periportal lymph node
+A10	E	PD11328e	0015_CRUK_PC_0015#T1	19919	ProstateCA	primary	prostate
+A12	A	PD11333a	0020_CRUK_PC_0020#M1	19947	MediastinalLNMet	metastasis	mediastinal lymph node
+A12	B	PD11333b	0020_CRUK_PC_0020#N	19950	LiverNL	normal	noncancerous liver
+A12	C	PD11333c	0020_CRUK_PC_0020#M2	19948	ParaaorticLNMet	metastasis	paraaortic lymph node
+A12	D	PD11333d	0020_CRUK_PC_0020#M3	19949	RPelvicLNMet	metastasis	right pelvic lymph node
+A12	F	PD11333f	0020_CRUK_PC_0020#M4	20544	LPelvicLNMet	metastasis	left pelvic lymph node
+A17	A	PD13412a	0095_CRUK_PC_0095#M1	20205	AbdParaaorticLNMet	metastasis	abdominal paraaortic lymph node
+A17	B	PD13412b	0095_CRUK_PC_0095#N	20204	KidneyNL	normal	noncancerous kidney
+A17	C	PD13412c	0095_CRUK_PC_0095#M2	20206	R SupraclavicularLNMet	metastasis	right supraclavicular lymph node
+A17	D	PD13412d	0095_CRUK_PC_0095#M3	20207	RFemurMarrowMet	metastasis	right femur marrow
+A17	E	PD13412e	0095_CRUK_PC_0095#M4	20208	SubduralFossaCMet	metastasis	cranial subdural cavity
+A17	F	PD13412f	0095_CRUK_PC_0095#M5	20209	LAxillaryLN#2Met	metastasis	left axillary lymph node 2
+A21	A	PD12337a	0096_CRUK_PC_0096#M1	19888	LRib5MassMet	metastasis	left rib 5
+A21	B	PD12337b	0096_CRUK_PC_0096#N	19893	LKidneyNL	normal	noncancerous kidney
+A21	C	PD12337c	0096_CRUK_PC_0096#M2	19891	SingleLiverMet8	metastasis	liver
+A21	D	PD12337d	0096_CRUK_PC_0096#M3	19892	LAdrenalMet	metastasis	left adrenal gland
+A21	E	PD12337e	0096_CRUK_PC_0096#M4	19890	SingleLiverMet4	metastasis	liver
+A21	F	PD12337f	0096_CRUK_PC_0096#M5	19889	RRibNodularMet	metastasis	right rib nodular
+A21	G	PD12337g	0096_CRUK_PC_0096#M6	20166	SingleLiverMet2	metastasis	liver
+A21	H	PD12337h	0096_CRUK_PC_0096#M7	20168	MultLiverMet13	metastasis	liver
+A21	I	PD12337i	0096_CRUK_PC_0096#M8	20216	LClavicleLNMet	metastasis	left clavicular lymph node
+A21	J	PD12337j	0096_CRUK_PC_0096#M9	20199	LIliacCrestSoftMet	metastasis	left iliac crest
+A21	L	PD12337l	0096_CRUK_PC_0096#N3	20540	StromaNL	stroma	prostate
+A21	N	PD12337n	0096_CRUK_PC_0096#T1	20537	CAGL5 EPE	primary	prostate cancer Gleason 5 extraprostatic extension
+A21	Q	PD12337q	0096_CRUK_PC_0096#T4	20542	CAGL3/5	primary	intraprostatic cancer focus with Gleason 3 and Gleason 5 components
+A22	A	PD11329a	0016_CRUK_PC_0016#M1	19921	LHumerusBoneMarrowMet	metastasis	left humerus bone marrow
+A22	B	PD11329b	0016_CRUK_PC_0016#N	19931	LiverNL	normal	noncancerous liver
+A22	C	PD11329c	0016_CRUK_PC_0016#T1	19922	ApicalProstateCA	primary	prostate
+A22	D	PD11329d	0016_CRUK_PC_0016#M2	19923	SeminalVesicleMet	metastasis	seminal vesicle
+A22	E	PD11329e	0016_CRUK_PC_0016#M3	19924	LAdrenalMet	metastasis	left adrenal gland
+A22	F	PD11329f	0016_CRUK_PC_0016#M4	20152	RAdrenalMet	metastasis	right adrenal gland
+A22	G	PD11329g	0016_CRUK_PC_0016#M5	19926	BladderMet	metastasis	bladder
+A22	H	PD11329h	0016_CRUK_PC_0016#M6	19927	PelvicLN7Met	metastasis	pelvic lymph node 7
+A22	I	PD11329i	0016_CRUK_PC_0016#M7	20153	LPelvicLN8Met	metastasis	left pelvic lymph node 8
+A22	J	PD11329j	0016_CRUK_PC_0016#M8	19929	RPelvicLN12Met	metastasis	right pelvic lymph node 12
+A22	K	PD11329k	0016_CRUK_PC_0016#M9	19930	LPelvicLN5Met	metastasis	left pelvic lymph node 5
+A22	L	PD11329l	0016_CRUK_PC_0016#M10	20543	LMediastinalLNMet	metastasis	left mediastinal lymph node
+A24	A	PD11334a	0021_CRUK_PC_0021#M1	19951	RAxillaryLNMet	metastasis	right axillary lymph node
+A24	B	PD11334b	0021_CRUK_PC_0021#N	19955	SpleenNL	normal	noncancerous spleen
+A24	C	PD11334c	0021_CRUK_PC_0021#M2	19952	RDiaphragmaticMet	metastasis	right diaphragm
+A24	D	PD11334d	0021_CRUK_PC_0021#M3	19953	RRib7Met	metastasis	right rib 7
+A24	E	PD11334e	0021_CRUK_PC_0021#M4	19954	XiphoidMet	metastasis	xiphoid
+A24	F	PD11334f	0021_CRUK_PC_0021#M5	20545	LLobeLiverMet	metastasis	left lobe liver
+A24	G	PD11334g	0021_CRUK_PC_0021#M6	20546	FalciformLigamentMet	metastasis	falciform ligament nodule
+A29	A	PD11330a	0017_CRUK_PC_0017#M1	19932	RSuperficialInguinalLNMetA1	metastasis	right superficial inguinal lymph node
+A29	B	PD11330b	0017_CRUK_PC_0017#N	19934	SpleenNL	normal	spleen lymph node
+A29	C	PD11330c	0017_CRUK_PC_0017#T1	19933	ProstateCA	primary	prostate
+A29	D	PD11330d	0017_CRUK_PC_0017#M2	20369	RAxillaryLNMetA1	metastasis	right axillary lymph node
+A31	A	PD11331a	0018_CRUK_PC_0018#M1	19935	RSubduralMet	metastasis	right subdural
+A31	B	PD11331b	0018_CRUK_PC_0018#N	19940	SpleenNL	normal	noncancerous spleen
+A31	C	PD11331c	0018_CRUK_PC_0018#T1	20154	Prostate1-1-2CA	primary	prostate
+A31	D	PD11331d	0018_CRUK_PC_0018#M2	20155	RIngLNMet	metastasis	right inguinal lymph node
+A31	E	PD11331e	0018_CRUK_PC_0018#M3	19938	LAdrenalMet	metastasis	left adrenal gland
+A31	F	PD11331f	0018_CRUK_PC_0018#M4	19939	RRib7Met	metastasis	right rib 7
+A31	G	PD11331g	0018_CRUK_PC_0018#M5	20547	LSubduralMet	metastasis	left cranial subdural cavity
+A31	H	PD11331h	0018_CRUK_PC_0018#M6	20549	RAxillaryLNMet	metastasis	right axillary lymph node
+A31	I	PD11331i	0018_CRUK_PC_0018#T2	20368	Prostate3-2-1CA	primary	prostate
+A31	N	PD11331n	0018_CRUK_PC_0018#T3	20656	Prostate2-2-2CA	primary	prostate
+A32	A	PD11332a	0019_CRUK_PC_0019#M1	19941	RRib8Met1	metastasis	right rib 8
+A32	B	PD11332b	0019_CRUK_PC_0019#N	19946	SpleenNL	normal	noncancerous spleen
+A32	C	PD11332c	0019_CRUK_PC_0019#T1	19942	Prostate10-1-3CA	primary	prostate
+A32	D	PD11332d	0019_CRUK_PC_0019#M2	19943	LCervicalLNMet1-2	metastasis	left cervical lymph node
+A32	E	PD11332e	0019_CRUK_PC_0019#M3	19944	LSubclavicularLNMet1-5	metastasis	left subclavicular lymph node
+A32	F	PD11332f	0019_CRUK_PC_0019#M4	19945	RHumerusMet1-12	metastasis	right humerus
+A32	K	PD11332k	0019_CRUK_PC_0019#T2	20657	Prostate6-1-2CA	primary	prostate
+A34	A	PD11335a	0022_CRUK_PC_0022#M1	19956	LiverMet3	metastasis	liver
+A34	B	PD11335b	0022_CRUK_PC_0022#N1	19960	SpleenNL	normal	spleen lymph node
+A34	C	PD11335c	0022_CRUK_PC_0022#M2	19957	LiverMet1	metastasis	liver
+A34	D	PD11335d	0022_CRUK_PC_0022#M3	19958	LiverMet12	metastasis	liver
+A34	E	PD11335e	0022_CRUK_PC_0022#M4	19959	SacralNerveRootCompressingMet11yrsbeforedeath	metastasis	sacrum
+A34	F	PD11335f	0022_CRUK_PC_0022#N2	20156	Blood391BNL	normal	blood
+A34	K	PD11335k	0022_CRUK_PC_0022#T1	20658	TURP CA	primary	prostate
