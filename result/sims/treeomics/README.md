@@ -1,4 +1,4 @@
-To run `Treeomics':
+To run `Treeomics`:
 
 1. Generate Treeomics input files using `generate_input.sh`
 
