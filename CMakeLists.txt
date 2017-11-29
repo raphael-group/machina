@@ -349,6 +349,21 @@ set( pmh_ti_src
   src/spruce/tensor.cpp
 )
 
+set( stats_hdr
+  src/utils.h
+  src/clonetree.h
+  src/basetree.h
+  src/migrationgraph.h
+)
+
+set( stats_src
+  src/statsmain.cpp
+  src/utils.cpp
+  src/clonetree.cpp
+  src/basetree.cpp
+  src/migrationgraph.cpp
+)
+
 set( visualizeclonetree_hdr
   src/utils.h
   src/clonetree.h
@@ -522,3 +537,6 @@ target_link_libraries( cluster ${CommonLibs} )
 
 add_executable( frequencies EXCLUDE_FROM_ALL ${reads_to_frequencies_src} ${reads_to_frequencies_hdr} )
 target_link_libraries( frequencies ${CommonLibs} )
+
+add_executable( stats ${stats_src} ${stats_hdr} )
+target_link_libraries( stats ${CommonLibs} )
