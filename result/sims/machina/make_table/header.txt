@@ -1,0 +1,8 @@
+\begin{center}
+\scriptsize
+\begin{tabular}{ |c|c|c|c|c||cc||cc||cc| } 
+\hline
+\multirow{2}{*}{seed} & \#anatomical & $\#$mut. & simulated & simulated & \multicolumn{2}{c||}{\OurMethod (S)} & \multicolumn{2}{c||}{\OurMethod (S, M)} & \multicolumn{2}{c|}{\OurMethod (S, M, R)}\\ 
+ & sites $m$ & trees $|\overline{\mathcal{T}}|$ & pattern & ($\mu$, $\delta$) & pattern & ($\mu$, $\delta$) & pattern & ($\mu$, $\delta$) & pattern & ($\mu$, $\delta$) \\ 
+\hline 
+\hline 

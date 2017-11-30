@@ -5,6 +5,11 @@ then
     exit 1
 fi
 
+if [ ! -e sankoff ]
+then
+    mkdir sankoff
+fi
+
 for m in {m5,m8}
 do
     for p in {mS,S,M,R}
@@ -15,7 +20,7 @@ do
             echo Solving seed $s, pattern $p, anatomical sites $m...
             tree=../../data/sims/$m/$p/T_seed${s}.tree
             labeling=../../data/sims/$m/$p/T_seed${s}.labeling
-            $1 -p P $tree $labeling 2> sankoff_${m}_${p}_${s}.txt
+            $1 -p P $tree $labeling 2> sankoff/${m}_${p}_${s}.txt
         done
     done
 done

@@ -1,0 +1,9 @@
+# To generate tables run
+
+bash process_table.bash seeds5.txt > Table_m5.txt
+bash process_table.bash seeds8.txt > Table_m8.txt
+
+# Seed file has following format
+# pattern seed nsites
+#
+# Empty line introduces horizontal break in table 
