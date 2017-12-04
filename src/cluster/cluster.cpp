@@ -22,6 +22,31 @@ Cluster::Cluster(const ReadMatrix& R,
   classify();
 }
 
+void Cluster::writeAncesTreeInput(std::ostream& out) const
+{
+  const int n = _newR.getNrCharacters();
+  const int k = _newR.getNrSamples();
+  
+  out << "cluster";
+  for (int p = 0; p < k; ++p)
+  {
+    out << "\t" << _newR.indexToSample(p)
+        << "\t" << _newR.indexToSample(p);
+  }
+  out << std::endl;
+  
+  for (int i = 0; i < n; ++i)
+  {
+    out << _newR.indexToCharacter(i);
+    for (int p = 0; p < k; ++p)
+    {
+      out << "\t" << _newR.getRef(p, i)
+          << "\t" << _newR.getVar(p, i);
+    }
+    out << std::endl;
+  }
+}
+
 void Cluster::classify()
 {
   const int k = _F.getNrSamples();

@@ -17,10 +17,12 @@ int main(int argc, char** argv)
   double alpha = 0.001;
   double beta = 0.01;
   bool relabel = false;
+  bool outputAncesTree = false;
   
   lemon::ArgParser ap(argc, argv);
   ap.refOption("a", "Confidence interval used for clustering (default: 0.001)", alpha)
     .refOption("b", "Confidence interval used for pooled frequency matrix (default: 0.01)", beta)
+    .refOption("A", "Output AncesTree input file", outputAncesTree)
     .refOption("r", "Relabel mutation clusters", relabel)
     .other("R", "Read matrix");
   ap.parse();
@@ -61,7 +63,15 @@ int main(int argc, char** argv)
   Cluster cluster(R, alpha, relabel);
   cluster.clusterCC(beta);
   cluster.writeClustering(std::cerr);
-  std::cout << cluster.getClusteredF();
+  
+  if (outputAncesTree)
+  {
+    cluster.writeAncesTreeInput(std::cout);
+  }
+  else
+  {
+    std::cout << cluster.getClusteredF();
+  }
   
   return 0;
 }

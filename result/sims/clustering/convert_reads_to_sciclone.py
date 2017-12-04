@@ -30,6 +30,8 @@ if __name__ == "__main__":
                 sample = s[SAMPLE_LABEL_IDX]
                 ff = open(output_dir + "/" + sample + ".tsv", "w")
                 ff.write("\t".join(["chr", "pos", "ref_reads", "var_reads", "vaf"]) + "\n")
+
+            print s
             pos = int(s[MUTATION_LABEL_IDX])
             for j,i in enumerate(range(pos*1000, pos*1000 + MULT)):
                 if int(s[VAR_IDX]) >= MULT:

@@ -24,7 +24,7 @@ do
 
     for p in {mS,S,M,R}
     do
-        for f in ../../data/sims/${m}/$p/reads_seed*.tsv
+        for f in ../../../data/sims/${m}/$p/reads_seed*.tsv
         do
     	    s=$(basename $f .tsv | sed -e s/reads_seed//g)
 
@@ -35,7 +35,7 @@ do
 	    then
 		mkdir output_${m}/${p}_${s}
 	    fi
-            $3 -p P -c ../../data/sims/coloring.txt -m 1,2,3 -t 2 -o output_${m}/${p}_${s}/ -F input_${m}/cluster_${p}_seed${s}.tsv -barT mut_trees_${m}/mut_trees_${p}_seed${s}.txt > output_${m}/${p}_${s}.txt
+            $3 -p P -c ../../../data/sims/coloring.txt -m 1,2,3 -t 2 -o output_${m}/${p}_${s}/ -F input_${m}/cluster_${p}_seed${s}.tsv -barT mut_trees_${m}/mut_trees_${p}_seed${s}.txt > output_${m}/${p}_${s}.txt
         done
     done
 done
