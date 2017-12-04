@@ -13,6 +13,7 @@ if __name__ == "__main__":
     MUTATION_LABEL_IDX = 5
     REF_IDX = 6
     VAR_IDX = 7
+    MULT = 5
 
     sample = ""
     ff = None
@@ -30,9 +31,9 @@ if __name__ == "__main__":
                 ff = open(output_dir + "/" + sample + ".tsv", "w")
                 ff.write("\t".join(["chr", "pos", "ref_reads", "var_reads", "vaf"]) + "\n")
             pos = int(s[MUTATION_LABEL_IDX])
-            for j,i in enumerate(range(pos*1000, pos*1000 + 5)):
-                if int(s[VAR_IDX]) >= 5:
-                    var = int(s[VAR_IDX]) + j - 2
+            for j,i in enumerate(range(pos*1000, pos*1000 + MULT)):
+                if int(s[VAR_IDX]) >= MULT:
+                    var = int(s[VAR_IDX]) + j - MULT / 2
                     vaf = float(var)/float(var + int(s[REF_IDX]))
                     ff.write("\t".join(["1", str(i), s[REF_IDX], str(var), str(vaf)]) + "\n")
                 else:
