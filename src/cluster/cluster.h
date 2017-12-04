@@ -57,6 +57,11 @@ public:
   /// @param out Output stream
   void writeClustering(std::ostream& out) const;
   
+  /// Write AncesTree input file
+  ///
+  /// @param out Output stream
+  void writeAncesTreeInput(std::ostream& out) const;
+  
   /// Return pooled read matrix
   const ReadMatrix& getClusteredR() const
   {
