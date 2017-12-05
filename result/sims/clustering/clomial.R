@@ -48,12 +48,13 @@ bic = function (Dc, Dt, Mu, P)
   return(result)
 }
 
+print(dirname)
 bics = c()
 for (i in 3:clusters) {
-  clomial = Clomial(Dc=Dc,Dt=Dt,maxIt=20,C=i,doParal=FALSE,binomTryNum=100)
+  clomial = Clomial(Dc=Dc,Dt=Dt,maxIt=20,C=i,doParal=FALSE,binomTryNum=25)
   chosen <- choose.best(models=clomial$models, doTalk=TRUE)$bestModel
   bics[i] <- bic(Dc=Dc,Dt=Dt, Mu=chosen$Mu, P=chosen$P)$bic
+  print(paste("bic", i, "clusters:", bics[i]))
+  write.table(bics, paste0(dirname, "/bics.tsv"), sep="\t")
   write.table(round(chosen$Mu), paste0(dirname, "/", i, ".tsv"), sep="\t")
 }
-
-write.table(bics, paste0(dirname, "/bics.tsv"), sep="\t")

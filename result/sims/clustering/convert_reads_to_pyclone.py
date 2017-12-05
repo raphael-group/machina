@@ -29,15 +29,13 @@ if __name__ == "__main__":
                     ff.close()
                 sample = s[SAMPLE_LABEL_IDX]
                 ff = open(output_dir + "/" + sample + ".tsv", "w")
-                ff.write("\t".join(["chr", "pos", "ref_reads", "var_reads", "vaf"]) + "\n")
-
+                ff.write("\t".join(["mutation_id", "ref_counts", "var_counts", "normal_cn", "minor_cn", "major_cn", "genotype"]) + "\n")
             pos = int(s[MUTATION_LABEL_IDX])
             for j,i in enumerate(range(pos*1000, pos*1000 + MULT)):
                 if int(s[VAR_IDX]) >= MULT:
                     var = int(s[VAR_IDX]) + j - MULT / 2
-                    vaf = float(var)/float(var + int(s[REF_IDX]))
-                    ff.write("\t".join(["1", str(i), s[REF_IDX], str(var), str(vaf)]) + "\n")
+                    ff.write("\t".join([str(i), s[REF_IDX], str(var), "2", "1", "1", "AB"]) + "\n")
                 else:
-                    vaf = float(s[VAR_IDX])/float(int(s[VAR_IDX]) + int(s[REF_IDX]))
-                    ff.write("\t".join(["1", str(i), s[REF_IDX], s[VAR_IDX], str(vaf)]) + "\n")
+                    ff.write("\t".join([str(i), s[REF_IDX], s[VAR_IDX], "2", "1", "1", "AB"]) + "\n")
+
         ff.close()

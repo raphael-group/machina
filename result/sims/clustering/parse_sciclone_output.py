@@ -19,6 +19,5 @@ for i in range(nrSNVs):
         j = int(df[df['st'] == i * 1000]['cluster'])
         C[j - 1].append(i)
 
-print C
 for j in range(nrClusters):
     print ";".join(map(str, C[j]))
