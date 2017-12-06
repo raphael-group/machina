@@ -312,7 +312,7 @@ std::istream& operator>>(std::istream& in, ReadMatrix& R)
     
     R._indexToAnatomicalSite[s] = sStr;
     R._anatomicalSiteToIndex[sStr] = s;
-    R._indexToSample[p] = pStr;`
+    R._indexToSample[p] = pStr;
     R._sampleToIndex[pStr] = p;
     R._indexToCharacter[c] = cStr;
     R._characterToIndex[cStr] = c;
