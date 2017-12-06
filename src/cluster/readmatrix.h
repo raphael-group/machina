@@ -58,10 +58,13 @@ public:
   /// Return a read matrix whose entries are down sampled from the current matrix
   ///
   /// @param nrSamplesPerAnatomicalSite Number of samples per anatomical site
-  /// @param coverage
+  /// @param coverage Coverage
+  /// @param purity Purity
+  /// @param seqErrorRate Per base sequencing error rate
   ReadMatrix downSample(int nrSamplesPerAnatomicalSite,
                         int coverage,
-                        double purity) const;
+                        double purity,
+                        double seqErrorRate) const;
 
 private:
   /// Variant reads

@@ -119,7 +119,8 @@ FrequencyMatrix ReadMatrix::toFrequencyMatrix(double alpha) const
 
 ReadMatrix ReadMatrix::downSample(int nrSamplesPerAnatomicalSite,
                                   int coverage,
-                                  double purity) const
+                                  double purity,
+                                  double seqErrorRate) const
 {
   std::poisson_distribution<> poisson(coverage);
   
@@ -168,8 +169,22 @@ ReadMatrix ReadMatrix::downSample(int nrSamplesPerAnatomicalSite,
         int newCoverage = poisson(g_rng);
         
         std::binomial_distribution<> binom(newCoverage, vaf_pi);
-        newR._var[newP][i] = binom(g_rng);
-        newR._ref[newP][i] = newCoverage - newR._var[newP][i];
+        int org_var = binom(g_rng);
+        int org_ref = newCoverage - newR._var[newP][i];
+        
+        if (g_tol.nonZero(seqErrorRate))
+        {
+          std::binomial_distribution<> binom_noise_var(org_var,
+                                                       seqErrorRate);
+          std::binomial_distribution<> binom_noise_ref(org_ref,
+                                                       seqErrorRate);
+          
+          int flips_var =  binom_noise_var(g_rng);
+          int flips_ref =  binom_noise_ref(g_rng);
+          
+          newR._var[newP][i] = org_var - flips_var + flips_ref;
+          newR._var[newP][i] = coverage - newR._var[newP][i];
+        }
       }
     }
   }
@@ -297,7 +312,7 @@ std::istream& operator>>(std::istream& in, ReadMatrix& R)
     
     R._indexToAnatomicalSite[s] = sStr;
     R._anatomicalSiteToIndex[sStr] = s;
-    R._indexToSample[p] = pStr;
+    R._indexToSample[p] = pStr;`
     R._sampleToIndex[pStr] = p;
     R._indexToCharacter[c] = cStr;
     R._characterToIndex[cStr] = c;

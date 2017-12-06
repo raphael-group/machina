@@ -16,12 +16,14 @@ int main(int argc, char** argv)
   double purity;
   int nrSamplesPerAnatomicalSite;
   int coverage;
+  double seqErrorRate;
   
   lemon::ArgParser ap(argc, argv);
   ap.refOption("s", "Random number generator seed (default: 0)", seed, false)
     .refOption("C", "Target coverage", coverage, true)
     .refOption("P", "Purity", purity, true)
     .refOption("k", "Number of samples per anatomical site", nrSamplesPerAnatomicalSite, true)
+    .refOption("E", "Per base sequencing error rate (default: 0)", seqErrorRate, true)
     .other("R", "Read matrix");
   ap.parse();
   
@@ -60,7 +62,7 @@ int main(int argc, char** argv)
   
   g_rng = std::mt19937(seed);
   
-  ReadMatrix newR = R.downSample(nrSamplesPerAnatomicalSite, coverage, purity);
+  ReadMatrix newR = R.downSample(nrSamplesPerAnatomicalSite, coverage, purity, seqErrorRate);
   
   std::cout << newR;
   
