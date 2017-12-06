@@ -231,8 +231,6 @@ bool Simulation::simulateReadCounts()
           
           _var[s][p][i] = org_var - flips_var + flips_ref;
           _ref[s][p][i] = coverage - _var[s][p][i];
-          
-          std::binomial_distribution<> binom_noise_var(_ref[s][p][i], _seqErrorRate);
         }
         else
         {

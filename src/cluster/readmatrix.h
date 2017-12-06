@@ -54,6 +54,14 @@ public:
   /// @param relabel Flag indicating whether clusters should receive new labels
   ReadMatrix poolReads(const IntMatrix& clustering,
                        bool relabel) const;
+  
+  /// Return a read matrix whose entries are down sampled from the current matrix
+  ///
+  /// @param nrSamplesPerAnatomicalSite Number of samples per anatomical site
+  /// @param coverage
+  ReadMatrix downSample(int nrSamplesPerAnatomicalSite,
+                        int coverage,
+                        double purity) const;
 
 private:
   /// Variant reads

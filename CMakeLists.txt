@@ -31,6 +31,21 @@ set( pmh_hdr
   src/gabowmyers.h
 )
 
+set( downsample_hdr
+  src/basematrix.h
+  src/cluster/readmatrix.h
+  src/frequencymatrix.h
+  src/utils.h
+)
+
+set( downsample_src
+  src/utils.cpp
+  src/simulation/downsamplemain.cpp
+  src/basematrix.cpp
+  src/cluster/readmatrix.cpp
+  src/frequencymatrix.cpp
+)
+
 set( simulation_hdr
   src/simulation/cell.h
   src/simulation/simulation.h
@@ -540,3 +555,6 @@ target_link_libraries( frequencies ${CommonLibs} )
 
 add_executable( stats ${stats_src} ${stats_hdr} )
 target_link_libraries( stats ${CommonLibs} )
+
+add_executable( downsample EXCLUDE_FROM_ALL ${downsample_src} ${downsample_hdr} )
+target_link_libraries( downsample ${CommonLibs} )

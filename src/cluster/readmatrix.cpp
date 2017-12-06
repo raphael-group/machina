@@ -117,6 +117,66 @@ FrequencyMatrix ReadMatrix::toFrequencyMatrix(double alpha) const
   return resF;
 }
 
+ReadMatrix ReadMatrix::downSample(int nrSamplesPerAnatomicalSite,
+                                  int coverage,
+                                  double purity) const
+{
+  std::poisson_distribution<> poisson(coverage);
+  
+  ReadMatrix newR;
+  newR._m = _m;
+  newR._n = _n;
+  newR._k = nrSamplesPerAnatomicalSite * _m;
+  
+  newR._indexToAnatomicalSite = _indexToAnatomicalSite;
+  newR._anatomicalSiteToIndex = _anatomicalSiteToIndex;
+  
+  newR._anatomicalSiteIndexToSampleIndices = IntSetVector(_m);
+  
+  newR._indexToCharacter = _indexToCharacter;
+  newR._characterToIndex = _characterToIndex;
+  
+  newR._var = IntMatrix(nrSamplesPerAnatomicalSite * _m,
+                        IntVector(_n, 0));
+  newR._ref = IntMatrix(nrSamplesPerAnatomicalSite * _m,
+                        IntVector(_n, 0));
+  
+  for (int s = 0; s < _m; ++s)
+  {
+    IntVector sampleIndices(anatomicalSiteIndexToSampleIndices(s).begin(),
+                            anatomicalSiteIndexToSampleIndices(s).end());
+    
+    std::shuffle(sampleIndices.begin(), sampleIndices.end(), g_rng);
+    
+    assert(nrSamplesPerAnatomicalSite <= sampleIndices.size());
+    
+    for (int pp = 0; pp < nrSamplesPerAnatomicalSite; ++pp)
+    {
+      int p = sampleIndices[pp];
+      const std::string& pStr = _indexToSample[p];
+      int newP = nrSamplesPerAnatomicalSite * s + pp;
+      
+      newR._sampleToIndex[pStr] = newP;
+      newR._indexToSample.push_back(pStr);
+      
+      newR._anatomicalSiteIndexToSampleIndices[s].insert(newP);
+      newR._sampleIndexToAnatomicalSiteIndex.push_back(s);
+      
+      for (int i = 0; i < _n; ++i)
+      {
+        double vaf_pi = purity * double(_var[p][i]) / double(_var[p][i] + _ref[p][i]);
+        int newCoverage = poisson(g_rng);
+        
+        std::binomial_distribution<> binom(newCoverage, vaf_pi);
+        newR._var[newP][i] = binom(g_rng);
+        newR._ref[newP][i] = newCoverage - newR._var[newP][i];
+      }
+    }
+  }
+  
+  return newR;
+}
+
 std::ostream& operator<<(std::ostream& out,
                          const ReadMatrix& R)
 {

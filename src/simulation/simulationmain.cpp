@@ -111,12 +111,12 @@ int main(int argc, char** argv)
   int nrSamplesPerAnatomicalSite = 2;
   int nrSamplesPrimary = 2;
   double seqErrorRate = 0;
-  double purity = 0;
+  double purity = 1;
   
   lemon::ArgParser ap(argc, argv);
   ap.refOption("s", "Random number generator seed (default: 0)", seed, false)
     .refOption("c", "Color map file", filenameColorMap, true)
-    .refOption("C", "Target coverage (default: 200)", coverage, true)
+    .refOption("C", "Target coverage", coverage, true)
     .refOption("D", "Driver probability (default: 1e-7)", driverProb)
     .refOption("E", "Per base sequencing error rate (default: 0)", seqErrorRate)
     .refOption("P", "Purity (default: 1)", purity)
