@@ -179,11 +179,11 @@ ReadMatrix ReadMatrix::downSample(int nrSamplesPerAnatomicalSite,
           std::binomial_distribution<> binom_noise_ref(org_ref,
                                                        seqErrorRate);
           
-          int flips_var =  binom_noise_var(g_rng);
-          int flips_ref =  binom_noise_ref(g_rng);
+          int flips_var = binom_noise_var(g_rng);
+          int flips_ref = binom_noise_ref(g_rng);
           
           newR._var[newP][i] = org_var - flips_var + flips_ref;
-          newR._var[newP][i] = coverage - newR._var[newP][i];
+          newR._ref[newP][i] = coverage - newR._var[newP][i];
         }
       }
     }
