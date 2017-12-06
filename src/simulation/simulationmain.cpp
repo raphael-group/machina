@@ -110,12 +110,16 @@ int main(int argc, char** argv)
   int coverage = 200;
   int nrSamplesPerAnatomicalSite = 2;
   int nrSamplesPrimary = 2;
+  double seqErrorRate = 0;
+  double purity = 0;
   
   lemon::ArgParser ap(argc, argv);
   ap.refOption("s", "Random number generator seed (default: 0)", seed, false)
     .refOption("c", "Color map file", filenameColorMap, true)
     .refOption("C", "Target coverage (default: 200)", coverage, true)
     .refOption("D", "Driver probability (default: 1e-7)", driverProb)
+    .refOption("E", "Per base sequencing error rate (default: 0)", seqErrorRate)
+    .refOption("P", "Purity (default: 1)", purity)
     .refOption("K", "Carrying capacity (default: 5e4)", K)
     .refOption("k", "Number of samples per anatomical site (default: 2)", nrSamplesPerAnatomicalSite)
     .refOption("kP", "Number of samples for the primary tumor (default: 2)", nrSamplesPrimary)
@@ -157,7 +161,9 @@ int main(int argc, char** argv)
                           nrSamplesPerAnatomicalSite,
                           nrSamplesPrimary,
                           coverage,
-                          migrationPattern);
+                          migrationPattern,
+                          seqErrorRate,
+                          purity);
     if (simulation.simulate(true))
     {
       output(simulation, outputDirectory, colorMap, seed);
@@ -178,7 +184,9 @@ int main(int argc, char** argv)
                             nrSamplesPerAnatomicalSite,
                             nrSamplesPrimary,
                             coverage,
-                            migrationPattern);
+                            migrationPattern,
+                            seqErrorRate,
+                            purity);
       if (simulation.simulate(true))
       {
         MigrationGraph GG = simulation.getObservedMigrationGraph();

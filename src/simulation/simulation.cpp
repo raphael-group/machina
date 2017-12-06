@@ -10,14 +10,16 @@
 #include <lemon/bfs.h>
 
 Simulation::Simulation(double K,
-                   double migrationRate,
-                   double driverProb,
-                   double mutFreqThreshold,
-                   int maxNrAnatomicalSites,
-                   int nrSamplesPerAnatomicalSite,
-                   int nrSamplesPrimary,
-                   int targetCoverage,
-                   Pattern pattern)
+                       double migrationRate,
+                       double driverProb,
+                       double mutFreqThreshold,
+                       int maxNrAnatomicalSites,
+                       int nrSamplesPerAnatomicalSite,
+                       int nrSamplesPrimary,
+                       int targetCoverage,
+                       Pattern pattern,
+                       double seqErrorRate,
+                       double purity)
   : _G()
   , _rootG(lemon::INVALID)
   , _anatomicalSiteMap(_G)
@@ -41,6 +43,8 @@ Simulation::Simulation(double K,
   , _nrSamplesPrimary(nrSamplesPrimary)
   , _targetCoverage(targetCoverage)
   , _pattern(pattern)
+  , _seqErrorRate(seqErrorRate)
+  , _purity(purity)
   , _populationRecord()
   , _driverMutations()
   , _observableMutationToCellTreeMutation()
@@ -202,7 +206,7 @@ bool Simulation::simulateReadCounts()
         }
         
         // divide 2, heterozygous diploid
-        double f = _freq[s][p][i] / 2;
+        double f = (_freq[s][p][i] * _purity) / 2;
         
 //        int alpha = std::max(1, int(round(f * 100)));
 //        int beta = 100 - alpha;
@@ -211,12 +215,30 @@ bool Simulation::simulateReadCounts()
         
         std::binomial_distribution<> binom(coverage, f);
 //        std::binomial_distribution<> binom(coverage, ff);
-//        std::binomial_distribution<> binom_noise(coverage, 0.0001);
-        
-        int flips = 0; //binom_noise(g_rng);
 
-        _var[s][p][i] = binom(g_rng) + flips;
-        _ref[s][p][i] = coverage - _var[s][p][i];
+        int org_var = binom(g_rng);
+        int org_ref = coverage - _var[s][p][i];
+
+        if (g_tol.nonZero(_seqErrorRate))
+        {
+          std::binomial_distribution<> binom_noise_var(org_var,
+                                                       _seqErrorRate);
+          std::binomial_distribution<> binom_noise_ref(org_ref,
+                                                       _seqErrorRate);
+
+          int flips_var =  binom_noise_var(g_rng);
+          int flips_ref =  binom_noise_ref(g_rng);
+          
+          _var[s][p][i] = org_var - flips_var + flips_ref;
+          _ref[s][p][i] = coverage - _var[s][p][i];
+          
+          std::binomial_distribution<> binom_noise_var(_ref[s][p][i], _seqErrorRate);
+        }
+        else
+        {
+          _var[s][p][i] = org_var;
+          _ref[s][p][i] = org_ref;
+        }
       }
     }
   }
