@@ -1,0 +1,78 @@
+digraph T {
+	{
+		rank=same
+		34 [penwidth=3,colorscheme=set19,color=3,label="0_P\nP\n90%"]
+		32 [penwidth=3,colorscheme=set19,color=3,label="1_P\nP\n10%"]
+		30 [penwidth=3,colorscheme=set19,color=2,label="2;13_M1\nM1\n11%"]
+		28 [penwidth=3,colorscheme=set19,color=2,label="21;22_M1\nM1\n41%"]
+		26 [penwidth=3,colorscheme=set19,color=2,label="23;25;26_M1\nM1\n11%"]
+		24 [penwidth=3,colorscheme=set19,color=2,label="30_M1\nM1\n15%"]
+		22 [penwidth=3,colorscheme=set19,color=2,label="29_M1\nM1\n10%"]
+		20 [penwidth=3,colorscheme=set19,color=2,label="31_M1\nM1\n11%"]
+		18 [penwidth=3,colorscheme=set19,color=8,label="5;14_M2\nM2\n13%"]
+		16 [penwidth=3,colorscheme=set19,color=8,label="3;8;12;17;18;20_M2\nM2\n46%"]
+		14 [penwidth=3,colorscheme=set19,color=8,label="24_M2\nM2\n34%"]
+		12 [penwidth=3,colorscheme=set19,color=8,label="32_M2\nM2\n7%"]
+		10 [penwidth=3,colorscheme=set19,color=9,label="4;6;9;11;15;16_M3\nM3\n80%"]
+		8 [penwidth=3,colorscheme=set19,color=9,label="27_M3\nM3\n8.8%"]
+		6 [penwidth=3,colorscheme=set19,color=9,label="28_M3\nM3\n11%"]
+		4 [penwidth=3,colorscheme=set19,color=7,label="7;10;19_M4\nM4\n67%"]
+		2 [penwidth=3,colorscheme=set19,color=7,label="33_M4\nM4\n25%"]
+		0 [penwidth=3,colorscheme=set19,color=7,label="34_M4\nM4\n7.3%"]
+	}
+	36 [label="GL"]
+	35 [label="0"]
+	33 [label="1"]
+	31 [label="2;13"]
+	29 [label="21;22"]
+	27 [label="23;25;26"]
+	25 [label="30"]
+	23 [label="29"]
+	21 [label="31"]
+	19 [label="5;14"]
+	17 [label="3;8;12;17;18;20"]
+	15 [label="24"]
+	13 [label="32"]
+	11 [label="4;6;9;11;15;16"]
+	9 [label="27"]
+	7 [label="28"]
+	5 [label="7;10;19"]
+	3 [label="33"]
+	1 [label="34"]
+	36 -> 35
+	35 -> 34
+	35 -> 33
+	35 -> 31
+	35 -> 17
+	35 -> 11
+	35 -> 5
+	33 -> 32
+	33 -> 19
+	31 -> 30
+	31 -> 29
+	31 -> 27
+	31 -> 23
+	31 -> 21
+	29 -> 28
+	27 -> 26
+	27 -> 25
+	25 -> 24
+	23 -> 22
+	21 -> 20
+	19 -> 18
+	17 -> 16
+	17 -> 15
+	15 -> 14
+	15 -> 13
+	13 -> 12
+	11 -> 10
+	11 -> 9
+	11 -> 7
+	9 -> 8
+	7 -> 6
+	5 -> 4
+	5 -> 3
+	3 -> 2
+	3 -> 1
+	1 -> 0
+}
