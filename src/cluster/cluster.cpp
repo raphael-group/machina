@@ -219,6 +219,32 @@ void Cluster::clusterCC(double beta)
   _newF = _newR.toFrequencyMatrix(beta);
 }
 
+void Cluster::readClustering(std::istream& in,
+                             double beta)
+{
+  _clustering.clear();
+  
+  while (in.good())
+  {
+    _clustering.push_back(IntVector());
+    
+    std::string line;
+    getline(in, line);
+    
+    StringVector s;
+    boost::split(s, line, boost::is_any_of(";"));
+    
+    IntVector ss;
+    for (const std::string& cStr : s)
+    {
+      _clustering.back().push_back(boost::lexical_cast<int>(cStr));
+    }
+  }
+  
+  _newR = _R.poolReads(_clustering, _relabel);
+  _newF = _newR.toFrequencyMatrix(beta);
+}
+
 void Cluster::writeClustering(std::ostream& out) const
 {
   int idx = 0;

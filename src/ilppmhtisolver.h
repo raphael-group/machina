@@ -60,20 +60,20 @@ public:
   /// @param forcedComigrations List of ordered pairs of anatomical sites
   /// that must be present
   /// @param disablePolytomyResolution No polytomy resolution
-  static void run(const CloneTree& T,
-                  const FrequencyMatrix& F,
-                  const std::string& primary,
-                  const std::string& outputDirectory,
-                  const std::string& outputPrefix,
-                  const StringToIntMap& colorMap,
-                  MigrationGraph::Pattern pattern,
-                  int nrThreads,
-                  bool outputILP,
-                  bool outputSearchGraph,
-                  int timeLimit,
-                  const IntTriple& bounds,
-                  const StringPairList& forcedComigrations,
-                  bool disablePolytomyResolution);
+  static IntTriple run(const CloneTree& T,
+                       const FrequencyMatrix& F,
+                       const std::string& primary,
+                       const std::string& outputDirectory,
+                       const std::string& outputPrefix,
+                       const StringToIntMap& colorMap,
+                       MigrationGraph::Pattern pattern,
+                       int nrThreads,
+                       bool outputILP,
+                       bool outputSearchGraph,
+                       int timeLimit,
+                       const IntTriple& bounds,
+                       const StringPairList& forcedComigrations,
+                       bool disablePolytomyResolution);
   
   /// Write search graph
   void writeSearchGraphDOT(std::ostream& out) const;

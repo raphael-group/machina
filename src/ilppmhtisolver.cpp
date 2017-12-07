@@ -822,20 +822,20 @@ void IlpPmhTiSolver::initVariables()
   _model.update();
 }
 
-void IlpPmhTiSolver::run(const CloneTree& T,
-                         const FrequencyMatrix& F,
-                         const std::string& primary,
-                         const std::string& outputDirectory,
-                         const std::string& outputPrefix,
-                         const StringToIntMap& colorMap,
-                         MigrationGraph::Pattern pattern,
-                         int nrThreads,
-                         bool outputILP,
-                         bool outputSearchGraph,
-                         int timeLimit,
-                         const IntTriple& bounds,
-                         const StringPairList& forcedComigrations,
-                         bool disablePolytomyResolution)
+IntTriple IlpPmhTiSolver::run(const CloneTree& T,
+                              const FrequencyMatrix& F,
+                              const std::string& primary,
+                              const std::string& outputDirectory,
+                              const std::string& outputPrefix,
+                              const StringToIntMap& colorMap,
+                              MigrationGraph::Pattern pattern,
+                              int nrThreads,
+                              bool outputILP,
+                              bool outputSearchGraph,
+                              int timeLimit,
+                              const IntTriple& bounds,
+                              const StringPairList& forcedComigrations,
+                              bool disablePolytomyResolution)
 {
   std::string filenameGurobiLog;
   if (!outputDirectory.empty())
@@ -858,19 +858,19 @@ void IlpPmhTiSolver::run(const CloneTree& T,
                         forcedComigrations,
                         disablePolytomyResolution);
   
-  IlpPmhSolver::run(solver,
-                    T,
-                    primary,
-                    outputDirectory,
-                    outputPrefix,
-                    colorMap,
-                    pattern,
-                    nrThreads,
-                    outputILP,
-                    outputSearchGraph,
-                    timeLimit,
-                    bounds,
-                    forcedComigrations);
+  return IlpPmhSolver::run(solver,
+                           T,
+                           primary,
+                           outputDirectory,
+                           outputPrefix,
+                           colorMap,
+                           pattern,
+                           nrThreads,
+                           outputILP,
+                           outputSearchGraph,
+                           timeLimit,
+                           bounds,
+                           forcedComigrations);
 }
 
 GRBLinExpr IlpPmhTiSolver::initObjective(const IntTriple& bounds)

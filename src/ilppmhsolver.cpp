@@ -169,18 +169,18 @@ void IlpPmhSolver::initIndices()
   }
 }
 
-void IlpPmhSolver::run(const CloneTree& T,
-                       const std::string& primary,
-                       const std::string& outputDirectory,
-                       const std::string& outputPrefix,
-                       const StringToIntMap& colorMap,
-                       MigrationGraph::Pattern pattern,
-                       int nrThreads,
-                       bool outputILP,
-                       bool outputSearchGraph,
-                       int timeLimit,
-                       const IntTriple& bounds,
-                       const StringPairList& forcedComigrations)
+IntTriple IlpPmhSolver::run(const CloneTree& T,
+                            const std::string& primary,
+                            const std::string& outputDirectory,
+                            const std::string& outputPrefix,
+                            const StringToIntMap& colorMap,
+                            MigrationGraph::Pattern pattern,
+                            int nrThreads,
+                            bool outputILP,
+                            bool outputSearchGraph,
+                            int timeLimit,
+                            const IntTriple& bounds,
+                            const StringPairList& forcedComigrations)
 {
   std::string filenameGurobiLog;
   if (!outputDirectory.empty())
@@ -200,34 +200,34 @@ void IlpPmhSolver::run(const CloneTree& T,
                       pattern,
                       filenameGurobiLog,
                       forcedComigrations);
-  run(solver,
-      T,
-      primary,
-      outputDirectory,
-      outputPrefix,
-      colorMap,
-      pattern,
-      nrThreads,
-      outputILP,
-      outputSearchGraph,
-      timeLimit,
-      bounds,
-      forcedComigrations);
+  return run(solver,
+             T,
+             primary,
+             outputDirectory,
+             outputPrefix,
+             colorMap,
+             pattern,
+             nrThreads,
+             outputILP,
+             outputSearchGraph,
+             timeLimit,
+             bounds,
+             forcedComigrations);
 }
 
-void IlpPmhSolver::run(IlpPmhSolver& solver,
-                       const CloneTree& T,
-                       const std::string& primary,
-                       const std::string& outputDirectory,
-                       const std::string& outputPrefix,
-                       const StringToIntMap& colorMap,
-                       MigrationGraph::Pattern pattern,
-                       int nrThreads,
-                       bool outputILP,
-                       bool outputSearchGraph,
-                       int timeLimit,
-                       const IntTriple& bounds,
-                       const StringPairList& forcedComigrations)
+IntTriple IlpPmhSolver::run(IlpPmhSolver& solver,
+                            const CloneTree& T,
+                            const std::string& primary,
+                            const std::string& outputDirectory,
+                            const std::string& outputPrefix,
+                            const StringToIntMap& colorMap,
+                            MigrationGraph::Pattern pattern,
+                            int nrThreads,
+                            bool outputILP,
+                            bool outputSearchGraph,
+                            int timeLimit,
+                            const IntTriple& bounds,
+                            const StringPairList& forcedComigrations)
 {
   char buf[1024];
   std::string filenameSearchGraph;
@@ -270,7 +270,13 @@ void IlpPmhSolver::run(IlpPmhSolver& solver,
               << "-" << "\t"
               << timer.realTime()
               << std::endl;
-    return;
+
+    IntTriple res;
+    res.first = -1;
+    res.second.first = -1;
+    res.second.second = -1;
+    
+    return res;
   }
 
   MigrationGraph G(solver.T(), solver.lPlus());
@@ -341,6 +347,13 @@ void IlpPmhSolver::run(IlpPmhSolver& solver,
     solver.writeSolutionGraphDOT(outGG, colorMap);
     outGG.close();
   }
+  
+  IntTriple res;
+  res.first = mu;
+  res.second.first = gamma;
+  res.second.second = sigma;
+  
+  return res;
 }
 
 void IlpPmhSolver::initCallbacks()

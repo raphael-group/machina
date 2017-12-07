@@ -57,6 +57,13 @@ public:
   /// @param out Output stream
   void writeClustering(std::ostream& out) const;
   
+  /// Read clustering
+  ///
+  /// @param in Input stream
+  /// @param beta Confidence interval used for pooled frequency matrix
+  void readClustering(std::istream& in,
+                      double beta);
+  
   /// Write AncesTree input file
   ///
   /// @param out Output stream
