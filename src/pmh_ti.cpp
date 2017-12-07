@@ -44,6 +44,7 @@ int main(int argc, char** argv)
   bool oldMode = false;
   bool disablePolytomyResolution = false;
   int mutationTreeIdx = -1;
+  bool useBounds = false;
   
   lemon::ArgParser ap(argc, argv);
   ap.refOption("c", "Color map file", filenameColorMap, true)
@@ -54,6 +55,7 @@ int main(int argc, char** argv)
     .refOption("t", "Number of threads (default: -1, #cores)", nrThreads)
     .refOption("o", "Output prefix" , outputDirectory)
     .refOption("noPR", "Disable polytomy resolution", disablePolytomyResolution)
+    .refOption("useBounds", "Only retain optimal solution", useBounds)
     .refOption("OLD", "Use old ILP (typically much slower)", oldMode)
     .refOption("mutTreeIdx", "Mutation tree index (default: -1)", mutationTreeIdx)
     .refOption("m", "Allowed migration patterns:\n"\
@@ -204,20 +206,25 @@ int main(int argc, char** argv)
             
             if (!oldMode)
             {
-              IlpPmhTiSolver::run(barT,
-                                  F,
-                                  primary,
-                                  outputDirectory,
-                                  buf,
-                                  colorMap,
-                                  pattern,
-                                  nrThreads,
-                                  outputILP,
-                                  outputSearchGraph,
-                                  timeLimitILP,
-                                  bounds,
-                                  migrationTree,
-                                  disablePolytomyResolution);
+              IntTriple res = IlpPmhTiSolver::run(barT,
+                                                  F,
+                                                  primary,
+                                                  outputDirectory,
+                                                  buf,
+                                                  colorMap,
+                                                  pattern,
+                                                  nrThreads,
+                                                  outputILP,
+                                                  outputSearchGraph,
+                                                  timeLimitILP,
+                                                  bounds,
+                                                  migrationTree,
+                                                  disablePolytomyResolution);
+              
+              if (res.first != -1 && useBounds)
+              {
+                bounds = res;
+              }
             }
             else
             {
@@ -251,20 +258,25 @@ int main(int argc, char** argv)
           snprintf(buf, 1024, "%d-", mutTreeIdx);
           if (!oldMode)
           {
-            IlpPmhTiSolver::run(barT,
-                                F,
-                                primary,
-                                outputDirectory,
-                                buf,
-                                colorMap,
-                                pattern,
-                                nrThreads,
-                                outputILP,
-                                outputSearchGraph,
-                                timeLimitILP,
-                                bounds,
-                                StringPairList(),
-                                disablePolytomyResolution);
+            IntTriple res = IlpPmhTiSolver::run(barT,
+                                                F,
+                                                primary,
+                                                outputDirectory,
+                                                buf,
+                                                colorMap,
+                                                pattern,
+                                                nrThreads,
+                                                outputILP,
+                                                outputSearchGraph,
+                                                timeLimitILP,
+                                                bounds,
+                                                StringPairList(),
+                                                disablePolytomyResolution);
+            
+            if (res.first != -1 && useBounds)
+            {
+              bounds = res;
+            }
           }
           else
           {
