@@ -254,6 +254,11 @@ void Simulation::writeDrivers(std::ostream& out) const
       out << j << std::endl;
     }
   }
+  
+  out << "Number of generations: " << _generation << std::endl;
+  out << "Number of mutations: " << _nrMutations << std::endl;
+  out << "Number of extant cells: " << _nrExtantCells << std::endl;
+  out << "Number of active anatomical sites: " << _nrActiveAnatomicalSites << std::endl;
 }
 
 void Simulation::writeReadCounts(std::ostream& out) const
