@@ -5,16 +5,17 @@ then
     exit 1
 fi
 
-for s in {0,114,139,191,24,249,250,4,54,98}
+for s in {0,114,139,24,250,342,391,459,54,98}
 do
-    for C in {60,200,10000}
+    for C in {200,500,1000,10000}
     do 
         for P in {0.5,0.8,1.0}
         do
-            for k in {1,2,4,5}
+            for k in {1,2,3}
             do
                 $1 reads_seed${s}.tsv -C $C -k $k -P $P -E 0.001 > reads_seed${s}_k${k}_P${P}_C${C}.tsv
             done
         done
     done
 done
+
