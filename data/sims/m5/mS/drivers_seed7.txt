@@ -1,2 +1,6 @@
 0
 17
+Number of generations: 147
+Number of mutations: 683835
+Number of extant cells: 298514
+Number of active anatomical sites: 5
