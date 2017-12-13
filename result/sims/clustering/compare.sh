@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "m	p	s	method	ARI	RI	recall	precision"
-for x in {ancestree,clomial,sciclone,pyclone,pyclone_binomial}
+for x in {ancestree,phylowgs,clomial,sciclone,pyclone,pyclone_binomial,pyclone_org,pyclone_org_binomial}
 do
     for m in {m5,m8}
     do
@@ -14,6 +14,10 @@ do
                 if [ "$x" == "pyclone_binomial" ]
                 then
                     ff=pyclone/$m/$p/$s/clustering_binomial.txt
+                fi
+                if [ "$x" == "pyclone_org_binomial" ]
+                then
+                    ff=pyclone_org/$m/$p/$s/clustering_binomial.txt
                 fi
                 #echo $f $ff
                 if [ -e $ff ] && [ -s $ff ]

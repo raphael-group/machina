@@ -44,6 +44,7 @@ int main(int argc, char** argv)
   bool oldMode = false;
   bool disablePolytomyResolution = false;
   int mutationTreeIdx = -1;
+  bool useBounds = false;
   
   lemon::ArgParser ap(argc, argv);
   ap.refOption("c", "Color map file", filenameColorMap, true)
@@ -54,6 +55,7 @@ int main(int argc, char** argv)
     .refOption("t", "Number of threads (default: -1, #cores)", nrThreads)
     .refOption("o", "Output prefix" , outputDirectory)
     .refOption("noPR", "Disable polytomy resolution", disablePolytomyResolution)
+    .refOption("useBounds", "Only retain optimal solution", useBounds)
     .refOption("OLD", "Use old ILP (typically much slower)", oldMode)
     .refOption("mutTreeIdx", "Mutation tree index (default: -1)", mutationTreeIdx)
     .refOption("m", "Allowed migration patterns:\n"\
@@ -69,7 +71,8 @@ int main(int argc, char** argv)
     .refOption("UB_mu", "Upper bound on the migration number (default: -1, disabled)", bounds.first)
     .refOption("UB_gamma", "Upper bound on the comigration number (default: -1, disabled)", bounds.second.first)
     .refOption("UB_sigma", "Upper bound on the seeding site number (default: -1, disabled)", bounds.second.second)
-    .refOption("l", "Time limit in seconds for the ILP (default: -1, unlimited)", timeLimitILP);
+    .refOption("l", "Time limit in seconds for the ILP (default: -1, unlimited)", timeLimitILP)
+    .refOption("N", "Number of mutation trees to consider (default: -1, all)", nrMutTrees, false);
   ap.parse();
   
   FrequencyMatrix F;
@@ -204,20 +207,25 @@ int main(int argc, char** argv)
             
             if (!oldMode)
             {
-              IlpPmhTiSolver::run(barT,
-                                  F,
-                                  primary,
-                                  outputDirectory,
-                                  buf,
-                                  colorMap,
-                                  pattern,
-                                  nrThreads,
-                                  outputILP,
-                                  outputSearchGraph,
-                                  timeLimitILP,
-                                  bounds,
-                                  migrationTree,
-                                  disablePolytomyResolution);
+              IntTriple res = IlpPmhTiSolver::run(barT,
+                                                  F,
+                                                  primary,
+                                                  outputDirectory,
+                                                  buf,
+                                                  colorMap,
+                                                  pattern,
+                                                  nrThreads,
+                                                  outputILP,
+                                                  outputSearchGraph,
+                                                  timeLimitILP,
+                                                  bounds,
+                                                  migrationTree,
+                                                  disablePolytomyResolution);
+              
+              if (res.first != -1 && useBounds)
+              {
+                bounds = res;
+              }
             }
             else
             {
@@ -251,20 +259,25 @@ int main(int argc, char** argv)
           snprintf(buf, 1024, "%d-", mutTreeIdx);
           if (!oldMode)
           {
-            IlpPmhTiSolver::run(barT,
-                                F,
-                                primary,
-                                outputDirectory,
-                                buf,
-                                colorMap,
-                                pattern,
-                                nrThreads,
-                                outputILP,
-                                outputSearchGraph,
-                                timeLimitILP,
-                                bounds,
-                                StringPairList(),
-                                disablePolytomyResolution);
+            IntTriple res = IlpPmhTiSolver::run(barT,
+                                                F,
+                                                primary,
+                                                outputDirectory,
+                                                buf,
+                                                colorMap,
+                                                pattern,
+                                                nrThreads,
+                                                outputILP,
+                                                outputSearchGraph,
+                                                timeLimitILP,
+                                                bounds,
+                                                StringPairList(),
+                                                disablePolytomyResolution);
+            
+            if (res.first != -1 && useBounds)
+            {
+              bounds = res;
+            }
           }
           else
           {

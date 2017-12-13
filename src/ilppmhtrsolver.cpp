@@ -816,18 +816,18 @@ void IlpPmhTrSolver::initVertexLabelingConstraints()
   }
 }
 
-void IlpPmhTrSolver::run(const CloneTree& T,
-                         const std::string& primary,
-                         const std::string& outputDirectory,
-                         const std::string& outputPrefix,
-                         const StringToIntMap& colorMap,
-                         MigrationGraph::Pattern pattern,
-                         int nrThreads,
-                         bool outputILP,
-                         bool outputSearchGraph,
-                         int timeLimit,
-                         const IntTriple& bounds,
-                         const StringPairList& forcedComigrations)
+IntTriple IlpPmhTrSolver::run(const CloneTree& T,
+                              const std::string& primary,
+                              const std::string& outputDirectory,
+                              const std::string& outputPrefix,
+                              const StringToIntMap& colorMap,
+                              MigrationGraph::Pattern pattern,
+                              int nrThreads,
+                              bool outputILP,
+                              bool outputSearchGraph,
+                              int timeLimit,
+                              const IntTriple& bounds,
+                              const StringPairList& forcedComigrations)
 {
   std::string filenameGurobiLog;
   if (!outputDirectory.empty())
@@ -847,19 +847,20 @@ void IlpPmhTrSolver::run(const CloneTree& T,
                         pattern,
                         filenameGurobiLog,
                         forcedComigrations);
-  IlpPmhSolver::run(solver,
-                    T,
-                    primary,
-                    outputDirectory,
-                    outputPrefix,
-                    colorMap,
-                    pattern,
-                    nrThreads,
-                    outputILP,
-                    outputSearchGraph,
-                    timeLimit,
-                    bounds,
-                    forcedComigrations);
+  
+  return IlpPmhSolver::run(solver,
+                           T,
+                           primary,
+                           outputDirectory,
+                           outputPrefix,
+                           colorMap,
+                           pattern,
+                           nrThreads,
+                           outputILP,
+                           outputSearchGraph,
+                           timeLimit,
+                           bounds,
+                           forcedComigrations);
 }
 
 void IlpPmhTrSolver::refine(const BoolNodeMap& leafPresence,

@@ -83,7 +83,10 @@ if __name__ == "__main__":
 
     recall = float(len(seeding_clones_inferred & seeding_clones_simulated)) / float(len(seeding_clones_simulated))
     precision = float(len(seeding_clones_inferred & seeding_clones_simulated)) / float(len(seeding_clones_inferred))
-    F = 2.0 / ((1.0 / recall) + (1.0 / precision))
+    if recall == 0 or precision == 0:
+        F = 0
+    else:
+        F = 2.0 / ((1.0 / recall) + (1.0 / precision))
 
     edge_set_G_simulated = set(parse_migration_graph(sys.argv[3]))
     edge_set_G_inferred = set(parse_migration_graph(sys.argv[6]))
@@ -97,7 +100,13 @@ if __name__ == "__main__":
     recall_G2 = float(len(edge_multiset_G_inferred & edge_multiset_G_simulated)) / float(len(edge_multiset_G_simulated))
     precision_G2 = float(len(edge_multiset_G_inferred & edge_multiset_G_simulated)) / float(len(edge_multiset_G_inferred))
 
-    F_G = 2.0 / ((1.0 / recall_G) + (1.0 / precision_G))
-    F_G2 = 2.0 / ((1.0 / recall_G2) + (1.0 / precision_G2))
+    if recall_G != 0 and precision_G != 0:
+        F_G = 2.0 / ((1.0 / recall_G) + (1.0 / precision_G))
+    else:
+        F_G = 0
+    if recall_G2 != 0 and precision_G2 != 0:
+        F_G2 = 2.0 / ((1.0 / recall_G2) + (1.0 / precision_G2))
+    else:
+        F_G2 = 0
 
     print ",".join(map(str, [recall, precision, F, recall_G, precision_G, F_G, recall_G2, precision_G2, F_G2]))
