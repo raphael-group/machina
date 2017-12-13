@@ -71,7 +71,8 @@ int main(int argc, char** argv)
     .refOption("UB_mu", "Upper bound on the migration number (default: -1, disabled)", bounds.first)
     .refOption("UB_gamma", "Upper bound on the comigration number (default: -1, disabled)", bounds.second.first)
     .refOption("UB_sigma", "Upper bound on the seeding site number (default: -1, disabled)", bounds.second.second)
-    .refOption("l", "Time limit in seconds for the ILP (default: -1, unlimited)", timeLimitILP);
+    .refOption("l", "Time limit in seconds for the ILP (default: -1, unlimited)", timeLimitILP)
+    .refOption("N", "Number of mutation trees to consider (default: -1, all)", nrMutTrees, false);
   ap.parse();
   
   FrequencyMatrix F;
