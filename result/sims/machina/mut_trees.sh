@@ -18,6 +18,6 @@ do
     do
 	s=$(basename $f .tsv | sed -e s/reads_seed//g)
 	echo Generating mutation trees: seed $s pattern $p...
-	$1 -tl 10 input_${m}/cluster_${p}_seed${s}.tsv > mut_trees_${m}/mut_trees_${p}_seed${s}.txt
+	$1 input_${m}/cluster_${p}_seed${s}.tsv > mut_trees_${m}/mut_trees_${p}_seed${s}.txt
     done
 done
