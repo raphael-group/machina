@@ -20,7 +20,7 @@ int main(int argc, char** argv)
   
   lemon::ArgParser ap(argc, argv);
   ap.refOption("s", "Random number generator seed (default: 0)", seed, false)
-    .refOption("C", "Target coverage", coverage, true)
+    .refOption("C", "Target coverage (specify -1 to maintain orginal numbers)", coverage, true)
     .refOption("P", "Purity", purity, true)
     .refOption("k", "Number of samples per anatomical site", nrSamplesPerAnatomicalSite, true)
     .refOption("E", "Per base sequencing error rate (default: 0)", seqErrorRate, true)

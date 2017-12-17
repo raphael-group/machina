@@ -122,7 +122,7 @@ ReadMatrix ReadMatrix::downSample(int nrSamplesPerAnatomicalSite,
                                   double purity,
                                   double seqErrorRate) const
 {
-  std::poisson_distribution<> poisson(coverage);
+  std::poisson_distribution<> poisson(coverage >= 0 ? coverage : 0);
   
   ReadMatrix newR;
   newR._m = _m;
@@ -165,25 +165,33 @@ ReadMatrix ReadMatrix::downSample(int nrSamplesPerAnatomicalSite,
       
       for (int i = 0; i < _n; ++i)
       {
-        double vaf_pi = purity * double(_var[p][i]) / double(_var[p][i] + _ref[p][i]);
-        int newCoverage = poisson(g_rng);
-        
-        std::binomial_distribution<> binom(newCoverage, vaf_pi);
-        int org_var = binom(g_rng);
-        int org_ref = newCoverage - newR._var[newP][i];
-        
-        if (g_tol.nonZero(seqErrorRate))
+        if (coverage < 0)
         {
-          std::binomial_distribution<> binom_noise_var(org_var,
-                                                       seqErrorRate);
-          std::binomial_distribution<> binom_noise_ref(org_ref,
-                                                       seqErrorRate);
+          newR._var[newP][i] = _var[p][i];
+          newR._ref[newP][i] = _ref[p][i];
+        }
+        else
+        {
+          double vaf_pi = purity * double(_var[p][i]) / double(_var[p][i] + _ref[p][i]);
+          int newCoverage = poisson(g_rng);
           
-          int flips_var = binom_noise_var(g_rng);
-          int flips_ref = binom_noise_ref(g_rng);
+          std::binomial_distribution<> binom(newCoverage, vaf_pi);
+          int org_var = binom(g_rng);
+          int org_ref = newCoverage - org_var;
           
-          newR._var[newP][i] = org_var - flips_var + flips_ref;
-          newR._ref[newP][i] = coverage - newR._var[newP][i];
+          if (g_tol.nonZero(seqErrorRate))
+          {
+            std::binomial_distribution<> binom_noise_var(org_var,
+                                                         seqErrorRate);
+            std::binomial_distribution<> binom_noise_ref(org_ref,
+                                                         seqErrorRate);
+            
+            int flips_var = binom_noise_var(g_rng);
+            int flips_ref = binom_noise_ref(g_rng);
+            
+            newR._var[newP][i] = org_var - flips_var + flips_ref;
+            newR._ref[newP][i] = newCoverage - newR._var[newP][i];
+          }
         }
       }
     }
