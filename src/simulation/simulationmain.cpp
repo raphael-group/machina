@@ -101,6 +101,7 @@ int main(int argc, char** argv)
   double K = 5e4;
   double mutFreqThreshold = 0.05;
   double migrationRate = 1e-6;
+  double mutRate = 0.1;
   double driverProb = 1e-7;
   int maxNrAnatomicalSites = 8;
   std::string filenameColorMap;
@@ -125,6 +126,7 @@ int main(int argc, char** argv)
     .refOption("kP", "Number of samples for the primary tumor (default: 2)", nrSamplesPrimary)
     .refOption("f", "Mutation frequency threshold (default: 0.05)", mutFreqThreshold)
     .refOption("mig", "Migration rate (default: 1e-6)", migrationRate)
+    .refOption("mut", "Mutation rate (default: 0.1)", mutRate)
     .refOption("N", "Number of successful simulations (default: -1)", N)
     .refOption("m", "Maximum number of detectable anatomical sites (default: 8)", maxNrAnatomicalSites)
     .refOption("p", "Allowed migration patterns:\n"\
@@ -155,6 +157,7 @@ int main(int argc, char** argv)
     g_rng = std::mt19937(seed);
     Simulation simulation(K,
                           migrationRate,
+                          mutationRate,
                           driverProb,
                           mutFreqThreshold,
                           maxNrAnatomicalSites,
@@ -178,6 +181,7 @@ int main(int argc, char** argv)
       g_rng = std::mt19937(seed);
       Simulation simulation(K,
                             migrationRate,
+                            mutationRate,
                             driverProb,
                             mutFreqThreshold,
                             maxNrAnatomicalSites,

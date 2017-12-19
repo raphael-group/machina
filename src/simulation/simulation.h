@@ -38,6 +38,7 @@ public:
   ///
   /// @param K Carrying capacity
   /// @param migrationRate Migration rate
+  /// @param mutationRate Mutation rate
   /// @param driverProb Driver mutation probability
   /// @param mutFreqThreshold Mutation frequency threshold
   /// @param maxNrAnatomicalSites Maximum number of detectable anatomical sites
@@ -49,6 +50,7 @@ public:
   /// @param purity Sample purity
   Simulation(double K,
              double migrationRate,
+             double mutationRate,
              double driverProb,
              double mutFreqThreshold,
              int maxNrAnatomicalSites,
@@ -462,6 +464,8 @@ private:
   const double _K;
   /// Migration rate
   const double _migrationRate;
+  /// Mutation rate
+  const double _mutationRate;
   /// Driver mutation probability
   const double _driverProb;
   /// Mutation frequency threshold

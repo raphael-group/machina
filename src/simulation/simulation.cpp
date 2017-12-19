@@ -11,6 +11,7 @@
 
 Simulation::Simulation(double K,
                        double migrationRate,
+                       double mutationRate,
                        double driverProb,
                        double mutFreqThreshold,
                        int maxNrAnatomicalSites,
@@ -36,6 +37,7 @@ Simulation::Simulation(double K,
   , _anatomicalSiteFactors()
   , _K(K)
   , _migrationRate(migrationRate)
+  , _mutationRate(mutationRate)
   , _driverProb(driverProb)
   , _mutFreqThreshold(mutFreqThreshold)
   , _maxNrAnatomicalSites(maxNrAnatomicalSites)
@@ -671,7 +673,7 @@ bool Simulation::simulate(bool verbose)
                   
                   newExtantCellsByDrivers_s[driverMutations2].push_back(daughterCell2);
                 }
-                else if (r < 0.1)
+                else if (r < _mutationRate)
                 {
                   int new_mut = getNewMutation();
                   
