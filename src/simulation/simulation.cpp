@@ -657,7 +657,7 @@ bool Simulation::simulate(bool verbose)
               {
                 newExtantCellsByDrivers_sX.push_back(cell);
                 
-                int nrInitialPassengers = floor(_mutationRate) - 1;
+                int nrInitialPassengers = floor(_mutationRate);
                 IntVector initialPassengerMutations;
                 for (int i = 0; i < nrInitialPassengers; ++i)
                 {
