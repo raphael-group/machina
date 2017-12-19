@@ -657,27 +657,44 @@ bool Simulation::simulate(bool verbose)
               {
                 newExtantCellsByDrivers_sX.push_back(cell);
                 
+                int nrInitialPassengers = floor(_mutationRate) - 1;
+                IntVector initialPassengerMutations;
+                for (int i = 0; i < nrInitialPassengers; ++i)
+                {
+                  int new_mut = getNewMutation();
+                  initialPassengerMutations.push_back(new_mut);
+                }
+                
                 /// do we have a new driver?
                 double r = unif(g_rng);
                 if (r < _driverProb * (X.size() + 1))
                 {
+                  IntVector passengerMutations2 = cell.getPassengerMutations();
+                  passengerMutations2.insert(passengerMutations2.end(),
+                                             initialPassengerMutations.begin(),
+                                             initialPassengerMutations.end());
+
                   int new_mut = getNewMutation();
                   
                   IntSet driverMutations2 = X;
                   driverMutations2.insert(new_mut);
                   _driverMutations.insert(new_mut);
                   
-                  Cell daughterCell2(cell.getPassengerMutations(),
+                  Cell daughterCell2(passengerMutations2,
                                      new_mut,
                                      cell.getAnatomicalSite());
                   
                   newExtantCellsByDrivers_s[driverMutations2].push_back(daughterCell2);
                 }
-                else if (r < _mutationRate)
+                else if (r < _mutationRate - floor(_mutationRate))
                 {
                   int new_mut = getNewMutation();
                   
                   IntVector passengerMutations2 = cell.getPassengerMutations();
+                  passengerMutations2.insert(passengerMutations2.end(),
+                                             initialPassengerMutations.begin(),
+                                             initialPassengerMutations.end());
+                  
                   passengerMutations2.push_back(new_mut);
                   
                   Cell daughterCell2(passengerMutations2,
@@ -688,7 +705,19 @@ bool Simulation::simulate(bool verbose)
                 }
                 else
                 {
-                  newExtantCellsByDrivers_sX.push_back(cell);
+                  int new_mut = initialPassengerMutations.empty() ?
+                                cell.getMutation() : initialPassengerMutations.back();
+                  
+                  IntVector passengerMutations2 = cell.getPassengerMutations();
+                  passengerMutations2.insert(passengerMutations2.end(),
+                                             initialPassengerMutations.begin(),
+                                             initialPassengerMutations.end());
+                  
+                  Cell daughterCell2(passengerMutations2,
+                                     new_mut,
+                                     cell.getAnatomicalSite());
+                  
+                  newExtantCellsByDrivers_sX.push_back(daughterCell2);
                 }
                 
                 newNrExtantCells += 2;
