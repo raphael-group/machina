@@ -19,9 +19,11 @@ int main(int argc, char** argv)
   bool relabel = false;
   bool outputAncesTree = false;
   std::string clusteringFilename;
+  double fwr = -1;
   
   lemon::ArgParser ap(argc, argv);
   ap.refOption("a", "Confidence interval used for clustering (default: 0.001)", alpha)
+    .refOption("FWR", "Family-wise error rate", fwr)
     .refOption("b", "Confidence interval used for pooled frequency matrix (default: 0.01)", beta)
     .refOption("A", "Output AncesTree input file", outputAncesTree)
     .refOption("C", "Clustering input filename", clusteringFilename)
@@ -60,6 +62,11 @@ int main(int argc, char** argv)
   {
     std::cerr << "Error: " << e.what() << std::endl;
     return 1;
+  }
+  
+  if (fwr != -1)
+  {
+    alpha = fwr * R.getNrSamples() * R.getNrCharacters();
   }
   
   Cluster cluster(R, alpha, relabel);
