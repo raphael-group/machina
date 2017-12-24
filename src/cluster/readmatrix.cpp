@@ -94,8 +94,7 @@ FrequencyMatrix ReadMatrix::toFrequencyMatrix(double alpha,
       double f_lb = boost::math::quantile(beta_dist, alpha / 2);
       double f_ub = boost::math::quantile(beta_dist, 1 - alpha / 2);
       
-//      if (var <= (var + ref) * 0.02)
-      if (var < threshold)
+      if (var < threshold || var <= (var + ref) * 0.01)
       {
         f_lb = f_ub = 0;
       }
