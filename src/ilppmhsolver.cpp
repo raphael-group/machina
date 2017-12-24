@@ -232,7 +232,13 @@ IntTriple IlpPmhSolver::run(IlpPmhSolver& solver,
   char buf[1024];
   std::string filenameSearchGraph;
   
-  solver.init(bounds);
+  try {
+    solver.init(bounds);
+  } catch (GRBException& e) {
+    std::cerr << e.getMessage() << std::endl;
+    abort();
+  }
+
   
   if (!outputDirectory.empty())
   {
@@ -619,7 +625,7 @@ void IlpPmhSolver::initLeafVariables()
         snprintf(buf, 1024, "x;%s;%s;%d",
                  getLabel(v_i).c_str(),
                  _indexToAnatomicalSite[s].c_str(), c);
-        _x[i][s][c] = _model.addVar(0, 1, 0, GRB_BINARY, buf);
+        _x[i][s][c] = strlen(buf) > 255 ? _model.addVar(0, 1, 0, GRB_BINARY) : _model.addVar(0, 1, 0, GRB_BINARY, buf);
       }
     }
   }
@@ -650,7 +656,7 @@ void IlpPmhSolver::initVariables()
         snprintf(buf, 1024, "x;%s;%s;%d",
                  getLabel(v_i).c_str(),
                  _indexToAnatomicalSite[s].c_str(), c);
-        _x[i][s][c] = _model.addVar(0, 1, 0, GRB_BINARY, buf);
+        _x[i][s][c] = strlen(buf) > 255 ? _model.addVar(0, 1, 0, GRB_BINARY) : _model.addVar(0, 1, 0, GRB_BINARY, buf);
       }
     }
   }
@@ -681,7 +687,7 @@ void IlpPmhSolver::initVariables()
                      getLabel(v_j).c_str(),
                      _indexToAnatomicalSite[s].c_str(), c,
                      _indexToAnatomicalSite[t].c_str(), d);
-            _xx[ij][s][c][t][d] = _model.addVar(0, 1, 0, GRB_BINARY, buf);
+            _xx[ij][s][c][t][d] = strlen(buf) > 255 ? _model.addVar(0, 1, 0, GRB_BINARY) : _model.addVar(0, 1, 0, GRB_BINARY, buf);
           }
         }
       }

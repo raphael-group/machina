@@ -266,7 +266,7 @@ void IlpPmhTrSolver::initVariables()
                      getLabel(v_i).c_str(),
                      _indexToAnatomicalSite[s].c_str(), c,
                      _indexToAnatomicalSite[t].c_str(), d);
-            _zz[i][s][c][t][d] = _model.addVar(0, 1, 0, GRB_BINARY, buf);
+            _zz[i][s][c][t][d] = strlen(buf) > 255 ? _model.addVar(0, 1, 0, GRB_BINARY) :  _model.addVar(0, 1, 0, GRB_BINARY, buf);
           }
         }
       }
@@ -288,7 +288,7 @@ void IlpPmhTrSolver::initVariables()
         snprintf(buf, 1024, "r;%s;%s;%d",
                  getLabel(v_i).c_str(),
                  _indexToAnatomicalSite[s].c_str(), c);
-        _r[i][s][c] = _model.addVar(0, 1, 0, GRB_BINARY, buf);
+        _r[i][s][c] = strlen(buf) > 255 ? _model.addVar(0, 1, 0, GRB_BINARY) : _model.addVar(0, 1, 0, GRB_BINARY, buf);
       }
     }
   }
@@ -453,7 +453,7 @@ void IlpPmhTrSolver::initLeafVariables()
         snprintf(buf, 1024, "r;%s;%s;%d",
                  getLabel(v_i).c_str(),
                  _indexToAnatomicalSite[s].c_str(), c);
-        _r[i][s][c] = _model.addVar(0, 1, 0, GRB_BINARY, buf);
+        _r[i][s][c] = strlen(buf) > 255 ? _model.addVar(0, 1, 0, GRB_BINARY) : _model.addVar(0, 1, 0, GRB_BINARY, buf);
       }
     }
   }
