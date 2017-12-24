@@ -23,6 +23,7 @@ public:
   /// @param relabel Relabel mutation clusters
   Cluster(const ReadMatrix& R,
           double alpha,
+          int threshold,
           bool relabel);
   
   /// Clonality status of a mutation

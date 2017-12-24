@@ -76,7 +76,8 @@ ReadMatrix ReadMatrix::poolReads(const IntMatrix& clustering,
   return newR;
 }
 
-FrequencyMatrix ReadMatrix::toFrequencyMatrix(double alpha) const
+FrequencyMatrix ReadMatrix::toFrequencyMatrix(double alpha,
+                                              int threshold) const
 {
   FrequencyMatrix resF(*this);
   
@@ -93,7 +94,8 @@ FrequencyMatrix ReadMatrix::toFrequencyMatrix(double alpha) const
       double f_lb = boost::math::quantile(beta_dist, alpha / 2);
       double f_ub = boost::math::quantile(beta_dist, 1 - alpha / 2);
       
-      if (var <= (var + ref) * 0.01)
+//      if (var <= (var + ref) * 0.02)
+      if (var < threshold)
       {
         f_lb = f_ub = 0;
       }

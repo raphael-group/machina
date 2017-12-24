@@ -45,7 +45,11 @@ public:
   
   /// Return frequency matrix using the specified alpha for computing
   /// the binomial proportion confidence intervals
-  FrequencyMatrix toFrequencyMatrix(double alpha) const;
+  ///
+  /// @param alpha Binomial proportion confidence interval
+  /// @param threshold Variant read count threshold
+  FrequencyMatrix toFrequencyMatrix(double alpha,
+                                    int threshold) const;
   
   /// Return a read matrix whose entries are mutation clusters with pooled
   /// read counts

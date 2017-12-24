@@ -10,9 +10,10 @@
 
 Cluster::Cluster(const ReadMatrix& R,
                  double alpha,
+                 int varThreshold,
                  bool relabel)
   : _R(R)
-  , _F(R.toFrequencyMatrix(alpha))
+  , _F(R.toFrequencyMatrix(alpha, varThreshold))
   , _profile(R.getNrSamples(),
              ProfileVector(R.getNrCharacters(),
                            ABSENT))
@@ -111,7 +112,7 @@ void Cluster::clusterClonalityStatus(double beta)
   }
   
   _newR = _R.poolReads(_clustering, _relabel);
-  _newF = _newR.toFrequencyMatrix(beta);
+  _newF = _newR.toFrequencyMatrix(beta, 3);
 }
 
 void Cluster::clusterCC(double beta)
@@ -196,10 +197,10 @@ void Cluster::clusterCC(double beta)
 //  {
 //    Graph::Node v_i = G.u(a_ij);
 //    Graph::Node v_j = G.v(a_ij);
-//    
+//
 //    int i = nodeToMutation[v_i];
 //    int j = nodeToMutation[v_j];
-//    
+//
 //    std::cout << "\t" << i << " -- " << j << std::endl;
 //  }
 //  std::cout << "}" << std::endl;
@@ -216,7 +217,7 @@ void Cluster::clusterCC(double beta)
   }
   
   _newR = _R.poolReads(_clustering, _relabel);
-  _newF = _newR.toFrequencyMatrix(beta);
+  _newF = _newR.toFrequencyMatrix(beta, 3);
 }
 
 void Cluster::readClustering(std::istream& in,
@@ -245,7 +246,7 @@ void Cluster::readClustering(std::istream& in,
   }
   
   _newR = _R.poolReads(_clustering, _relabel);
-  _newF = _newR.toFrequencyMatrix(beta);
+  _newF = _newR.toFrequencyMatrix(beta, 3);
 }
 
 void Cluster::writeClustering(std::ostream& out) const

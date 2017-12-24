@@ -20,9 +20,11 @@ int main(int argc, char** argv)
   bool outputAncesTree = false;
   std::string clusteringFilename;
   double fwr = -1;
+  int varCountThreshold = 3;
   
   lemon::ArgParser ap(argc, argv);
   ap.refOption("a", "Confidence interval used for clustering (default: 0.001)", alpha)
+    .refOption("varLB", "Minimum number of variant reads (default: 3)", varCountThreshold)
     .refOption("FWR", "Family-wise error rate", fwr)
     .refOption("b", "Confidence interval used for pooled frequency matrix (default: 0.01)", beta)
     .refOption("A", "Output AncesTree input file", outputAncesTree)
@@ -66,10 +68,10 @@ int main(int argc, char** argv)
   
   if (fwr != -1)
   {
-    alpha = fwr * R.getNrSamples() * R.getNrCharacters();
+    alpha = fwr / (R.getNrSamples() * R.getNrCharacters());
   }
   
-  Cluster cluster(R, alpha, relabel);
+  Cluster cluster(R, alpha, varCountThreshold, relabel);
   if (clusteringFilename.empty())
   {
     cluster.clusterCC(beta);
