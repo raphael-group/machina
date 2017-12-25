@@ -121,28 +121,53 @@ FrequencyMatrix ReadMatrix::toFrequencyMatrix(double alpha,
 ReadMatrix ReadMatrix::downSample(int nrSamplesPerAnatomicalSite,
                                   int coverage,
                                   double purity,
-                                  double seqErrorRate) const
+                                  double seqErrorRate,
+                                  double fracSNVs) const
 {
   std::poisson_distribution<> poisson(coverage >= 0 ? coverage : 0);
   
+  const int new_n = _n * fracSNVs;
+  IntVector snvIndices(_n, 0);
+  for (int i = 1; i < _n; ++i)
+  {
+    snvIndices[i] = snvIndices[i-1] + 1;
+  }
+  std::shuffle(snvIndices.begin(), snvIndices.end(), g_rng);
+  snvIndices.erase(snvIndices.begin() + new_n, snvIndices.end());
+  
   ReadMatrix newR;
   newR._m = _m;
-  newR._n = _n;
-  newR._k = nrSamplesPerAnatomicalSite * _m;
+  newR._n = new_n;
+  if (nrSamplesPerAnatomicalSite < 0)
+  {
+    newR._k = _k;
+    newR._var = IntMatrix(_k,
+                          IntVector(new_n, 0));
+    newR._ref = IntMatrix(_k,
+                          IntVector(new_n, 0));
+  }
+  else
+  {
+    newR._k = nrSamplesPerAnatomicalSite * _m;
+    newR._var = IntMatrix(nrSamplesPerAnatomicalSite * _m,
+                          IntVector(new_n, 0));
+    newR._ref = IntMatrix(nrSamplesPerAnatomicalSite * _m,
+                          IntVector(new_n, 0));
+  }
   
   newR._indexToAnatomicalSite = _indexToAnatomicalSite;
   newR._anatomicalSiteToIndex = _anatomicalSiteToIndex;
   
   newR._anatomicalSiteIndexToSampleIndices = IntSetVector(_m);
   
-  newR._indexToCharacter = _indexToCharacter;
-  newR._characterToIndex = _characterToIndex;
+  newR._indexToCharacter = StringVector(new_n);
+  for (int i = 0; i < new_n; ++i)
+  {
+    newR._indexToCharacter[i] = _indexToCharacter[snvIndices[i]];
+    newR._characterToIndex[newR._indexToCharacter[i]] = i;
+  }
   
-  newR._var = IntMatrix(nrSamplesPerAnatomicalSite * _m,
-                        IntVector(_n, 0));
-  newR._ref = IntMatrix(nrSamplesPerAnatomicalSite * _m,
-                        IntVector(_n, 0));
-  
+  int newP = 0;
   for (int s = 0; s < _m; ++s)
   {
     IntVector sampleIndices(anatomicalSiteIndexToSampleIndices(s).begin(),
@@ -150,13 +175,13 @@ ReadMatrix ReadMatrix::downSample(int nrSamplesPerAnatomicalSite,
     
     std::shuffle(sampleIndices.begin(), sampleIndices.end(), g_rng);
     
-    assert(nrSamplesPerAnatomicalSite <= sampleIndices.size());
     
-    for (int pp = 0; pp < nrSamplesPerAnatomicalSite; ++pp)
+    int nrSamplesPerAnatomicalSite_s = nrSamplesPerAnatomicalSite < 0 ? anatomicalSiteIndexToSampleIndices(s).size() : nrSamplesPerAnatomicalSite;
+    assert(nrSamplesPerAnatomicalSite_s <= sampleIndices.size());
+    for (int pp = 0; pp < nrSamplesPerAnatomicalSite_s; ++pp)
     {
       int p = sampleIndices[pp];
       const std::string& pStr = _indexToSample[p];
-      int newP = nrSamplesPerAnatomicalSite * s + pp;
       
       newR._sampleToIndex[pStr] = newP;
       newR._indexToSample.push_back(pStr);
@@ -164,16 +189,17 @@ ReadMatrix ReadMatrix::downSample(int nrSamplesPerAnatomicalSite,
       newR._anatomicalSiteIndexToSampleIndices[s].insert(newP);
       newR._sampleIndexToAnatomicalSiteIndex.push_back(s);
       
-      for (int i = 0; i < _n; ++i)
+      for (int i = 0; i < new_n; ++i)
       {
+        int old_i = snvIndices[i];
         if (coverage < 0)
         {
-          newR._var[newP][i] = _var[p][i];
-          newR._ref[newP][i] = _ref[p][i];
+          newR._var[newP][i] = _var[p][old_i];
+          newR._ref[newP][i] = _ref[p][old_i];
         }
         else
         {
-          double vaf_pi = purity * double(_var[p][i]) / double(_var[p][i] + _ref[p][i]);
+          double vaf_pi = purity * double(_var[p][old_i]) / double(_var[p][old_i] + _ref[p][old_i]);
           int newCoverage = poisson(g_rng);
           
           std::binomial_distribution<> binom(newCoverage, vaf_pi);
@@ -193,8 +219,14 @@ ReadMatrix ReadMatrix::downSample(int nrSamplesPerAnatomicalSite,
             newR._var[newP][i] = org_var - flips_var + flips_ref;
             newR._ref[newP][i] = newCoverage - newR._var[newP][i];
           }
+          else
+          {
+            newR._var[newP][i] = org_var;
+            newR._ref[newP][i] = newCoverage - newR._var[newP][i];
+          }
         }
       }
+      ++newP;
     }
   }
   

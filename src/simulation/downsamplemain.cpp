@@ -13,17 +13,19 @@
 int main(int argc, char** argv)
 {
   int seed = 0;
-  double purity;
-  int nrSamplesPerAnatomicalSite;
-  int coverage;
-  double seqErrorRate;
+  double purity = 1.0;
+  int nrSamplesPerAnatomicalSite = -1;
+  int coverage = -1;
+  double seqErrorRate = 0;
+  double fractionSNVs = 1;
   
   lemon::ArgParser ap(argc, argv);
   ap.refOption("s", "Random number generator seed (default: 0)", seed, false)
-    .refOption("C", "Target coverage (specify -1 to maintain orginal numbers)", coverage, true)
-    .refOption("P", "Purity", purity, true)
-    .refOption("k", "Number of samples per anatomical site", nrSamplesPerAnatomicalSite, true)
-    .refOption("E", "Per base sequencing error rate (default: 0)", seqErrorRate, true)
+    .refOption("C", "Target coverage (default: -1 maintains orginal counts)", coverage, false)
+    .refOption("P", "Purity (default: 1.0)", purity, false)
+    .refOption("k", "Number of samples per anatomical site (default: -1, maintains original samples)", nrSamplesPerAnatomicalSite, false)
+    .refOption("E", "Per base sequencing error rate (default: 0)", seqErrorRate, false)
+    .refOption("snvFrac", "Fraction of SNVs to retain (default: 1)", fractionSNVs, false)
     .other("R", "Read matrix");
   ap.parse();
   
@@ -62,7 +64,7 @@ int main(int argc, char** argv)
   
   g_rng = std::mt19937(seed);
   
-  ReadMatrix newR = R.downSample(nrSamplesPerAnatomicalSite, coverage, purity, seqErrorRate);
+  ReadMatrix newR = R.downSample(nrSamplesPerAnatomicalSite, coverage, purity, seqErrorRate, fractionSNVs);
   
   std::cout << newR;
   

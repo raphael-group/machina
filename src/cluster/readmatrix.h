@@ -65,10 +65,12 @@ public:
   /// @param coverage Coverage
   /// @param purity Purity
   /// @param seqErrorRate Per base sequencing error rate
+  /// @param fracSNVs Fraction of SNVs to retain
   ReadMatrix downSample(int nrSamplesPerAnatomicalSite,
                         int coverage,
                         double purity,
-                        double seqErrorRate) const;
+                        double seqErrorRate,
+                        double fracSNVs) const;
 
 private:
   /// Variant reads
