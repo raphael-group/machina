@@ -136,8 +136,10 @@ void IlpPmhSolver::initIndices()
   {
     if (s == _primaryIndex)
       _lca[s] = getRoot();
-    else
+    else if (!_L[s].empty())
       _lca[s] = getLCA(_L[s]);
+    else
+      _lca[s] = lemon::INVALID;
   }
   
   // 3. Initialize _indexToNode and _nodeToIndex
