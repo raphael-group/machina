@@ -238,10 +238,17 @@ void Cluster::readClustering(std::istream& in,
     boost::split(s, line, boost::is_any_of(";"));
     
     IntVector ss;
+    bool ok = true;
     for (const std::string& cStr : s)
     {
       int c = _R.characterToIndex(cStr);
+      ok = ok && (c != -1);
+      
       _clustering.back().push_back(c);
+    }
+    if (!ok)
+    {
+      _clustering.pop_back();
     }
   }
   
