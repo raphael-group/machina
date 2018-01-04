@@ -24,4 +24,4 @@ with open(filename) as f:
         lb = float(s[6])
         ub = float(s[7])
         width = ub - lb
-        print "\t".join(map(str, [sys.argv[2],instance, sample, character, width]))
+        print "\t".join(map(str, [sys.argv[2], pattern, instance, sample, character, width]))
