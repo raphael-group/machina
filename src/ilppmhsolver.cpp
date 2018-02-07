@@ -528,7 +528,15 @@ bool IlpPmhSolver::solve(int nrThreads, int timeLimit)
     }
     
     _model.getEnv().set(GRB_IntParam_LogToConsole, 0);
-    _model.optimize();
+    try
+    {
+      _model.optimize();
+    }
+    catch (GRBException& e)
+    {
+      std::cerr << e.getMessage() << std::endl;
+      exit(1);
+    }
     
     int status = _model.get(GRB_IntAttr_Status);
     if (status == GRB_OPTIMAL || status == GRB_SUBOPTIMAL)
