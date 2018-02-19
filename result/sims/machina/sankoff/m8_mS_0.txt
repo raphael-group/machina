@@ -1,0 +1,31 @@
+Clone tree has 9 anatomical sites
+Found 26 maximum parsimony labelings with primary 'P'
+Found 4 labelings with 8 comigrations, 1 seeding sites and mPS
+Found 18 labelings with 8 comigrations, 2 seeding sites and mS
+Found 4 labelings with 8 comigrations, 3 seeding sites and mS
+Labeling 0: 8 migrations, 8 comigrations, 2 seeding sites and mS
+Labeling 1: 8 migrations, 8 comigrations, 2 seeding sites and mS
+Labeling 2: 8 migrations, 8 comigrations, 2 seeding sites and mS
+Labeling 3: 8 migrations, 8 comigrations, 2 seeding sites and mS
+Labeling 4: 8 migrations, 8 comigrations, 2 seeding sites and mS
+Labeling 5: 8 migrations, 8 comigrations, 2 seeding sites and mS
+Labeling 6: 8 migrations, 8 comigrations, 2 seeding sites and mS
+Labeling 7: 8 migrations, 8 comigrations, 2 seeding sites and mS
+Labeling 8: 8 migrations, 8 comigrations, 3 seeding sites and mS
+Labeling 9: 8 migrations, 8 comigrations, 3 seeding sites and mS
+Labeling 10: 8 migrations, 8 comigrations, 3 seeding sites and mS
+Labeling 11: 8 migrations, 8 comigrations, 3 seeding sites and mS
+Labeling 12: 8 migrations, 8 comigrations, 2 seeding sites and mS
+Labeling 13: 8 migrations, 8 comigrations, 2 seeding sites and mS
+Labeling 14: 8 migrations, 8 comigrations, 2 seeding sites and mS
+Labeling 15: 8 migrations, 8 comigrations, 2 seeding sites and mS
+Labeling 16: 8 migrations, 8 comigrations, 2 seeding sites and mS
+Labeling 17: 8 migrations, 8 comigrations, 2 seeding sites and mS
+Labeling 18: 8 migrations, 8 comigrations, 2 seeding sites and mS
+Labeling 19: 8 migrations, 8 comigrations, 2 seeding sites and mS
+Labeling 20: 8 migrations, 8 comigrations, 2 seeding sites and mS
+Labeling 21: 8 migrations, 8 comigrations, 2 seeding sites and mS
+Labeling 22: 8 migrations, 8 comigrations, 1 seeding sites and mPS
+Labeling 23: 8 migrations, 8 comigrations, 1 seeding sites and mPS
+Labeling 24: 8 migrations, 8 comigrations, 1 seeding sites and mPS
+Labeling 25: 8 migrations, 8 comigrations, 1 seeding sites and mPS
