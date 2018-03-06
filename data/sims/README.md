@@ -1,4 +1,4 @@
-This directory contains the simulated instances. We consider four
+This directory contains the simulated instances. We consider five
 different simulation experiments.
 
 1. [m5](m5/) contains simulated instances with m = 5 anatomical sites.
