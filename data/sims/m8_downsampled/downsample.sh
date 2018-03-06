@@ -11,9 +11,9 @@ for p in {mS,S,M,R}
 do
     for f in ../m8_mut_rates/$p/reads_seed*_mut10.tsv
     do
-        for s in {0.01,0.05,0.1,0.5,1.0}
+        for s in {0.005,0.01,0.05,0.1,0.5,1.0}
         do
-            echo "$1 -snvFrac $s > $p/`basename $f .tsv`_SNV${s}.tsv"
+            $1 -s $RANDOM -snvFrac $s $f > $p/`basename $f .tsv`_SNV${s}.tsv
         done
     done
 done
