@@ -14,12 +14,12 @@ for m in {m5,m8}
 do
     for p in {mS,S,M,R}
     do
-        for f in ../../data/sims/$m/$p/reads_seed*.tsv
+        for f in ../../../data/sims/$m/$p/reads_seed*.tsv
         do
             s=$(basename $f .tsv | sed -e s/reads_seed//g)
             echo Solving seed $s, pattern $p, anatomical sites $m...
-            tree=../../data/sims/$m/$p/T_seed${s}.tree
-            labeling=../../data/sims/$m/$p/T_seed${s}.labeling
+            tree=../../../data/sims/$m/$p/T_seed${s}.tree
+            labeling=../../../data/sims/$m/$p/T_seed${s}.labeling
             $1 -p P $tree $labeling 2> sankoff/${m}_${p}_${s}.txt
         done
     done

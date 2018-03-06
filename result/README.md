@@ -30,6 +30,6 @@ The following scripts generate the results for the Gundem *et al.* dataset.
 
 The following scripts generate MACHINA results for the simulated instances.
 
-* [`sims/run.sh`](sims/run.sh) solves the PMH-TI problem for each simulated instance.
-* [`sims/run_sankoff.sh`](sims/run_sankoff.sh) enumerates all minimum migration histories of each simulated clone tree.
+* [`sims/machina/run.sh`](sims/machina/run.sh) solves the PMH-TI problem for each simulated instance.
+* [`sims/machina/run_sankoff.sh`](sims/machina/run_sankoff.sh) enumerates all minimum migration histories of each simulated clone tree.
 

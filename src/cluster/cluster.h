@@ -23,6 +23,7 @@ public:
   /// @param relabel Relabel mutation clusters
   Cluster(const ReadMatrix& R,
           double alpha,
+          int threshold,
           bool relabel);
   
   /// Clonality status of a mutation
@@ -56,6 +57,18 @@ public:
   ///
   /// @param out Output stream
   void writeClustering(std::ostream& out) const;
+  
+  /// Read clustering
+  ///
+  /// @param in Input stream
+  /// @param beta Confidence interval used for pooled frequency matrix
+  void readClustering(std::istream& in,
+                      double beta);
+  
+  /// Write AncesTree input file
+  ///
+  /// @param out Output stream
+  void writeAncesTreeInput(std::ostream& out) const;
   
   /// Return pooled read matrix
   const ReadMatrix& getClusteredR() const

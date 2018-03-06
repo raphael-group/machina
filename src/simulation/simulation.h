@@ -38,6 +38,7 @@ public:
   ///
   /// @param K Carrying capacity
   /// @param migrationRate Migration rate
+  /// @param mutationRate Mutation rate
   /// @param driverProb Driver mutation probability
   /// @param mutFreqThreshold Mutation frequency threshold
   /// @param maxNrAnatomicalSites Maximum number of detectable anatomical sites
@@ -45,15 +46,20 @@ public:
   /// @param nrSamplesPrimary Number of samples of primary tumor
   /// @param targetCoverage Target coverage
   /// @param pattern Migration pattern
+  /// @param seqErrorRate Per base sequencing error
+  /// @param purity Sample purity
   Simulation(double K,
              double migrationRate,
+             double mutationRate,
              double driverProb,
              double mutFreqThreshold,
              int maxNrAnatomicalSites,
              int nrSamplesPerAnatomicalSite,
              int nrSamplesPrimary,
              int targetCoverage,
-             Pattern pattern);
+             Pattern pattern,
+             double seqErrorRate,
+             double purity);
   
   /// Destructor
   ~Simulation();
@@ -458,6 +464,8 @@ private:
   const double _K;
   /// Migration rate
   const double _migrationRate;
+  /// Mutation rate
+  const double _mutationRate;
   /// Driver mutation probability
   const double _driverProb;
   /// Mutation frequency threshold
@@ -472,6 +480,10 @@ private:
   const int _targetCoverage;
   /// Migration pattern
   const Pattern _pattern;
+  /// Sequencing error rate
+  const double _seqErrorRate;
+  /// Purity
+  const double _purity;
   
   /// _populationRecord[s][i] is the
   /// number of cells at anatomical site s in generation i

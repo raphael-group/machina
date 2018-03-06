@@ -1,0 +1,36 @@
+Clone tree has 5 anatomical sites
+Found 30 maximum parsimony labelings with primary 'P'
+Found 4 labelings with 4 comigrations, 1 seeding sites and pPS
+Found 12 labelings with 4 comigrations, 2 seeding sites and pS
+Found 6 labelings with 5 comigrations, 2 seeding sites and mM
+Found 8 labelings with 5 comigrations, 3 seeding sites and mM
+Labeling 0: 5 migrations, 5 comigrations, 3 seeding sites and mM
+Labeling 1: 5 migrations, 5 comigrations, 3 seeding sites and mM
+Labeling 2: 5 migrations, 5 comigrations, 3 seeding sites and mM
+Labeling 3: 5 migrations, 5 comigrations, 3 seeding sites and mM
+Labeling 4: 5 migrations, 5 comigrations, 3 seeding sites and mM
+Labeling 5: 5 migrations, 5 comigrations, 3 seeding sites and mM
+Labeling 6: 5 migrations, 5 comigrations, 2 seeding sites and mM
+Labeling 7: 5 migrations, 5 comigrations, 2 seeding sites and mM
+Labeling 8: 5 migrations, 5 comigrations, 2 seeding sites and mM
+Labeling 9: 5 migrations, 5 comigrations, 2 seeding sites and mM
+Labeling 10: 5 migrations, 5 comigrations, 3 seeding sites and mM
+Labeling 11: 5 migrations, 5 comigrations, 3 seeding sites and mM
+Labeling 12: 5 migrations, 4 comigrations, 2 seeding sites and pS
+Labeling 13: 5 migrations, 4 comigrations, 2 seeding sites and pS
+Labeling 14: 5 migrations, 4 comigrations, 2 seeding sites and pS
+Labeling 15: 5 migrations, 4 comigrations, 2 seeding sites and pS
+Labeling 16: 5 migrations, 4 comigrations, 2 seeding sites and pS
+Labeling 17: 5 migrations, 4 comigrations, 2 seeding sites and pS
+Labeling 18: 5 migrations, 4 comigrations, 2 seeding sites and pS
+Labeling 19: 5 migrations, 4 comigrations, 2 seeding sites and pS
+Labeling 20: 5 migrations, 5 comigrations, 2 seeding sites and mM
+Labeling 21: 5 migrations, 5 comigrations, 2 seeding sites and mM
+Labeling 22: 5 migrations, 4 comigrations, 2 seeding sites and pS
+Labeling 23: 5 migrations, 4 comigrations, 2 seeding sites and pS
+Labeling 24: 5 migrations, 4 comigrations, 2 seeding sites and pS
+Labeling 25: 5 migrations, 4 comigrations, 2 seeding sites and pS
+Labeling 26: 5 migrations, 4 comigrations, 1 seeding sites and pPS
+Labeling 27: 5 migrations, 4 comigrations, 1 seeding sites and pPS
+Labeling 28: 5 migrations, 4 comigrations, 1 seeding sites and pPS
+Labeling 29: 5 migrations, 4 comigrations, 1 seeding sites and pPS

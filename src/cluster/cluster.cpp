@@ -10,9 +10,10 @@
 
 Cluster::Cluster(const ReadMatrix& R,
                  double alpha,
+                 int varThreshold,
                  bool relabel)
   : _R(R)
-  , _F(R.toFrequencyMatrix(alpha))
+  , _F(R.toFrequencyMatrix(alpha, varThreshold))
   , _profile(R.getNrSamples(),
              ProfileVector(R.getNrCharacters(),
                            ABSENT))
@@ -20,6 +21,31 @@ Cluster::Cluster(const ReadMatrix& R,
   , _relabel(relabel)
 {
   classify();
+}
+
+void Cluster::writeAncesTreeInput(std::ostream& out) const
+{
+  const int n = _newR.getNrCharacters();
+  const int k = _newR.getNrSamples();
+  
+  out << "cluster";
+  for (int p = 0; p < k; ++p)
+  {
+    out << "\t" << _newR.indexToSample(p)
+        << "\t" << _newR.indexToSample(p);
+  }
+  out << std::endl;
+  
+  for (int i = 0; i < n; ++i)
+  {
+    out << _newR.indexToCharacter(i);
+    for (int p = 0; p < k; ++p)
+    {
+      out << "\t" << _newR.getRef(p, i)
+          << "\t" << _newR.getVar(p, i);
+    }
+    out << std::endl;
+  }
 }
 
 void Cluster::classify()
@@ -86,7 +112,7 @@ void Cluster::clusterClonalityStatus(double beta)
   }
   
   _newR = _R.poolReads(_clustering, _relabel);
-  _newF = _newR.toFrequencyMatrix(beta);
+  _newF = _newR.toFrequencyMatrix(beta, 3);
 }
 
 void Cluster::clusterCC(double beta)
@@ -171,10 +197,10 @@ void Cluster::clusterCC(double beta)
 //  {
 //    Graph::Node v_i = G.u(a_ij);
 //    Graph::Node v_j = G.v(a_ij);
-//    
+//
 //    int i = nodeToMutation[v_i];
 //    int j = nodeToMutation[v_j];
-//    
+//
 //    std::cout << "\t" << i << " -- " << j << std::endl;
 //  }
 //  std::cout << "}" << std::endl;
@@ -191,7 +217,43 @@ void Cluster::clusterCC(double beta)
   }
   
   _newR = _R.poolReads(_clustering, _relabel);
-  _newF = _newR.toFrequencyMatrix(beta);
+  _newF = _newR.toFrequencyMatrix(beta, 3);
+}
+
+void Cluster::readClustering(std::istream& in,
+                             double beta)
+{
+  _clustering.clear();
+  
+  while (in.good())
+  {
+    std::string line;
+    getline(in, line);
+
+    if (line.empty()) continue;
+    
+    _clustering.push_back(IntVector());
+    
+    StringVector s;
+    boost::split(s, line, boost::is_any_of(";"));
+    
+    IntVector ss;
+    bool ok = true;
+    for (const std::string& cStr : s)
+    {
+      int c = _R.characterToIndex(cStr);
+      ok = ok && (c != -1);
+      
+      _clustering.back().push_back(c);
+    }
+    if (!ok)
+    {
+      _clustering.pop_back();
+    }
+  }
+  
+  _newR = _R.poolReads(_clustering, _relabel);
+  _newF = _newR.toFrequencyMatrix(beta, 3);
 }
 
 void Cluster::writeClustering(std::ostream& out) const

@@ -1,41 +1,41 @@
 pattern,seed,method,RF
-mS,0,Treeomics (sub),6
-mS,10,Treeomics (sub),7
-mS,12,Treeomics (sub),6
-mS,2,Treeomics (sub),3
-mS,3,Treeomics (sub),10
-mS,4,Treeomics (sub),5
-mS,5,Treeomics (sub),6
-mS,7,Treeomics (sub),6
-mS,8,Treeomics (sub),7
-mS,9,Treeomics (sub),2
-pS,17,Treeomics (sub),5
-pS,23,Treeomics (sub),9
-pS,25,Treeomics (sub),2
-pS,31,Treeomics (sub),8
-pS,32,Treeomics (sub),5
-pS,35,Treeomics (sub),6
-pS,40,Treeomics (sub),7
-pS,49,Treeomics (sub),4
-pS,62,Treeomics (sub),7
-pS,81,Treeomics (sub),9
-pM,209,Treeomics (sub),10
-pM,473,Treeomics (sub),19
-pM,512,Treeomics (sub),10
-pM,534,Treeomics (sub),4
-pM,545,Treeomics (sub),13
-pM,565,Treeomics (sub),9
-pM,694,Treeomics (sub),13
-pM,76,Treeomics (sub),2
-pM,865,Treeomics (sub),6
-pM,907,Treeomics (sub),9
-pR,1140,Treeomics (sub),4
-pR,17,Treeomics (sub),10
-pR,2155,Treeomics (sub),10
-pR,247,Treeomics (sub),9
-pR,518,Treeomics (sub),4
-pR,538,Treeomics (sub),2
-pR,571,Treeomics (sub),10
-pR,950,Treeomics (sub),5
-pR,955,Treeomics (sub),8
-pR,981,Treeomics (sub),10
+mS,0,Treeomics-sub,6
+mS,10,Treeomics-sub,7
+mS,12,Treeomics-sub,6
+mS,2,Treeomics-sub,3
+mS,3,Treeomics-sub,10
+mS,4,Treeomics-sub,5
+mS,5,Treeomics-sub,6
+mS,7,Treeomics-sub,6
+mS,8,Treeomics-sub,7
+mS,9,Treeomics-sub,2
+S,17,Treeomics-sub,5
+S,23,Treeomics-sub,9
+S,25,Treeomics-sub,2
+S,31,Treeomics-sub,8
+S,32,Treeomics-sub,5
+S,35,Treeomics-sub,6
+S,40,Treeomics-sub,7
+S,49,Treeomics-sub,4
+S,62,Treeomics-sub,7
+S,81,Treeomics-sub,9
+M,209,Treeomics-sub,10
+M,473,Treeomics-sub,19
+M,512,Treeomics-sub,10
+M,534,Treeomics-sub,4
+M,545,Treeomics-sub,13
+M,565,Treeomics-sub,9
+M,694,Treeomics-sub,13
+M,76,Treeomics-sub,2
+M,865,Treeomics-sub,6
+M,907,Treeomics-sub,9
+R,1140,Treeomics-sub,4
+R,17,Treeomics-sub,10
+R,2155,Treeomics-sub,10
+R,247,Treeomics-sub,9
+R,518,Treeomics-sub,4
+R,538,Treeomics-sub,2
+R,571,Treeomics-sub,10
+R,950,Treeomics-sub,5
+R,955,Treeomics-sub,8
+R,981,Treeomics-sub,10

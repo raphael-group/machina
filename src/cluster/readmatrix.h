@@ -45,7 +45,11 @@ public:
   
   /// Return frequency matrix using the specified alpha for computing
   /// the binomial proportion confidence intervals
-  FrequencyMatrix toFrequencyMatrix(double alpha) const;
+  ///
+  /// @param alpha Binomial proportion confidence interval
+  /// @param threshold Variant read count threshold
+  FrequencyMatrix toFrequencyMatrix(double alpha,
+                                    int threshold) const;
   
   /// Return a read matrix whose entries are mutation clusters with pooled
   /// read counts
@@ -54,6 +58,19 @@ public:
   /// @param relabel Flag indicating whether clusters should receive new labels
   ReadMatrix poolReads(const IntMatrix& clustering,
                        bool relabel) const;
+  
+  /// Return a read matrix whose entries are down sampled from the current matrix
+  ///
+  /// @param nrSamplesPerAnatomicalSite Number of samples per anatomical site
+  /// @param coverage Coverage
+  /// @param purity Purity
+  /// @param seqErrorRate Per base sequencing error rate
+  /// @param fracSNVs Fraction of SNVs to retain
+  ReadMatrix downSample(int nrSamplesPerAnatomicalSite,
+                        int coverage,
+                        double purity,
+                        double seqErrorRate,
+                        double fracSNVs) const;
 
 private:
   /// Variant reads

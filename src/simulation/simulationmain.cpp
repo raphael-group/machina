@@ -101,6 +101,7 @@ int main(int argc, char** argv)
   double K = 5e4;
   double mutFreqThreshold = 0.05;
   double migrationRate = 1e-6;
+  double mutationRate = 0.1;
   double driverProb = 1e-7;
   int maxNrAnatomicalSites = 8;
   std::string filenameColorMap;
@@ -110,17 +111,22 @@ int main(int argc, char** argv)
   int coverage = 200;
   int nrSamplesPerAnatomicalSite = 2;
   int nrSamplesPrimary = 2;
+  double seqErrorRate = 0;
+  double purity = 1;
   
   lemon::ArgParser ap(argc, argv);
   ap.refOption("s", "Random number generator seed (default: 0)", seed, false)
     .refOption("c", "Color map file", filenameColorMap, true)
-    .refOption("C", "Target coverage (default: 200)", coverage, true)
+    .refOption("C", "Target coverage", coverage, true)
     .refOption("D", "Driver probability (default: 1e-7)", driverProb)
+    .refOption("E", "Per base sequencing error rate (default: 0)", seqErrorRate)
+    .refOption("P", "Purity (default: 1)", purity)
     .refOption("K", "Carrying capacity (default: 5e4)", K)
     .refOption("k", "Number of samples per anatomical site (default: 2)", nrSamplesPerAnatomicalSite)
     .refOption("kP", "Number of samples for the primary tumor (default: 2)", nrSamplesPrimary)
     .refOption("f", "Mutation frequency threshold (default: 0.05)", mutFreqThreshold)
     .refOption("mig", "Migration rate (default: 1e-6)", migrationRate)
+    .refOption("mut", "Mutation rate (default: 0.1)", mutationRate)
     .refOption("N", "Number of successful simulations (default: -1)", N)
     .refOption("m", "Maximum number of detectable anatomical sites (default: 8)", maxNrAnatomicalSites)
     .refOption("p", "Allowed migration patterns:\n"\
@@ -151,13 +157,16 @@ int main(int argc, char** argv)
     g_rng = std::mt19937(seed);
     Simulation simulation(K,
                           migrationRate,
+                          mutationRate,
                           driverProb,
                           mutFreqThreshold,
                           maxNrAnatomicalSites,
                           nrSamplesPerAnatomicalSite,
                           nrSamplesPrimary,
                           coverage,
-                          migrationPattern);
+                          migrationPattern,
+                          seqErrorRate,
+                          purity);
     if (simulation.simulate(true))
     {
       output(simulation, outputDirectory, colorMap, seed);
@@ -172,13 +181,16 @@ int main(int argc, char** argv)
       g_rng = std::mt19937(seed);
       Simulation simulation(K,
                             migrationRate,
+                            mutationRate,
                             driverProb,
                             mutFreqThreshold,
                             maxNrAnatomicalSites,
                             nrSamplesPerAnatomicalSite,
                             nrSamplesPrimary,
                             coverage,
-                            migrationPattern);
+                            migrationPattern,
+                            seqErrorRate,
+                            purity);
       if (simulation.simulate(true))
       {
         MigrationGraph GG = simulation.getObservedMigrationGraph();

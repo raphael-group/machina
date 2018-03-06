@@ -1,0 +1,32 @@
+Clone tree has 5 anatomical sites
+Found 26 maximum parsimony labelings with primary 'P'
+Found 4 labelings with 5 comigrations, 2 seeding sites and pM
+Found 8 labelings with 5 comigrations, 3 seeding sites and pM
+Found 8 labelings with 6 comigrations, 3 seeding sites and mM
+Found 6 labelings with 6 comigrations, 4 seeding sites and mM
+Labeling 0: 6 migrations, 5 comigrations, 3 seeding sites and pM
+Labeling 1: 6 migrations, 5 comigrations, 3 seeding sites and pM
+Labeling 2: 6 migrations, 5 comigrations, 3 seeding sites and pM
+Labeling 3: 6 migrations, 5 comigrations, 3 seeding sites and pM
+Labeling 4: 6 migrations, 6 comigrations, 4 seeding sites and mM
+Labeling 5: 6 migrations, 6 comigrations, 4 seeding sites and mM
+Labeling 6: 6 migrations, 6 comigrations, 4 seeding sites and mM
+Labeling 7: 6 migrations, 6 comigrations, 4 seeding sites and mM
+Labeling 8: 6 migrations, 6 comigrations, 3 seeding sites and mM
+Labeling 9: 6 migrations, 6 comigrations, 3 seeding sites and mM
+Labeling 10: 6 migrations, 6 comigrations, 3 seeding sites and mM
+Labeling 11: 6 migrations, 6 comigrations, 3 seeding sites and mM
+Labeling 12: 6 migrations, 6 comigrations, 4 seeding sites and mM
+Labeling 13: 6 migrations, 6 comigrations, 4 seeding sites and mM
+Labeling 14: 6 migrations, 6 comigrations, 3 seeding sites and mM
+Labeling 15: 6 migrations, 6 comigrations, 3 seeding sites and mM
+Labeling 16: 6 migrations, 5 comigrations, 3 seeding sites and pM
+Labeling 17: 6 migrations, 5 comigrations, 3 seeding sites and pM
+Labeling 18: 6 migrations, 5 comigrations, 3 seeding sites and pM
+Labeling 19: 6 migrations, 5 comigrations, 3 seeding sites and pM
+Labeling 20: 6 migrations, 6 comigrations, 3 seeding sites and mM
+Labeling 21: 6 migrations, 6 comigrations, 3 seeding sites and mM
+Labeling 22: 6 migrations, 5 comigrations, 2 seeding sites and pM
+Labeling 23: 6 migrations, 5 comigrations, 2 seeding sites and pM
+Labeling 24: 6 migrations, 5 comigrations, 2 seeding sites and pM
+Labeling 25: 6 migrations, 5 comigrations, 2 seeding sites and pM

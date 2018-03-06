@@ -51,18 +51,18 @@ public:
   /// @param bounds Upper bounds on mu, gamma and sigma
   /// @param forcedComigrations List of ordered pairs of anatomical sites
   /// that must be present
-  static void run(const CloneTree& T,
-                  const std::string& primary,
-                  const std::string& outputDirectory,
-                  const std::string& outputPrefix,
-                  const StringToIntMap& colorMap,
-                  MigrationGraph::Pattern pattern,
-                  int nrThreads,
-                  bool outputILP,
-                  bool outputSearchGraph,
-                  int timeLimit,
-                  const IntTriple& bounds,
-                  const StringPairList& forcedComigrations);
+  static IntTriple run(const CloneTree& T,
+                       const std::string& primary,
+                       const std::string& outputDirectory,
+                       const std::string& outputPrefix,
+                       const StringToIntMap& colorMap,
+                       MigrationGraph::Pattern pattern,
+                       int nrThreads,
+                       bool outputILP,
+                       bool outputSearchGraph,
+                       int timeLimit,
+                       const IntTriple& bounds,
+                       const StringPairList& forcedComigrations);
   
   /// Return refined clone tree of provided solution index
   virtual const CloneTree& T() const

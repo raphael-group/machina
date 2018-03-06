@@ -50,7 +50,7 @@ typedef std::pair<Node, Node> NodePair;
 typedef std::list<NodePair> NodePairList;
 typedef Digraph::NodeMap<NodePair> NodePairMap;
 typedef std::set<std::string> StringSet;
-typedef std::set<StringSet> Split;
+typedef std::multiset<StringSet> Split;
 typedef std::set<Split> SplitSet;
 typedef std::set<StringSet> StringSetSet;
 typedef std::vector<int> IntVector;

@@ -136,8 +136,10 @@ void IlpPmhSolver::initIndices()
   {
     if (s == _primaryIndex)
       _lca[s] = getRoot();
-    else
+    else if (!_L[s].empty())
       _lca[s] = getLCA(_L[s]);
+    else
+      _lca[s] = lemon::INVALID;
   }
   
   // 3. Initialize _indexToNode and _nodeToIndex
@@ -169,18 +171,18 @@ void IlpPmhSolver::initIndices()
   }
 }
 
-void IlpPmhSolver::run(const CloneTree& T,
-                       const std::string& primary,
-                       const std::string& outputDirectory,
-                       const std::string& outputPrefix,
-                       const StringToIntMap& colorMap,
-                       MigrationGraph::Pattern pattern,
-                       int nrThreads,
-                       bool outputILP,
-                       bool outputSearchGraph,
-                       int timeLimit,
-                       const IntTriple& bounds,
-                       const StringPairList& forcedComigrations)
+IntTriple IlpPmhSolver::run(const CloneTree& T,
+                            const std::string& primary,
+                            const std::string& outputDirectory,
+                            const std::string& outputPrefix,
+                            const StringToIntMap& colorMap,
+                            MigrationGraph::Pattern pattern,
+                            int nrThreads,
+                            bool outputILP,
+                            bool outputSearchGraph,
+                            int timeLimit,
+                            const IntTriple& bounds,
+                            const StringPairList& forcedComigrations)
 {
   std::string filenameGurobiLog;
   if (!outputDirectory.empty())
@@ -200,39 +202,45 @@ void IlpPmhSolver::run(const CloneTree& T,
                       pattern,
                       filenameGurobiLog,
                       forcedComigrations);
-  run(solver,
-      T,
-      primary,
-      outputDirectory,
-      outputPrefix,
-      colorMap,
-      pattern,
-      nrThreads,
-      outputILP,
-      outputSearchGraph,
-      timeLimit,
-      bounds,
-      forcedComigrations);
+  return run(solver,
+             T,
+             primary,
+             outputDirectory,
+             outputPrefix,
+             colorMap,
+             pattern,
+             nrThreads,
+             outputILP,
+             outputSearchGraph,
+             timeLimit,
+             bounds,
+             forcedComigrations);
 }
 
-void IlpPmhSolver::run(IlpPmhSolver& solver,
-                       const CloneTree& T,
-                       const std::string& primary,
-                       const std::string& outputDirectory,
-                       const std::string& outputPrefix,
-                       const StringToIntMap& colorMap,
-                       MigrationGraph::Pattern pattern,
-                       int nrThreads,
-                       bool outputILP,
-                       bool outputSearchGraph,
-                       int timeLimit,
-                       const IntTriple& bounds,
-                       const StringPairList& forcedComigrations)
+IntTriple IlpPmhSolver::run(IlpPmhSolver& solver,
+                            const CloneTree& T,
+                            const std::string& primary,
+                            const std::string& outputDirectory,
+                            const std::string& outputPrefix,
+                            const StringToIntMap& colorMap,
+                            MigrationGraph::Pattern pattern,
+                            int nrThreads,
+                            bool outputILP,
+                            bool outputSearchGraph,
+                            int timeLimit,
+                            const IntTriple& bounds,
+                            const StringPairList& forcedComigrations)
 {
   char buf[1024];
   std::string filenameSearchGraph;
   
-  solver.init(bounds);
+  try {
+    solver.init(bounds);
+  } catch (GRBException& e) {
+    std::cerr << e.getMessage() << std::endl;
+    abort();
+  }
+
   
   if (!outputDirectory.empty())
   {
@@ -270,7 +278,13 @@ void IlpPmhSolver::run(IlpPmhSolver& solver,
               << "-" << "\t"
               << timer.realTime()
               << std::endl;
-    return;
+
+    IntTriple res;
+    res.first = -1;
+    res.second.first = -1;
+    res.second.second = -1;
+    
+    return res;
   }
 
   MigrationGraph G(solver.T(), solver.lPlus());
@@ -341,6 +355,13 @@ void IlpPmhSolver::run(IlpPmhSolver& solver,
     solver.writeSolutionGraphDOT(outGG, colorMap);
     outGG.close();
   }
+  
+  IntTriple res;
+  res.first = mu;
+  res.second.first = gamma;
+  res.second.second = sigma;
+  
+  return res;
 }
 
 void IlpPmhSolver::initCallbacks()
@@ -507,7 +528,15 @@ bool IlpPmhSolver::solve(int nrThreads, int timeLimit)
     }
     
     _model.getEnv().set(GRB_IntParam_LogToConsole, 0);
-    _model.optimize();
+    try
+    {
+      _model.optimize();
+    }
+    catch (GRBException& e)
+    {
+      std::cerr << e.getMessage() << std::endl;
+      exit(1);
+    }
     
     int status = _model.get(GRB_IntAttr_Status);
     if (status == GRB_OPTIMAL || status == GRB_SUBOPTIMAL)
@@ -606,7 +635,7 @@ void IlpPmhSolver::initLeafVariables()
         snprintf(buf, 1024, "x;%s;%s;%d",
                  getLabel(v_i).c_str(),
                  _indexToAnatomicalSite[s].c_str(), c);
-        _x[i][s][c] = _model.addVar(0, 1, 0, GRB_BINARY, buf);
+        _x[i][s][c] = strlen(buf) > 255 ? _model.addVar(0, 1, 0, GRB_BINARY) : _model.addVar(0, 1, 0, GRB_BINARY, buf);
       }
     }
   }
@@ -637,7 +666,7 @@ void IlpPmhSolver::initVariables()
         snprintf(buf, 1024, "x;%s;%s;%d",
                  getLabel(v_i).c_str(),
                  _indexToAnatomicalSite[s].c_str(), c);
-        _x[i][s][c] = _model.addVar(0, 1, 0, GRB_BINARY, buf);
+        _x[i][s][c] = strlen(buf) > 255 ? _model.addVar(0, 1, 0, GRB_BINARY) : _model.addVar(0, 1, 0, GRB_BINARY, buf);
       }
     }
   }
@@ -668,7 +697,7 @@ void IlpPmhSolver::initVariables()
                      getLabel(v_j).c_str(),
                      _indexToAnatomicalSite[s].c_str(), c,
                      _indexToAnatomicalSite[t].c_str(), d);
-            _xx[ij][s][c][t][d] = _model.addVar(0, 1, 0, GRB_BINARY, buf);
+            _xx[ij][s][c][t][d] = strlen(buf) > 255 ? _model.addVar(0, 1, 0, GRB_BINARY) : _model.addVar(0, 1, 0, GRB_BINARY, buf);
           }
         }
       }

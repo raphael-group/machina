@@ -17,10 +17,18 @@ int main(int argc, char** argv)
   double alpha = 0.001;
   double beta = 0.01;
   bool relabel = false;
+  bool outputAncesTree = false;
+  std::string clusteringFilename;
+  double fwr = -1;
+  int varCountThreshold = 3;
   
   lemon::ArgParser ap(argc, argv);
   ap.refOption("a", "Confidence interval used for clustering (default: 0.001)", alpha)
+    .refOption("varLB", "Minimum number of variant reads (default: 3)", varCountThreshold)
+    .refOption("FWR", "Family-wise error rate", fwr)
     .refOption("b", "Confidence interval used for pooled frequency matrix (default: 0.01)", beta)
+    .refOption("A", "Output AncesTree input file", outputAncesTree)
+    .refOption("C", "Clustering input filename", clusteringFilename)
     .refOption("r", "Relabel mutation clusters", relabel)
     .other("R", "Read matrix");
   ap.parse();
@@ -58,10 +66,36 @@ int main(int argc, char** argv)
     return 1;
   }
   
-  Cluster cluster(R, alpha, relabel);
-  cluster.clusterCC(beta);
+  if (fwr != -1)
+  {
+    alpha = fwr / (R.getNrSamples() * R.getNrCharacters());
+  }
+  
+  Cluster cluster(R, alpha, varCountThreshold, relabel);
+  if (clusteringFilename.empty())
+  {
+    cluster.clusterCC(beta);
+  }
+  else
+  {
+    std::ifstream inC(clusteringFilename.c_str());
+    if (!inC.good())
+    {
+      std::cerr << "Error: could not open '" << clusteringFilename << "' for reading" << std::endl;;
+      return 1;
+    }
+    cluster.readClustering(inC, beta);
+  }
   cluster.writeClustering(std::cerr);
-  std::cout << cluster.getClusteredF();
+  
+  if (outputAncesTree)
+  {
+    cluster.writeAncesTreeInput(std::cout);
+  }
+  else
+  {
+    std::cout << cluster.getClusteredF();
+  }
   
   return 0;
 }

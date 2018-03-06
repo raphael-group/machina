@@ -35,22 +35,22 @@ bool readCloneTree(const std::string& filenameT,
 
 int main(int argc, char** argv)
 {
-  if (argc != 5)
+  if (argc != 5 && argc != 3)
   {
-    std::cerr << "Usage: " << argv[0] << " <T1> <lT1> <T2> <lT2>" << std::endl;
+    std::cerr << "Usage: " << argv[0] << " <T1> <lT1> (<T2> <lT2>)" << std::endl;
     return 1;
   }
   
   std::string filenameT1 = argv[1];
   std::string filenameLeafLabelingT1 = argv[2];
 
-  std::string filenameT2 = argv[3];
-  std::string filenameLeafLabelingT2 = argv[4];
+  std::string filenameT2 = argc == 5 ? argv[3] : "";
+  std::string filenameLeafLabelingT2 = argc == 5 ? argv[4] : "";
   
   CloneTree T1, T2;
   if (!readCloneTree(filenameT1, filenameLeafLabelingT1, T1))
     return 1;
-  if (!readCloneTree(filenameT2, filenameLeafLabelingT2, T2))
+  if (argc == 5 && !readCloneTree(filenameT2, filenameLeafLabelingT2, T2))
     return 1;
   
   SplitSet splitSet1 = T1.getSplits();

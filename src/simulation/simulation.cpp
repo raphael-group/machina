@@ -10,14 +10,17 @@
 #include <lemon/bfs.h>
 
 Simulation::Simulation(double K,
-                   double migrationRate,
-                   double driverProb,
-                   double mutFreqThreshold,
-                   int maxNrAnatomicalSites,
-                   int nrSamplesPerAnatomicalSite,
-                   int nrSamplesPrimary,
-                   int targetCoverage,
-                   Pattern pattern)
+                       double migrationRate,
+                       double mutationRate,
+                       double driverProb,
+                       double mutFreqThreshold,
+                       int maxNrAnatomicalSites,
+                       int nrSamplesPerAnatomicalSite,
+                       int nrSamplesPrimary,
+                       int targetCoverage,
+                       Pattern pattern,
+                       double seqErrorRate,
+                       double purity)
   : _G()
   , _rootG(lemon::INVALID)
   , _anatomicalSiteMap(_G)
@@ -34,6 +37,7 @@ Simulation::Simulation(double K,
   , _anatomicalSiteFactors()
   , _K(K)
   , _migrationRate(migrationRate)
+  , _mutationRate(mutationRate)
   , _driverProb(driverProb)
   , _mutFreqThreshold(mutFreqThreshold)
   , _maxNrAnatomicalSites(maxNrAnatomicalSites)
@@ -41,6 +45,8 @@ Simulation::Simulation(double K,
   , _nrSamplesPrimary(nrSamplesPrimary)
   , _targetCoverage(targetCoverage)
   , _pattern(pattern)
+  , _seqErrorRate(seqErrorRate)
+  , _purity(purity)
   , _populationRecord()
   , _driverMutations()
   , _observableMutationToCellTreeMutation()
@@ -202,7 +208,7 @@ bool Simulation::simulateReadCounts()
         }
         
         // divide 2, heterozygous diploid
-        double f = _freq[s][p][i] / 2;
+        double f = (_freq[s][p][i] * _purity) / 2;
         
 //        int alpha = std::max(1, int(round(f * 100)));
 //        int beta = 100 - alpha;
@@ -211,12 +217,28 @@ bool Simulation::simulateReadCounts()
         
         std::binomial_distribution<> binom(coverage, f);
 //        std::binomial_distribution<> binom(coverage, ff);
-//        std::binomial_distribution<> binom_noise(coverage, 0.0001);
-        
-        int flips = 0; //binom_noise(g_rng);
 
-        _var[s][p][i] = binom(g_rng) + flips;
-        _ref[s][p][i] = coverage - _var[s][p][i];
+        int org_var = binom(g_rng);
+        int org_ref = coverage - _var[s][p][i];
+
+        if (g_tol.nonZero(_seqErrorRate))
+        {
+          std::binomial_distribution<> binom_noise_var(org_var,
+                                                       _seqErrorRate);
+          std::binomial_distribution<> binom_noise_ref(org_ref,
+                                                       _seqErrorRate);
+
+          int flips_var =  binom_noise_var(g_rng);
+          int flips_ref =  binom_noise_ref(g_rng);
+          
+          _var[s][p][i] = org_var - flips_var + flips_ref;
+          _ref[s][p][i] = coverage - _var[s][p][i];
+        }
+        else
+        {
+          _var[s][p][i] = org_var;
+          _ref[s][p][i] = org_ref;
+        }
       }
     }
   }
@@ -234,6 +256,11 @@ void Simulation::writeDrivers(std::ostream& out) const
       out << j << std::endl;
     }
   }
+  
+  out << "Number of generations: " << _generation << std::endl;
+  out << "Number of mutations: " << _nrMutations << std::endl;
+  out << "Number of extant cells: " << _nrExtantCells << std::endl;
+  out << "Number of active anatomical sites: " << _nrActiveAnatomicalSites << std::endl;
 }
 
 void Simulation::writeReadCounts(std::ostream& out) const
@@ -630,27 +657,44 @@ bool Simulation::simulate(bool verbose)
               {
                 newExtantCellsByDrivers_sX.push_back(cell);
                 
+                int nrInitialPassengers = floor(_mutationRate);
+                IntVector initialPassengerMutations;
+                for (int i = 0; i < nrInitialPassengers; ++i)
+                {
+                  int new_mut = getNewMutation();
+                  initialPassengerMutations.push_back(new_mut);
+                }
+                
                 /// do we have a new driver?
                 double r = unif(g_rng);
                 if (r < _driverProb * (X.size() + 1))
                 {
+                  IntVector passengerMutations2 = cell.getPassengerMutations();
+                  passengerMutations2.insert(passengerMutations2.end(),
+                                             initialPassengerMutations.begin(),
+                                             initialPassengerMutations.end());
+
                   int new_mut = getNewMutation();
                   
                   IntSet driverMutations2 = X;
                   driverMutations2.insert(new_mut);
                   _driverMutations.insert(new_mut);
                   
-                  Cell daughterCell2(cell.getPassengerMutations(),
+                  Cell daughterCell2(passengerMutations2,
                                      new_mut,
                                      cell.getAnatomicalSite());
                   
                   newExtantCellsByDrivers_s[driverMutations2].push_back(daughterCell2);
                 }
-                else if (r < 0.1)
+                else if (r < _mutationRate - floor(_mutationRate))
                 {
                   int new_mut = getNewMutation();
                   
                   IntVector passengerMutations2 = cell.getPassengerMutations();
+                  passengerMutations2.insert(passengerMutations2.end(),
+                                             initialPassengerMutations.begin(),
+                                             initialPassengerMutations.end());
+                  
                   passengerMutations2.push_back(new_mut);
                   
                   Cell daughterCell2(passengerMutations2,
@@ -661,7 +705,19 @@ bool Simulation::simulate(bool verbose)
                 }
                 else
                 {
-                  newExtantCellsByDrivers_sX.push_back(cell);
+                  int new_mut = initialPassengerMutations.empty() ?
+                                cell.getMutation() : initialPassengerMutations.back();
+                  
+                  IntVector passengerMutations2 = cell.getPassengerMutations();
+                  passengerMutations2.insert(passengerMutations2.end(),
+                                             initialPassengerMutations.begin(),
+                                             initialPassengerMutations.end());
+                  
+                  Cell daughterCell2(passengerMutations2,
+                                     new_mut,
+                                     cell.getAnatomicalSite());
+                  
+                  newExtantCellsByDrivers_sX.push_back(daughterCell2);
                 }
                 
                 newNrExtantCells += 2;

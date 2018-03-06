@@ -1,0 +1,16 @@
+Clone tree has 5 anatomical sites
+Found 12 maximum parsimony labelings with primary 'P'
+Found 4 labelings with 4 comigrations, 1 seeding sites and pPS
+Found 8 labelings with 4 comigrations, 2 seeding sites and pS
+Labeling 0: 5 migrations, 4 comigrations, 2 seeding sites and pS
+Labeling 1: 5 migrations, 4 comigrations, 2 seeding sites and pS
+Labeling 2: 5 migrations, 4 comigrations, 1 seeding sites and pPS
+Labeling 3: 5 migrations, 4 comigrations, 2 seeding sites and pS
+Labeling 4: 5 migrations, 4 comigrations, 2 seeding sites and pS
+Labeling 5: 5 migrations, 4 comigrations, 1 seeding sites and pPS
+Labeling 6: 5 migrations, 4 comigrations, 2 seeding sites and pS
+Labeling 7: 5 migrations, 4 comigrations, 2 seeding sites and pS
+Labeling 8: 5 migrations, 4 comigrations, 1 seeding sites and pPS
+Labeling 9: 5 migrations, 4 comigrations, 2 seeding sites and pS
+Labeling 10: 5 migrations, 4 comigrations, 2 seeding sites and pS
+Labeling 11: 5 migrations, 4 comigrations, 1 seeding sites and pPS
