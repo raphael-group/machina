@@ -38,7 +38,7 @@ In case [doxygen](http://www.stack.nl/~dimitri/doxygen/) is available, extended 
 <a name="comp"></a>
 ### Compilation
 
-To compile SPRUCE, execute the following commands from the root of the repository:
+To compile MACHINA, execute the following commands from the root of the repository:
 
     $ mkdir build
     $ cd build
@@ -389,9 +389,9 @@ Given a mutation tree `T` with mutation frequencies `F-` and `F+`, the task is t
 An example execution:
 
     $ mkdir A7
-    $ ./generatemutationtrees ../data/hoadley_2016/A7/F.tsv > A7/mutation_trees.txt
+    $ ./generatemutationtrees ../data/hoadley_2016/A7/A7_MACHINA_0.95.tsv > A7/mutation_trees.txt
     $ ./pmh_ti -p breast -c ../data/hoadley_2016/coloring.txt \ 
-    -m 1 -o A7 -F ../data/hoadley_2016/A7/F.tsv \
+    -m 1 -o A7 -F ../data/hoadley_2016/A7/A7_MACHINA_0.95.tsv \
     > A7/result.txt
     
     $ cat A7/result.txt
