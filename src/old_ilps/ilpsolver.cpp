@@ -103,7 +103,7 @@ void IlpSolver::initVariables()
       snprintf(buf, 1024, "x_%s_%s",
                label(_indexToNode[i]).c_str(),
                _indexToAnatomicalSite[s].c_str());
-      _x[i][s] = _model.addVar(0, 1, 0, GRB_BINARY, buf);
+      _x[i][s] = strlen(buf) > 255 ? _model.addVar(0, 1, 0, GRB_BINARY) : _model.addVar(0, 1, 0, GRB_BINARY, buf);
     }
   }
   
@@ -117,7 +117,7 @@ void IlpSolver::initVariables()
     snprintf(buf, 1024, "y_%s_%s",
              label(v_i).c_str(),
              label(v_j).c_str());
-    _y[ij] = _model.addVar(0, 1, 0, GRB_CONTINUOUS, buf);
+    _y[ij] = strlen(buf) > 255 ? _model.addVar(0, 1, 0, GRB_CONTINUOUS) : _model.addVar(0, 1, 0, GRB_CONTINUOUS, buf);
   }
   
   _z = VarMatrix(nrArcs);
@@ -134,8 +134,7 @@ void IlpSolver::initVariables()
                label(v_i).c_str(),
                label(v_j).c_str(),
                _indexToAnatomicalSite[s].c_str());
-      
-      _z[ij][s] = _model.addVar(0, 1, 0, GRB_BINARY, buf);
+      _z[ij][s] = strlen(buf) > 255 ? _model.addVar(0, 1, 0, GRB_BINARY) : _model.addVar(0, 1, 0, GRB_BINARY, buf);
     }
   }
   
