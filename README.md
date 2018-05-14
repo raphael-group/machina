@@ -26,7 +26,7 @@ MACHINA is a computational framework for inferring migration patterns between a 
 
 MACHINA is written in C++11 and thus requires a modern C++ compiler (GCC >= 4.8.1, or Clang). In addition, MACHINA has the following dependencies.
 
-* [CMake](http://www.cmake.org/) (>= 2.8)
+* [CMake](http://www.cmake.org/) (>= 3.0)
 * [Boost](http://www.boost.org) (>= 1.38)
 * [LEMON](http://lemon.cs.elte.hu/trac/lemon) graph library (>= 1.3)
 * [Gurobi](http://www.gurobi.com) (>= 6.0)
