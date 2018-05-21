@@ -267,7 +267,14 @@ void Simulation::writeReadCounts(std::ostream& out) const
 {
   int nrMutations = _sampledMutations.size();
 
-  out << _nrActiveAnatomicalSites << " #anatomical sites" << std::endl;
+  if (_nrSamplesPerAnatomicalSite == 0)
+  {
+    out << " 1 #anatomical sites" << std::endl;
+  }
+  else
+  {
+    out << _nrActiveAnatomicalSites << " #anatomical sites" << std::endl;
+  }
   out << _nrSamplesPrimary + _nrSamplesPerAnatomicalSite * (_nrActiveAnatomicalSites - 1)
       << " #samples" << std::endl;
   out << nrMutations << " #mutations" << std::endl;

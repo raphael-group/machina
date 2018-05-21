@@ -75,7 +75,7 @@ int main(int argc, char** argv)
   
   if (clusteringFilename == "")
   {
-    FrequencyMatrix F = R.toFrequencyMatrix(alpha);
+    FrequencyMatrix F = R.toFrequencyMatrix(alpha, 2);
     std::cout << F;
   }
   else
@@ -98,7 +98,7 @@ int main(int argc, char** argv)
       return 1;
     }
     
-    std::cout << R.poolReads(C, false).toFrequencyMatrix(alpha);
+    std::cout << R.poolReads(C, false).toFrequencyMatrix(alpha, 2);
   }
   
   return 0;
