@@ -392,7 +392,7 @@ An example execution:
     $ ./generatemutationtrees ../data/hoadley_2016/A7/A7_MACHINA_0.95.tsv > A7/mutation_trees.txt
     $ ./pmh_ti -p breast -c ../data/hoadley_2016/coloring.txt \ 
     -m 1 -o A7 -F ../data/hoadley_2016/A7/A7_MACHINA_0.95.tsv \
-    > A7/result.txt
+    -barT A7/mutation_trees.txt > A7/result.txt
     
     $ cat A7/result.txt
     0-	(PS, S)	5	5	2	mS	5146.83	5146.83	9.43489
