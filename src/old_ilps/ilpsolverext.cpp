@@ -441,12 +441,12 @@ void IlpSolverExt::initVariables()
     _x[i] = VarArray(nrAnatomicalSites + 1);
     for (int s = 0; s < nrAnatomicalSites; ++s)
     {
-      snprintf(buf, 1024, "x_%s_%s",
+      snprintf(buf, 255, "x_%s_%s",
                label(_indexToNode[i]).c_str(),
                _indexToAnatomicalSite[s].c_str());
       _x[i][s] = _model.addVar(0, 1, 0, GRB_BINARY, buf);
     }
-    snprintf(buf, 1024, "x_%s_DUMMY", label(_indexToNode[i]).c_str());
+    snprintf(buf, 255, "x_%s_DUMMY", label(_indexToNode[i]).c_str());
     _x[i][nrAnatomicalSites] = _model.addVar(0, 1, 0, GRB_BINARY, buf);
   }
   
@@ -458,7 +458,7 @@ void IlpSolverExt::initVariables()
     Node v_i = _G.source(a_ij);
     Node v_j = _G.target(a_ij);
     
-    snprintf(buf, 1024, "y_%s_%s",
+    snprintf(buf, 255, "y_%s_%s",
              label(v_i).c_str(),
              label(v_j).c_str());
     _y[ij] = _model.addVar(0, 1, 0, GRB_CONTINUOUS, buf);
@@ -475,14 +475,14 @@ void IlpSolverExt::initVariables()
     _z[ij] = VarArray(nrAnatomicalSites+1);
     for (int s = 0; s < nrAnatomicalSites; ++s)
     {
-      snprintf(buf, 1024, "z_%s_%s_%s",
+      snprintf(buf, 255, "z_%s_%s_%s",
                label(v_i).c_str(),
                label(v_j).c_str(),
                _indexToAnatomicalSite[s].c_str());
       
       _z[ij][s] = _model.addVar(0, 1, 0, GRB_BINARY, buf);
     }
-    snprintf(buf, 1024, "z_%s_%s_DUMMY",
+    snprintf(buf, 255, "z_%s_%s_DUMMY",
              label(v_i).c_str(),
              label(v_j).c_str());
     _z[ij][nrAnatomicalSites] = _model.addVar(0, 1, 0, GRB_BINARY, buf);
@@ -495,7 +495,7 @@ void IlpSolverExt::initVariables()
     _c[s] = VarArray(nrAnatomicalSites);
     for (int t = 0; t < nrAnatomicalSites; ++t)
     {
-      snprintf(buf, 1024, "c_%s_%s",
+      snprintf(buf, 255, "c_%s_%s",
                _indexToAnatomicalSite[s].c_str(),
                _indexToAnatomicalSite[t].c_str());
       _c[s][t] = _model.addVar(0, 1, 0, GRB_CONTINUOUS, buf);
@@ -506,7 +506,7 @@ void IlpSolverExt::initVariables()
   _d = VarArray(nrAnatomicalSites);
   for (int s = 0; s < nrAnatomicalSites; ++s)
   {
-    snprintf(buf, 1024, "d_%s",
+    snprintf(buf, 255, "d_%s",
              _indexToAnatomicalSite[s].c_str());
     _d[s] = _model.addVar(0, 1, 0, GRB_CONTINUOUS, buf);
   }
@@ -518,7 +518,7 @@ void IlpSolverExt::initVariables()
     _f[p] = VarArray(nrCharacters);
     for (int c = 0; c < nrCharacters; ++c)
     {
-      snprintf(buf, 1024, "f_%s_%s",
+      snprintf(buf, 255, "f_%s_%s",
                _indexToSample[p].c_str(),
                _F.indexToCharacter(c).c_str());
       _f[p][c] = _model.addVar(0, 1, 0, GRB_CONTINUOUS, buf);
@@ -532,7 +532,7 @@ void IlpSolverExt::initVariables()
     _u[p] = VarArray(nrCharacters);
     for (int c = 0; c < nrCharacters; ++c)
     {
-      snprintf(buf, 1024, "u_%s_%s",
+      snprintf(buf, 255, "u_%s_%s",
                _indexToSample[p].c_str(),
                _F.indexToCharacter(c).c_str());
       _u[p][c] = _model.addVar(0, 1, 0, GRB_CONTINUOUS, buf);
@@ -547,7 +547,7 @@ void IlpSolverExt::initVariables()
     Node v_i = _G.source(a_ij);
     Node v_j = _G.target(a_ij);
     
-    snprintf(buf, 1024, "w_%s_%s",
+    snprintf(buf, 255, "w_%s_%s",
              label(v_i).c_str(),
              label(v_j).c_str());
     _w[ij] = _model.addVar(0, 1, 0, GRB_BINARY, buf);
