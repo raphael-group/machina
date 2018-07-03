@@ -33,6 +33,8 @@ MACHINA is written in C++11 and thus requires a modern C++ compiler (GCC >= 4.8.
 
 [Graphviz](http://www.graphviz.org) is required to visualize the resulting DOT files, but is not required for compilation.
 
+[Gurobi](http://www.gurobi.com) is a commercial ILP solver with two licensing options: (1) a single-host license where the license is tied to a single computer and (2) a network license for use in a compute cluster. Both options are freely available for users in academia.
+
 In case [doxygen](http://www.stack.nl/~dimitri/doxygen/) is available, extended source code documentation will be generated.
 
 <a name="comp"></a>
@@ -133,7 +135,7 @@ A frequency file encodes the frequency of every mutation (cluster) in an anatomi
     0	breast	0	breast	1	2	0	0.01213794
     ...
 
-See [F.tsv](data/hoadley_2016/A7/F.tsv) for the complete frequency file.
+See [F.tsv](data/hoadley_2016/A7/A7_MACHINA_0.95.tsv) for the complete frequency file. For an example on how obtain this file from read data, please see: [process_A7_new.ipynb](data/hoadley_2016/A7/raw/process_A7_new.ipynb). Specifically, you will need to process the bulk DNA sequencing data by first calling single-nucleotide variants and copy-number aberrations. Then, SNVs that occur in copy-neutral regions need to be clustered (e.g., using SciClone or PyClone).
 
 <a name="pmh"></a>
 ### Parsimonious Migration History (`pmh_sankoff` and `pmh`)
