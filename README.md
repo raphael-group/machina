@@ -135,7 +135,7 @@ A frequency file encodes the frequency of every mutation (cluster) in an anatomi
     0	breast	0	breast	1	2	0	0.01213794
     ...
 
-See [F.tsv](data/hoadley_2016/A7/A7_MACHINA_0.95.tsv) for the complete frequency file. For an example on how obtain this file from read data, please see: [process_A7_new.ipynb](data/hoadley_2016/A7/raw/process_A7_new.ipynb). Specifically, you will need to process the bulk DNA sequencing data by first calling single-nucleotide variants and copy-number aberrations. Then, SNVs that occur in copy-neutral regions need to be clustered (e.g., using SciClone or PyClone).
+See [F.tsv](data/hoadley_2016/A7/A7_MACHINA_0.95.tsv) for the complete frequency file. For an example on how obtain this file from read data, please see: [process_A7_new.ipynb](data/hoadley_2016/A7/raw/process_A7_new.ipynb). Specifically, you will need to process the bulk DNA sequencing data by first calling single-nucleotide variants and copy-number aberrations. Then, SNVs that occur in copy-neutral regions need to be clustered (e.g., using SciClone or PyClone). Confidence intervals can then be obtained by first pooling for each sample the read counts of the mutations that belong to the same cluster followed by using a beta distribution. Please see the supplement of the MACHINA paper for more details.
 
 <a name="pmh"></a>
 ### Parsimonious Migration History (`pmh_sankoff` and `pmh`)
