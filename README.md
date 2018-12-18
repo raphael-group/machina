@@ -333,7 +333,7 @@ An example execution:
 The `results.txt` file is formatted in exactly the same way as `pmh`. 
 
 <a name="pmh_ti"></a>
-### Parsimonious Migration History with Tree Inference (`pmh_cti`)
+### Parsimonious Migration History with Tree Inference (`pmh_ti`)
 
 Given a mutation tree `T` with mutation frequencies `F-` and `F+`, the task is to find a frequency assignment `F` yielding a refined clone tree `T'` that admits a vertex labeling `l` such that the resulting migration graph `G` has minimum number of migrations and comigrations. It is possible to specify constraints on the topology of the migration graph.
 
