@@ -21,7 +21,7 @@ MACHINA is a computational framework for inferring migration patterns between a 
 <a name="compilation"></a>
 ## Compilation instructions
 
-*Note that binaries for macOS and linux are available [here](https://github.com/raphael-group/machina/releases). These binaries require a valid Gurobi installation and license key.*
+*Note that binaries for macOS and linux are available [here](https://github.com/raphael-group/machina/releases). These binaries require a valid Gurobi installation and license key. License key location can be specified via the environment variable GRB_LICENSE_KEY. In addition, installation of Gurobi in a non-standard location will require updating LD_LIBRARY_PATH (linux) and DYLD_LIBRARY_PATH (macOS).*
 
 <a name="dep"></a>
 ### Dependencies
