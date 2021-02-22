@@ -52,9 +52,9 @@ To compile MACHINA, execute the following commands from the root of the reposito
 In case CMake fails to detect LEMON or Gurobi, run the following command with adjusted paths:
 
     $ cmake -DLIBLEMON_ROOT=~/lemon \
-    -DGUROBI_INCLUDE_DIR=/usr/local/gurobi702/linux64/include \
-    -DGUROBI_CPP_LIB=/usr/local/gurobi702/linux64/lib/libgurobi_c++.a \
-    -DGUROBI_LIB=/usr/local/lib/libgurobi70.so ..
+    -DGUROBI_HOME=/path/to/gurobiXXX
+
+where `XXX` is the 3-digit version of gurobi.
 
 The compilation results in the following files in the `build` directory:
 
