@@ -1,6 +1,6 @@
 cmake_minimum_required( VERSION 3.0 )
 
-project( MACHINA VERSION 1.1 )
+project( MACHINA VERSION 1.2 )
 
 set( CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR} ${CMAKE_MODULE_PATH} )
 
@@ -492,8 +492,8 @@ set( GitCommand2 "log --pretty=format:\\\"%h\\\" -1" )
 execute_process( COMMAND git log --pretty=format:%h WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
 COMMAND head -n 1  COMMAND tr -d "\\n" OUTPUT_VARIABLE GitHashtag )
 
+find_package( Boost REQUIRED COMPONENTS thread system filesystem)
 set( Boost_USE_STATIC_LIBS ON )
-find_package( Boost REQUIRED COMPONENTS thread system filesystem )
 
 include_directories( "${LIBLEMON_ROOT}/include" "src" ${Boost_INCLUDE_DIRS} )
 link_directories( "${LIBLEMON_ROOT}/lib" )
