@@ -5,9 +5,9 @@ MACHINA is a computational framework for inferring migration patterns between a 
 
 ## Contents
 
-  1. [Compilation instructions](#compilation)
-     * [Dependencies](#dep)
-     * [Compilation](#comp)
+  1. [Installation](#installation)
+     * [Bioconda](#bioconda)
+     * [Manual compilation](#compilation)
   2. [Usage instructions](#usage)
      * [I/O formats](#io)
        - [Clone tree](#clonetree)
@@ -18,13 +18,36 @@ MACHINA is a computational framework for inferring migration patterns between a 
      * [Parsimonious Migration History with Tree Resolution](#pmh_tr)
      * [Parsimonious Migration History with Tree Inference](#pmh_ti)
 
-<a name="compilation"></a>
-## Compilation instructions
+<a name="installation"></a>
+## Installation 
 
+<a name="bioconda"></a>
+### bioconda
+1. Install [Anaconda](https://docs.anaconda.com/anaconda/install/) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html) if you do not already have one installed.
+2. (recommended) Create a new conda environment for `machina` and activate it:
+```
+conda create -n machina
+conda activate machina
+```
+3. Set up `conda` channels for `bioconda` (once per Anaconda/Miniconda installation):
+```
+conda config --add channels defaults
+conda config --add channels bioconda
+conda config --add channels conda-forge
+```
+4. Install `machina` from bioconda:
+```
+conda install machina
+```
+
+<a name="compilation"></a>
+### Manual compilation
 *Note that binaries for macOS and linux are available [here](https://github.com/raphael-group/machina/releases). These binaries require a valid Gurobi installation and license key. License key location can be specified via the environment variable GRB_LICENSE_KEY. In addition, installation of Gurobi in a non-standard location will require updating LD_LIBRARY_PATH (linux) and DYLD_LIBRARY_PATH (macOS).*
 
+Also note that to run the below examples, you must either provide the full path to the executable (e.g., `/path/to/machina/build/pmh_sankoff`) or add the `build` directory to your PATH.
+
 <a name="dep"></a>
-### Dependencies
+#### Dependencies
 
 MACHINA is written in C++11 and thus requires a modern C++ compiler (GCC >= 4.8.1, or Clang). In addition, MACHINA has the following dependencies.
 
@@ -40,7 +63,8 @@ MACHINA is written in C++11 and thus requires a modern C++ compiler (GCC >= 4.8.
 In case [doxygen](http://www.stack.nl/~dimitri/doxygen/) is available, extended source code documentation will be generated.
 
 <a name="comp"></a>
-### Compilation
+
+#### Compilation
 
 To compile MACHINA, execute the following commands from the root of the repository:
 
@@ -58,7 +82,7 @@ where `XXX` is the 3-digit version of gurobi.
 
 The compilation results in the following files in the `build` directory:
 
-EXECUTABLE | DESCRIPTION
+COMMAND | DESCRIPTION
 -----------|-------------
 `cluster` | Cluster mutations using a combinatorial algorithm that models variant read counts using a binomial distribution.
 `generatemigrationtrees` | Generates all migration trees given anatomical site labels. These migration trees can be used to constrain the search space of the `pmh`, `pmh_pr` and `pmh_cti` algorithms.
@@ -161,7 +185,7 @@ In our algorithms we allow for the following restrictions on the migration patte
 The unconstrained PMH problem can be solved by running `pmh_sankoff`, which is an adaptation of the Sankoff algorithm and enumerates all migration histories:
 
     Usage:
-    ./pmh_sankoff [--help|-h|-help] [-c str] [-o str] [-p str] T leaf_labeling
+    pmh_sankoff [--help|-h|-help] [-c str] [-o str] [-p str] T leaf_labeling
     Where:
     T
         Clone tree
@@ -177,26 +201,24 @@ The unconstrained PMH problem can be solved by running `pmh_sankoff`, which is a
         Primary anatomical sites separated by commas (if omitted, every
         anatomical site will be considered iteratively as the primary)
 
-An example execution of the `pmh_sankoff` algorithm:
+An example execution of the `pmh_sankoff` algorithm (executed from the root directory of the MACHINA repository):
 
     $ mkdir patient1
-    $ ./pmh_sankoff -p LOv,ROv -c ../data/mcpherson_2016/coloring.txt \
-    ../data/mcpherson_2016/patient1.tree \
-    ../data/mcpherson_2016/patient1.labeling \
-    -o patient1/ 2> patient1/result.txt
+    $ pmh_sankoff -p LOv,ROv -c data/mcpherson_2016/coloring.txt data/mcpherson_2016/patient1.tree \
+    data/mcpherson_2016/patient1.labeling -o patient1/ 2> patient1/result.txt
     
     $ cat patient1/result.txt
-    Clone tree has 7 samples
+    Clone tree has 7 anatomical sites
     Found 4 maximum parsimony labelings with primary 'LOv'
-    Found 2 labelings with 7 comigrations, 2 seeding sites and R
-    Found 2 labelings with 11 comigrations, 3 seeding sites and R
-    Labeling 0: 13 migrations, 11 comigrations, 3 seeding sites and R
-    Labeling 1: 13 migrations, 11 comigrations, 3 seeding sites and R
-    Labeling 2: 13 migrations, 7 comigrations, 2 seeding sites and R
-    Labeling 3: 13 migrations, 7 comigrations, 2 seeding sites and R
+    Found 2 labelings with 7 comigrations, 2 seeding sites and pR
+    Found 2 labelings with 11 comigrations, 3 seeding sites and pR
+    Labeling 0: 13 migrations, 11 comigrations, 3 seeding sites and pR
+    Labeling 1: 13 migrations, 11 comigrations, 3 seeding sites and pR
+    Labeling 2: 13 migrations, 7 comigrations, 2 seeding sites and pR
+    Labeling 3: 13 migrations, 7 comigrations, 2 seeding sites and pR
     Found 1 maximum parsimony labelings with primary 'ROv'
-    Found 1 labelings with 10 comigrations, 2 seeding sites and M
-    Labeling 0: 13 migrations, 10 comigrations, 2 seeding sites and M
+    Found 1 labelings with 10 comigrations, 2 seeding sites and pM
+    Labeling 0: 13 migrations, 10 comigrations, 2 seeding sites and pM
 
 The above command considers the left ovary (LOv) and right ovary (ROv) as the primary tumor site and enumerates all minimum migration vertex labelings of the given clone tree and leaf labeling. The output is stored in the directory patient1. In the DOT files the given color map is used for coloring the anatomical sites.
 
@@ -204,7 +226,7 @@ To further constrain the migration graph, we can use `pmh`:
 
 
     Usage:
-      ./pmh [--help|-h|-help] [-G str] [-OLD] [-UB_gamma int] [-UB_mu int]
+      pmh [--help|-h|-help] [-G str] [-OLD] [-UB_gamma int] [-UB_mu int]
          [-UB_sigma int] -c str [-e] [-g] [-l int] [-log] [-m str] [-o str]
          -p str [-t int] T leaf_labeling
     Where:
@@ -249,19 +271,17 @@ To further constrain the migration graph, we can use `pmh`:
          Number of threads (default: -1, #cores)
 
 
-An example execution of the `pmh` algorithm:
+An example execution of the `pmh` algorithm (executed from the root directory of the MACHINA repository):
 
     $ mkdir patient1_constrained
-    $ ./pmh -p LOv -c ../data/mcpherson_2016/coloring.txt \
-    ../data/mcpherson_2016/patient1.tree \
-    ../data/mcpherson_2016/patient1.labeling \
-    -o patient1_constrained/ > patient1_constrained/result.txt
+    $ pmh -p LOv -c data/mcpherson_2016/coloring.txt data/mcpherson_2016/patient1.tree \
+    data/mcpherson_2016/patient1.labeling -o patient1_constrained/ > patient1_constrained/result.txt
     
     $ cat patient1_constrained/result.txt
-    LOv-	(PS)	15	6	1	pPS	15.125	15.125	0.0892799
-    LOv-	(PS, S)	15	6	1	pPS	15.125	15.125	0.10285
-    LOv-	(PS, S, M)	15	6	1	pPS	15.125	15.125	0.107245
-    LOv-	(PS, S, M, R)	13	7	2	pR	13.148	13.148	0.480087
+    LOv-    (PS)    15      6       1       pPS     15.125  15.125  0.106424
+    LOv-    (PS, S) 15      6       1       pPS     15.125  15.125  0.057286
+    LOv-    (PS, S, M)      15      6       1       pPS     15.125  15.125  0.060853
+    LOv-    (PS, S, M, R)   13      7       2       pR      13.148  13.148  0.44595
 
 Each line lists the solution found by MACHINA. First the primary anatomical site is given, then the provided migration pattern restriction set, followed by the migration number, comigration number and seeding site number. Finally, the identified migration pattern is given, followed by a lower bound (LB) on the optimal solution and then an upper bound (UB), ending with the total running time in seconds. In case LB == UB, the identified solution is optimal.
 
@@ -271,7 +291,7 @@ Each line lists the solution found by MACHINA. First the primary anatomical site
 In the parsimonious migration history with polytomy resolution we are given a clone tree `T` whose leaves are labeled by anatomical sites. The task is to find a refinement `T'` of `T` and label its inner vertices of such that the resulting migration graph `G` has minimum migration number, comigration number and seeding site number. It is possible to specify constraints on the topology of the migration graph.
 
     Usage:
-      ./pmh_tr [--help|-h|-help] [-G str] [-OLD] [-UB_gamma int] [-UB_mu int]
+      pmh_tr [--help|-h|-help] [-G str] [-OLD] [-UB_gamma int] [-UB_mu int]
          [-UB_sigma int] -c str [-e] [-g] [-l int] [-log] [-m str] [-o str]
          -p str [-t int] T leaf_labeling
     Where:
@@ -316,20 +336,18 @@ In the parsimonious migration history with polytomy resolution we are given a cl
       -t int
          Number of threads (default: -1, #cores)
 
-An example execution:
+An example execution (executed from the root directory of the MACHINA repository):
 
 
     $ mkdir patient1_tr
-    $ ./pmh_tr -p LOv -c ../data/mcpherson_2016/coloring.txt \
-    ../data/mcpherson_2016/patient1.tree \
-    ../data/mcpherson_2016/patient1.labeling \
-    -o patient1_tr/ 2> patient1_tr/result.txt
+    $ pmh_tr -p LOv -c data/mcpherson_2016/coloring.txt data/mcpherson_2016/patient1.tree \
+    data/mcpherson_2016/patient1.labeling -o patient1_tr/ > patient1_tr/result.txt
     
     $ cat patient1_tr/result.txt
-    LOv-	(PS)	12	6	1	pPS	12125	12125	0.271094
-    LOv-	(PS, S)	12	6	1	pPS	12125	12125	0.34085
-    LOv-	(PS, S, M)	12	6	1	pPS	12125	12125	0.373354
-    LOv-	(PS, S, M, R)	11	7	2	pR	11148	11148	6.48791
+    LOv-    (PS)    12      6       1       pPS     12125   12125   0.53603
+    LOv-    (PS, S) 12      6       1       pPS     12125   12125   0.242606
+    LOv-    (PS, S, M)      12      6       1       pPS     12125   12125   0.248338
+    LOv-    (PS, S, M, R)   11      7       2       pR      11148   11148   15.9117
 
 
 The `results.txt` file is formatted in exactly the same way as `pmh`. 
@@ -341,7 +359,7 @@ Given a mutation tree `T` with mutation frequencies `F-` and `F+`, the task is t
 
 
     Usage:
-      ./pmh_ti [--help|-h|-help] -F str [-G str] [-OLD] [-UB_gamma int]
+      pmh_ti [--help|-h|-help] -F str [-G str] [-OLD] [-UB_gamma int]
          [-UB_mu int] [-UB_sigma int] -barT str -c str [-e] [-g] [-l int] [-log]
          [-m str] [-mutTreeIdx int] [-noPR] [-o str] -p str [-t int]
     Where:
@@ -390,16 +408,21 @@ Given a mutation tree `T` with mutation frequencies `F-` and `F+`, the task is t
       -t int
          Number of threads (default: -1, #cores)
 
-An example execution:
+An example execution (executed from the root directory of the MACHINA repository):
 
     $ mkdir A7
-    $ ./generatemutationtrees ../data/hoadley_2016/A7/A7_MACHINA_0.95.tsv > A7/mutation_trees.txt
-    $ ./pmh_ti -p breast -c ../data/hoadley_2016/coloring.txt \ 
-    -m 1 -o A7 -F ../data/hoadley_2016/A7/A7_MACHINA_0.95.tsv \
+    $ generatemutationtrees data/hoadley_2016/A7/A7_MACHINA_0.95.tsv > A7/mutation_trees.txt
+    8/1/1/-1 (1)
+    9/3/4/-1 (8)
+    10/4/8/-1 (9)
+    Found 2 mutation trees with 10 out of 10 mutations
+    
+    $ pmh_ti -p breast -c data/hoadley_2016/coloring.txt -m 1 -o A7 -F data/hoadley_2016/A7/A7_MACHINA_0.95.tsv \
     -barT A7/mutation_trees.txt > A7/result.txt
+    Read 2 mutation trees.
     
     $ cat A7/result.txt
-    0-	(PS, S)	5	5	2	mS	5146.83	5146.83	9.43489
-    1-	(PS, S)	5	5	2	mS	5146.83	5146.83	10.7844
+    0-      (PS, S) 5       5       2       mS      5146.83 5146.83 36.4647
+    1-      (PS, S) 5       5       2       mS      5146.83 5146.83 37.8299
 
 The program `generatemutationtrees` uses the SPRUCE algorithm to enumerate all mutation trees given a frequency matrix. The program `pmh_ti` considers solves the PMH-TI problem for each enumerated mutation tree. The `results.txt` file is formatted in exactly the same way as in `pmh`.
